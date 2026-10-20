@@ -30,8 +30,10 @@ COPY office ./office
 COPY --from=client /app/client/dist /srv/client
 COPY deploy/railway/Caddyfile /etc/caddy/Caddyfile
 COPY deploy/railway/start.sh /app/start.sh
-# NODE_ENV=production turns off the demo-distributor account.
-ENV NODE_ENV=production PORT=8080 XDG_CONFIG_HOME=/tmp XDG_DATA_HOME=/tmp
+# NODE_ENV=production turns off the demo accounts. OWNER_HOST / AGENT_HOST are the back-office
+# hostnames (operator login and distributor/agent login); override them in Railway's variables.
+ENV NODE_ENV=production PORT=8080 XDG_CONFIG_HOME=/tmp XDG_DATA_HOME=/tmp \
+    OWNER_HOST=owner.jackvault777.com AGENT_HOST=agent.jackvault777.com
 EXPOSE 8080
 USER node
 CMD ["sh", "/app/start.sh"]

@@ -4,14 +4,17 @@ Jack Vault runs on [Railway](https://railway.com) as one service plus a PostgreS
 
 ```
  player / agent browser
-        │  https://jackvault777.com
+        │  https://jackvault777.com        players
+        │  https://agent.jackvault777.com  distributor / agent login
+        │  https://owner.jackvault777.com  operator (owner) login
         ▼
  Railway edge (HTTPS certificate, automatic)
         │
         ▼
  jack-vault service (deploy/railway/Dockerfile)
    Caddy on $PORT ── /            player client (client/dist)
-                 └── /api /ws /office ──► game server on 127.0.0.1:8081
+                 ├── /api /ws /office ──► game server on 127.0.0.1:8081
+                 └── owner.* / agent.* ──► back office only
         │
         ▼
  Railway PostgreSQL (daily / weekly / monthly backups)
@@ -31,7 +34,7 @@ Jack Vault runs on [Railway](https://railway.com) as one service plus a PostgreS
 |---|---|
 | `railway.json` | Tells Railway to build `deploy/railway/Dockerfile`, restart on any exit, and stop the old copy before the new one takes over. |
 | `deploy/railway/Dockerfile` | Builds the player client and the server into one image. Sets `NODE_ENV=production`, which turns off the `demo-distributor` account. |
-| `deploy/railway/Caddyfile` | Serves the client, proxies `/api`, `/ws` and `/office` to the server, redirects `www.` to the bare domain, adds HSTS and caching headers. |
+| `deploy/railway/Caddyfile` | Serves the client, proxies `/api`, `/ws` and `/office` to the server, shows only the back office on `owner.` and `agent.`, redirects `www.` to the bare domain, adds HSTS and caching headers. |
 | `deploy/railway/start.sh` | Runs Caddy and the server. If the server exits (a crash, or the previous deploy still holding the database lock), it restarts it after 3 seconds. |
 
 `docker compose up --build` is unchanged and still the local stack.
@@ -57,7 +60,8 @@ Open the **jack-vault** service → **Variables** and add:
 |---|---|
 | `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` (Railway fills it in; it uses the private network) |
 | `ADMIN_KEY` | A long random string, 40+ characters. Keep it private. It unlocks `/api/admin`. |
-| `SEED_DISTRIBUTOR` | `yourname:a-long-password` for the first owner/distributor account. Remove it after the first login. |
+| `SEED_OPERATOR` | `yourname:a-long-password` for the owner (operator) login. Remove it after the first login. |
+| `SEED_DISTRIBUTOR` | Optional: `name:a-long-password` for a first distributor. The operator can also create distributors in the back office. |
 | `MATH_PROFILE` | `rtp95` (or `rtp94` / `rtp96`) |
 
 To make a random `ADMIN_KEY` on Windows, run this in PowerShell and paste the result:
@@ -83,11 +87,24 @@ Saving the variables redeploys. When the log shows `Jack Vault server on :8081`,
    - TTL: Automatic
 6. Wait for both domains to show a green check in Railway (usually minutes, up to a day). Railway then issues the HTTPS certificates on its own.
 
+### 4b. Back-office subdomains
+
+Distributors and agents log in at `agent.jackvault777.com`, the owner at `owner.jackvault777.com`. Each shows only its own login, and the server refuses an operator login on the agent site and the other way round. `jackvault777.com/office` sends people to the agent site.
+
+1. **jack-vault service → Settings → Networking → Custom Domain**: add `agent.jackvault777.com` (port 8080), then `owner.jackvault777.com` (port 8080). This needs the Pro plan, since Hobby allows only two domains per service.
+2. In Namecheap **Advanced DNS**, add the records Railway shows for each:
+   - `CNAME` Host `agent`, Value: the target Railway shows
+   - `CNAME` Host `owner`, Value: the target Railway shows
+   - each `TXT`: Host as Railway shows it minus `.jackvault777.com` (for example `_railway-verify.agent`), Value copied from Railway
+3. Wait for the green checks.
+
+The hostnames come from `OWNER_HOST` and `AGENT_HOST`, which the image sets to `owner.jackvault777.com` and `agent.jackvault777.com`. Set them in Variables only if the names change.
+
 ### 5. First login
 
-1. Open `https://jackvault777.com/office` and log in with the `SEED_DISTRIBUTOR` username and password.
-2. Delete the `SEED_DISTRIBUTOR` variable in Railway. The account stays; the variable only creates it when missing.
-3. Create agents, load them, and have agents create players. Players play at `https://jackvault777.com`.
+1. Open `https://owner.jackvault777.com` and log in with the `SEED_OPERATOR` username and password.
+2. Delete the `SEED_OPERATOR` (and `SEED_DISTRIBUTOR`) variables in Railway. The accounts stay; the variables only create them when missing.
+3. Create distributors. They log in at `https://agent.jackvault777.com`, create and load agents, and agents create players. Players play at `https://jackvault777.com`.
 
 ### 6. Backups
 

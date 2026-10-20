@@ -17,6 +17,9 @@ import { Store } from "../store/store.js";
  *   ALLOW_PLAYER_CREATE  "1" lets /api/sessions create players with STARTING_BALANCE_CENTS (default off: players log in with agent-made accounts)
  *   STARTING_BALANCE_CENTS default 100000 (1,000.00)
  *   ADMIN_KEY            enables /api/admin routes (including POST /api/admin/operators)
+ *   OWNER_HOST, AGENT_HOST  back-office hostnames (e.g. owner.example.com, agent.example.com). When both are set,
+ *                        operators log in only on OWNER_HOST, distributors and agents only on AGENT_HOST,
+ *                        and /office on other hosts redirects to AGENT_HOST.
  *   SEED_OPERATOR        "username:password" of an operator login created at start if missing
  *                        (default demo-operator:demo1234 outside production, unset in production)
  *   CORS_ORIGIN          allowed browser origin
@@ -58,6 +61,7 @@ const { server } = createApp({
   adminKey: env.ADMIN_KEY,
   corsOrigin: env.CORS_ORIGIN,
   store,
+  staffHosts: env.OWNER_HOST && env.AGENT_HOST ? { operator: env.OWNER_HOST.toLowerCase(), staff: env.AGENT_HOST.toLowerCase() } : undefined,
 });
 const port = Number(env.PORT ?? 8080);
 server.listen(port, () => {

@@ -21,6 +21,18 @@ export interface AppOptions {
   accounts?: AccountService;
   /** When set, every response waits until the store has made all commits durable. */
   store?: Store;
+  /**
+   * Back-office hostnames, e.g. owner.example.com and agent.example.com. When set, operators log in
+   * only on `operator`, distributors and agents only on `staff`, and /office on any other host
+   * redirects to the staff host.
+   */
+  staffHosts?: { operator: string; staff: string };
+}
+
+/** The back-office portal a request's Host header belongs to, or null for any other host. */
+function portalForHost(req: IncomingMessage, hosts: { operator: string; staff: string }): Portal | null {
+  const host = (req.headers.host ?? "").replace(/:\d+$/, "").toLowerCase();
+  return host === hosts.operator ? "operator" : host === hosts.staff ? "staff" : null;
 }
 
 /** The back-office page (office/index.html), found from src/api or dist/src/api. */
@@ -123,14 +135,25 @@ export function createApp(o: AppOptions): { server: Server; wss: WebSocketServer
 
       if (req.method === "GET" && (path === "/office" || path === "/office/")) {
         if (!office) throw new GameError("NOT_FOUND", "No such route", 404);
+        const portal = o.staffHosts ? portalForHost(req, o.staffHosts) : null;
+        if (o.staffHosts && !portal) {
+          res.writeHead(302, { location: `https://${o.staffHosts.staff}/` });
+          return res.end();
+        }
         res.setHeader("content-security-policy", "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-ancestors 'none'");
         res.setHeader("x-content-type-options", "nosniff");
         res.setHeader("content-type", "text/html; charset=utf-8");
         res.statusCode = 200;
-        return res.end(office);
+        // On a back-office host the page shows only that portal's login.
+        return res.end(portal ? office.replace("<html lang=\"en\">", `<html lang="en" data-portal="${portal}">`) : office);
       }
       if (path.startsWith("/api/office/") || path.startsWith("/api/player/") || path.startsWith("/api/admin/accounts") || path === "/api/admin/distributors" || path === "/api/admin/operators") {
         const body = req.method === "POST" ? await readJson(req) : {};
+        if (o.staffHosts && path === "/api/office/login") {
+          const portal = portalForHost(req, o.staffHosts);
+          if (!portal) throw new GameError("WRONG_HOST", `Log in at https://${o.staffHosts.staff}`, 403);
+          body.portal = portal;
+        }
         const meta = { ip: req.socket.remoteAddress ?? null, userAgent: req.headers["user-agent"] ?? null };
         const r = accountRoute(accounts(), reports!, svc, req.method ?? "GET", path, url.searchParams, body, bearer(req), admin, meta);
         return send(res, r.status ?? 200, r.body);

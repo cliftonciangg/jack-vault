@@ -749,7 +749,9 @@ async function logout() {
 function showLogin(notice) {
   document.body.classList.remove("drawer-open");
   const app = document.getElementById("app");
-  let portal = store.get("jv.office.portal") === "operator" ? "operator" : "staff";
+  // owner.* and agent.* each serve one portal (the server sets data-portal); elsewhere both tabs show.
+  const fixed = document.documentElement.dataset.portal;
+  let portal = fixed || (store.get("jv.office.portal") === "operator" ? "operator" : "staff");
   const user = h("input", { autocomplete: "username", required: true });
   const pw = passwordInput({ autocomplete: "current-password", required: true });
   const err = h("div", { class: "err", role: "alert", style: "color:var(--red);font-size:13px" });
@@ -799,7 +801,8 @@ function showLogin(notice) {
       else bannerBox.replaceChildren(errorBanner(e2));
     }
   } },
-    tabs, bannerBox,
+    fixed ? h("div", { class: "hint", style: "text-align:center;font-weight:700" }, fixed === "operator" ? "Operator login" : "Distributor / Agent login") : tabs,
+    bannerBox,
     field("Username", user),
     field("Password", pw.el, err),
     go,
