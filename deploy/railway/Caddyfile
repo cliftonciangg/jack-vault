@@ -17,6 +17,16 @@
 		-Server
 	}
 
+	# owner.* and agent.* show only the back office (the server picks the login for each host).
+	@staffsite {
+		host {$OWNER_HOST} {$AGENT_HOST}
+		not path /api/*
+	}
+	handle @staffsite {
+		rewrite * /office
+		reverse_proxy 127.0.0.1:8081
+	}
+
 	@server path /api/* /ws /ws/* /office /office/*
 	handle @server {
 		reverse_proxy 127.0.0.1:8081
