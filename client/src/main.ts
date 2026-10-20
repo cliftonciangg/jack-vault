@@ -126,7 +126,10 @@ async function pickApi(): Promise<GameApi> {
   const mode = __FORCE_DEMO__ ? "demo" : q.get("mode");
   if (mode === "demo") return new LocalApi();
   if (mode === "server" || (await serverReachable(base))) return new RemoteApi(base);
-  return new LocalApi();
+  // Demo fallback only on a dev machine. On a real site a slow health check must not drop a
+  // player into a browser-side wallet: stay on the server and let the retry loop wait for it.
+  const local = location.protocol === "file:" || ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+  return local ? new LocalApi() : new RemoteApi(base);
 }
 
 async function main() {
@@ -145,24 +148,34 @@ async function main() {
   const api = await pickApi();
   let config!: GameConfig;
   let state: GameState | null = null;
+  let notice = "";
   for (;;) {
     try {
       config = await api.config();
       state = await api.connect();
       break;
     } catch (e) {
-      if (e instanceof ApiError && e.code === "LOGIN_REQUIRED") break;
+      if (e instanceof ApiError && e.status === 401) {
+        // No saved session, or it ended: log in.
+        if (e.code === "LOGGED_IN_ELSEWHERE") notice = "This account was logged in on another device.";
+        break;
+      }
       loading.error("Can't reach the game server. Retrying…");
       await timeout(2500);
     }
   }
   // Players log in with the username and password their agent gave them.
-  if (!state && api instanceof RemoteApi) state = await loading.login((u, p) => api.login(u, p));
+  if (!state && api instanceof RemoteApi) state = await loading.login((u, p) => api.login(u, p), notice);
   if (!state) throw new Error("No game state");
   const st: GameState = state;
+  let liveGame: Game | null = null;
   if (api instanceof RemoteApi) {
-    api.onAuthLost = () => {
-      void showDialog("Signed out", "Your session ended. Please log in again.").then(() => location.reload());
+    api.onAuthLost = (reason) => {
+      liveGame?.stopForAuth();
+      const [title, body] = reason === "LOGGED_IN_ELSEWHERE"
+        ? ["Logged in on another device", "This account was just logged in on another device, so this one was logged out. Please log in again to play here."]
+        : ["Signed out", "Your session ended. Please log in again."];
+      void showDialog(title, body).then(() => location.reload());
     };
   }
   loading.progress(0.6);
@@ -177,6 +190,7 @@ async function main() {
   screen.setDemo(api.mode === "demo");
   screen.build(orientation);
   const game = new Game(api, config, stage, screen, root, (on) => stars.setSpinning(on));
+  liveGame = game;
   game.bindScreen();
   const relayout = () => stage.layout(frame, screen.grid, orientation === "portrait" ? 4 : 3);
   relayout();

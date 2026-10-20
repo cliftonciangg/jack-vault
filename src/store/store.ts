@@ -47,7 +47,7 @@ export interface Session {
   createdAt: string;
 }
 
-export type Role = "DISTRIBUTOR" | "AGENT" | "PLAYER";
+export type Role = "OPERATOR" | "DISTRIBUTOR" | "AGENT" | "PLAYER";
 
 /**
  * A login. Distributors and agents hold points in `balanceCents`. A player's
@@ -64,14 +64,24 @@ export interface Account {
   status: "ACTIVE" | "DISABLED";
   balanceCents: number;
   createdAt: string;
+  lastLoginAt?: string | null;
+  lastLoginIp?: string | null;
+  /** IANA time zone the back office shows times in (staff only). Default UTC. */
+  timeZone?: string;
+  /** Distributor only: math profile its players play on. Unset follows the operator's default. */
+  profileId?: string;
 }
 
-/** Back-office (distributor / agent) login. */
+/** Back-office (operator / distributor / agent) login. */
 export interface StaffSession {
   token: string;
   accountId: string;
   createdAt: string;
   expiresAt: string;
+  ip?: string | null;
+  userAgent?: string | null;
+  /** Refreshed at most every few minutes, not on every request. */
+  lastSeenAt?: string;
 }
 
 export type LedgerType = "ISSUE" | "REVOKE" | "LOAD" | "REDEEM";
@@ -94,6 +104,33 @@ export interface LedgerEntry {
   actorId: string;
   requestId: string;
   at: string;
+  /** Optional remark typed by whoever made the move. */
+  note?: string;
+}
+
+/** Operator-wide game settings. One record, replaced on each change. */
+export interface GameSettings {
+  /** Profile for distributors that haven't picked one. */
+  defaultProfileId: string;
+  /** Profiles distributors may choose themselves. */
+  allowedProfileIds: string[];
+  /** While on, new paid spins are refused; open rounds can still finish. */
+  maintenance: { on: boolean; message: string };
+}
+
+export type ChangeKind = "DISTRIBUTOR_PROFILE" | "DEFAULT_PROFILE" | "ALLOWED_PROFILES" | "MAINTENANCE";
+
+/** One settings change, for the win-ratio and game-settings history. */
+export interface ChangeLogEntry {
+  id: string;
+  kind: ChangeKind;
+  /** The distributor for DISTRIBUTOR_PROFILE, otherwise null. */
+  targetId: string | null;
+  from: string;
+  to: string;
+  /** Account id that made the change, or "operator" (admin key / startup). */
+  actorId: string;
+  at: string;
 }
 
 export interface IdempotencyEntry {
@@ -115,6 +152,8 @@ export interface Commit {
   accounts?: Account[];
   staffSessions?: StaffSession[];
   ledger?: LedgerEntry[];
+  settings?: GameSettings;
+  changes?: ChangeLogEntry[];
   /** Tokens to delete from both session maps (logout, password reset, disable). */
   revokeSessions?: string[];
 }
@@ -138,7 +177,9 @@ export class Store {
   readonly usernames = new Map<string, string>();
   readonly staffSessions = new Map<string, StaffSession>();
   readonly ledger = new Map<string, LedgerEntry>();
+  readonly changes = new Map<string, ChangeLogEntry>();
   jackpots: JackpotState | null = null;
+  settings: GameSettings | null = null;
 
   constructor(private readonly journalPath?: string) {
     if (journalPath) {
@@ -189,6 +230,8 @@ export class Store {
     });
     c.staffSessions?.forEach((s) => this.staffSessions.set(s.token, s));
     c.ledger?.forEach((e) => this.ledger.set(e.entryId, e));
+    if (c.settings) this.settings = c.settings;
+    c.changes?.forEach((e) => this.changes.set(e.id, e));
     c.revokeSessions?.forEach((t) => {
       this.sessions.delete(t);
       this.staffSessions.delete(t);

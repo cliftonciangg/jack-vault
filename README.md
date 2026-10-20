@@ -19,7 +19,7 @@ To run on PostgreSQL instead, set `DATABASE_URL` (see [Database](#database)), or
 
 Then, in a second terminal, `npm install --prefix client && npm run client` and open http://localhost:5173. See [client/README.md](client/README.md).
 
-The back office for distributors and agents is at http://localhost:8080/office (or http://localhost:5173/office while the client dev server runs). Outside production the server creates a first distributor, **demo-distributor** / **demo1234**, with 100,000.00 points. See [Distributors, agents and players](#distributors-agents-and-players).
+The back office for operators, distributors and agents is at http://localhost:8080/office (or http://localhost:5173/office while the client dev server runs). Outside production the server creates an operator login, **demo-operator** / **demo1234** (use the "Operator" tab), and a first distributor, **demo-distributor** / **demo1234**, with 100,000.00 points. See [Back office](#back-office).
 
 Other scripts:
 
@@ -36,14 +36,15 @@ Server environment variables:
 | Variable | Default | Meaning |
 |---|---|---|
 | `PORT` | 8080 | HTTP and WebSocket port |
-| `MATH_PROFILE` | rtp95 | Which RTP profile new rounds use (`rtp94`, `rtp95`, `rtp96`, or one you tuned) |
+| `MATH_PROFILE` | rtp95 | The default RTP profile on first start (`rtp94`, `rtp95`, `rtp96`, or one you tuned). After that the operator sets the default and each distributor's profile in the back office; every profile in `profiles/` is loaded. |
 | `DATABASE_URL` | unset | PostgreSQL connection string, e.g. `postgres://jackvault:pw@localhost:5432/jackvault`. When set, PostgreSQL is the database and `DATA_DIR` is ignored. |
 | `DATA_DIR` | ./data | Without a database: where the journal file lives. `memory` keeps nothing on disk. |
 | `ALLOW_PLAYER_CREATE` | 0 | `1` lets `POST /api/sessions` create guest players with no password (old demo mode). Agent-made players can never log in this way. |
 | `STARTING_BALANCE_CENTS` | 100000 | Balance for a guest player (only with `ALLOW_PLAYER_CREATE=1`) |
 | `SEED_DISTRIBUTOR` | `demo-distributor:demo1234` (unset when `NODE_ENV=production`) | `username:password` of a distributor created at start if that username doesn't exist yet |
 | `SEED_POINTS_CENTS` | 10000000 | Points issued to that new distributor (100,000.00) |
-| `ADMIN_KEY` | unset | Enables `/api/admin/*`, sent as the `x-admin-key` header |
+| `SEED_OPERATOR` | `demo-operator:demo1234` (unset when `NODE_ENV=production`) | `username:password` of an operator login created at start if that username doesn't exist yet |
+| `ADMIN_KEY` | unset | Enables `/api/admin/*`, sent as the `x-admin-key` header. `POST /api/admin/operators` creates operator logins. |
 | `CORS_ORIGIN` | unset | Allowed browser origin for a web client |
 
 ## Distributors, agents and players
@@ -52,9 +53,9 @@ Coins come down a three-level chain. Nobody can create coins except the operator
 
 | Who | Logs in at | Can do |
 |---|---|---|
-| **Operator** | `/office`, "Operator" tab, with `ADMIN_KEY` | Create distributors, issue points to them or take points back, reset passwords, disable accounts, see every account and the ledger check |
-| **Distributor** | `/office` | Create agents, **load** points to an agent (out of the distributor's own points) and **redeem** them back, reset an agent's password, disable an agent, view each agent's players (read only), see the ledger |
-| **Agent** | `/office` | Create players, **load** coins to a player (out of the agent's own points) and **redeem** them back, reset a player's password, disable a player, see the ledger |
+| **Operator** | `/office`, "Operator" tab, with an operator username and password | Create distributors, **issue** points to them or **take back** points, set each distributor's win ratio and the platform default, maintenance mode, the full points ledger and the audit checks |
+| **Distributor** | `/office` | Create agents, **load** points to an agent (out of the distributor's own points) and **redeem** them back, reset an agent's password, disable an agent, view each agent's players (read only), choose its players' win ratio from the profiles the operator allows, per-agent records |
+| **Agent** | `/office` | Create players, **load** coins to a player (out of the agent's own points) and **redeem** them back, reset a player's password, disable a player, transaction records and each player's game records |
 | **Player** | The game's start screen | Play with the balance the agent loaded. A load or redeem shows up in the open game right away. |
 
 How it works (`src/accounts/accounts.ts`):
@@ -64,6 +65,7 @@ How it works (`src/accounts/accounts.ts`):
 - **No overdrafts.** A distributor can't load more than it holds, an agent can't load more than it holds, and nobody can redeem more than the account has. Coins can always be redeemed out of a disabled account, but not loaded into one.
 - **Retry-safe.** Every load and redeem takes a `requestId`. Sending the same one again (after a dropped connection, say) returns the first result and moves nothing.
 - **Scoped.** A distributor only sees and touches its own agents (and reads their players); an agent only its own players. Anything else is a 404.
+- **Win ratio per distributor.** All profiles in `profiles/` run side by side. A player's new rounds use its distributor's profile (or the operator's default); a round already in progress finishes on the profile it started with, and every round records its profile and hash. The operator chooses which profiles distributors may pick, and every change is logged with who made it. There is no per-player setting.
 - **Audit.** `GET /api/admin/audit` now also reports `accounts.staffBalancesMatchLedger` (every distributor and agent balance equals its ledger flows) and `accounts.pointsConserved` (points issued minus taken back equals what's held across distributors, agents and players through the ledger).
 
 Account endpoints (money in integer cents; office calls use the token from `/api/office/login` as `Authorization: Bearer`):
@@ -72,23 +74,52 @@ Account endpoints (money in integer cents; office calls use the token from `/api
 |---|---|---|---|
 | POST | `/api/player/login` | | `{ username, password }` returns `{ token, playerId, state }`; the token works on every game route |
 | POST | `/api/player/logout` | Bearer (game) | |
-| POST | `/api/office/login` | | `{ username, password }` returns `{ token, account }` (distributors and agents) |
+| POST | `/api/office/login` | | `{ username, password, portal }` returns `{ token, account }`; `portal: "operator"` for operators, otherwise distributors and agents |
 | POST | `/api/office/logout` | Bearer (office) | |
-| GET | `/api/office/me` | Bearer (office) | Own account and points |
-| GET | `/api/office/accounts` | Bearer (office) | `?parent=<agentId>` for a distributor to list one agent's players |
-| POST | `/api/office/accounts` | Bearer (office) | `{ username, password }`: a distributor creates an agent, an agent creates a player |
-| POST | `/api/office/accounts/:id/load` | Bearer (office) | `{ requestId, amountCents }` |
-| POST | `/api/office/accounts/:id/redeem` | Bearer (office) | `{ requestId, amountCents }` |
+| GET | `/api/office/me` | Bearer (office) | Own account, points, parent and time zone |
+| POST | `/api/office/me/password` | Bearer (office) | `{ currentPassword, newPassword }`; at least 10 characters with an upper-case letter and a number; logs out the account's other sessions |
+| POST | `/api/office/me/prefs` | Bearer (office) | `{ timeZone }` (IANA name, e.g. `America/New_York`) |
+| GET | `/api/office/me/sessions` | Bearer (office) | Live sessions with IP, browser and last active |
+| POST | `/api/office/me/sessions/logout-others` | Bearer (office) | |
+| GET | `/api/office/accounts` | Bearer (office) | My distributors / agents / players; `?parent=<id>` lists any account below me (read only) |
+| POST | `/api/office/accounts` | Bearer (office) | `{ username, password, startingCents?, profileId? }`: the operator creates a distributor (`profileId` optional), a distributor an agent, an agent a player |
+| POST | `/api/office/accounts/:id/load` | Bearer (office) | `{ requestId, amountCents, note? }` distributor or agent |
+| POST | `/api/office/accounts/:id/redeem` | Bearer (office) | `{ requestId, amountCents, note? }` distributor or agent |
+| POST | `/api/office/accounts/:id/issue` | Bearer (operator) | `{ requestId, amountCents, note? }` |
+| POST | `/api/office/accounts/:id/revoke` | Bearer (operator) | `{ requestId, amountCents, note? }` takes points back |
+| POST | `/api/office/accounts/:id/profile` | Bearer (operator) | `{ profileId }` sets a distributor's win ratio |
 | POST | `/api/office/accounts/:id/password` | Bearer (office) | `{ password }` |
 | POST | `/api/office/accounts/:id/status` | Bearer (office) | `{ status: "ACTIVE" \| "DISABLED" }` |
-| GET | `/api/office/ledger` | Bearer (office) | `?account=<id>&limit=100&before=<entryId>` |
+| GET | `/api/office/accounts/:id/rounds` | Bearer (office) | A player's rounds and totals: `?from=&to=&limit=&before=<roundId>` (the player's agent, distributor or the operator) |
+| GET | `/api/office/rounds/:roundId` | Bearer (office) | One round with every step and a `verified` replay check |
+| GET | `/api/office/ledger` | Bearer (office) | `?account=<id or username>&actor=&type=LOAD,REDEEM&from=&to=&limit=100&before=<entryId>` |
+| GET | `/api/office/summary` | Bearer (office) | Period flows for me and each child (received, returned, loaded, redeemed, players' bet and win); `?from=&to=&parent=` |
+| GET | `/api/office/daily` | Bearer (office) | Loads and redeems per day: `?from=&to=&tz=&account=` |
+| GET / POST | `/api/office/win-ratio` | Bearer (distributor, operator) | Current profile, profile stats, actual vs expected RTP, history; POST `{ profileId }` (distributor, allowed profiles only) |
+| GET / POST | `/api/office/games` | Bearer (operator) | Profiles, assignments, game settings, change history; POST `{ defaultProfileId?, allowedProfileIds?, maintenance?: { on, message } }` |
+| GET | `/api/office/audit` | Bearer (operator) | Every audit check, with the accounts that fail it |
 | GET | `/api/admin/accounts` | x-admin-key | Every account plus the ledger audit |
+| POST | `/api/admin/operators` | x-admin-key | `{ username, password }` creates an operator login |
 | POST | `/api/admin/distributors` | x-admin-key | `{ username, password }` |
 | POST | `/api/admin/accounts/:id/issue` | x-admin-key | `{ requestId, amountCents }`; negative takes points back |
 | POST | `/api/admin/accounts/:id/password` | x-admin-key | `{ password }` |
 | POST | `/api/admin/accounts/:id/status` | x-admin-key | `{ status }` |
 
-Usernames are 3-32 letters, digits, `_`, `.` or `-`, unique across all roles and not case-sensitive. Passwords are 6-64 characters.
+Usernames are 3-32 letters, digits, `_`, `.` or `-`, unique across all roles and not case-sensitive. Passwords are 6-64 characters (staff changing their own: at least 10 with an upper-case letter and a number). `from` / `to` are ISO times, `from` inclusive and `to` exclusive.
+
+### Back office
+
+`office/index.html` is one page with no build step, built from the Claude Design files in `design-source/backoffice/` (style guide, shell, and Prompts 1-15). Each role gets its own menu:
+
+| Role | Pages |
+|---|---|
+| Agent | Dashboard, User Management, Transaction Records, Game Records (round drawer with the reel grid and replay check), Settings |
+| Distributor | Dashboard, Agent Management (with read-only players), Coin Management, Win Ratio, Agent Records, Settings |
+| Operator | Distributors (platform totals, issue / take back, read-only drill-down), Points Ledger, Audit, Win Ratio & Games (profiles, assignments, maintenance mode, change history), Settings |
+
+Times show in each account's time zone (Settings). Date shortcuts (Today, Yesterday, This Week, Last Week, This Month) are worked out in that zone. Tables export to CSV in the browser. On a phone the sidebar becomes a drawer and row actions move into a "..." sheet.
+
+Not built yet: two-step login codes (2FA) and the "request points" flow between distributor and operator. Settings shows 2FA as coming later.
 
 ## The game
 
@@ -118,7 +149,7 @@ Other characteristics (rtp95, max bet): hit frequency about 46%, free spins abou
 
 **How the exact figure works.** Every payline reads one row per reel, and every stop is equally likely, so the symbol a line sees on a reel has exactly the strip's symbol distribution, independently per reel. One line's expected pay is an enumeration over symbol counts, and all 25 lines share it. The strip builder guarantees no two SCATTERs (or BONUSes) fit in one 4-row window, so each reel shows one with probability count x 4 / length. Free spins and the wheel combine through linearity of expectation. A test enumerates every stop combination of a small set of strips and checks the formula against it exactly.
 
-**Changing the RTP.** Edit counts or pays in `src/math/design.ts`, or run `npm run tune -- --target <rtp>`. The tuner adjusts filler symbols on reels 2-5 until the exact RTP hits the target, then writes a new profile JSON. Switch the server with `MATH_PROFILE`. Each profile has a SHA-256 hash (`GET /api/config`, `npm run par`), and every round records the hash it was played on.
+**Changing the RTP.** Edit counts or pays in `src/math/design.ts`, or run `npm run tune -- --target <rtp>`. The tuner adjusts filler symbols on reels 2-5 until the exact RTP hits the target, then writes a new profile JSON. The operator assigns profiles to distributors in the back office (`MATH_PROFILE` only sets the first default). Each profile has a SHA-256 hash (`GET /api/config`, `npm run par`), and every round records the hash it was played on.
 
 ## API
 
@@ -208,7 +239,7 @@ test/         node:test suites
 
 ## Database
 
-With `DATABASE_URL` set, the server uses PostgreSQL (`src/store/pgStore.ts`). It creates its tables on start from [`src/store/schema.sql`](src/store/schema.sql): `players`, `txs` (game wallet), `rounds`, `jackpots`, `accounts`, `ledger` (coin movements), `sessions`, `staff_sessions` and `idempotency`. Each row keeps the full record as `jsonb` plus plain columns for reporting, so you can query it directly, for example `SELECT player_id, sum(amount_cents) FROM txs GROUP BY 1`.
+With `DATABASE_URL` set, the server uses PostgreSQL (`src/store/pgStore.ts`). It creates its tables on start from [`src/store/schema.sql`](src/store/schema.sql): `players`, `txs` (game wallet), `rounds`, `jackpots`, `accounts`, `ledger` (coin movements), `sessions`, `staff_sessions`, `idempotency`, `settings` (default profile, allowed profiles, maintenance) and `change_log` (win-ratio and settings history). Each row keeps the full record as `jsonb` plus plain columns for reporting, so you can query it directly, for example `SELECT player_id, sum(amount_cents) FROM txs GROUP BY 1`.
 
 How it stays safe:
 
@@ -227,6 +258,6 @@ These are deliberate simplifications for a runnable first build:
 
 - **Storage.** Use PostgreSQL (`DATABASE_URL`) in production. The journal file is for development and demos.
 - **Single process.** One server process per database, enforced by the advisory lock. Put it behind a reverse proxy (nginx, Caddy or your host's load balancer) for HTTPS, with WebSocket upgrades allowed on `/ws`.
-- **Accounts.** Change the seeded distributor's password (or set `SEED_DISTRIBUTOR` yourself and `NODE_ENV=production`), set a long random `ADMIN_KEY`, and serve everything over HTTPS. The login lockout counter lives in memory, so it resets on restart and isn't shared between instances.
+- **Accounts.** Change the seeded operator's and distributor's passwords (or set `SEED_OPERATOR` / `SEED_DISTRIBUTOR` yourself and `NODE_ENV=production`), set a long random `ADMIN_KEY`, and serve everything over HTTPS. The login lockout counter lives in memory, so it resets on restart and isn't shared between instances.
 - **Legal.** Running a game where coins are bought from and redeemed through agents is regulated as gambling or sweepstakes in most places. Check what licence or sweepstakes rules apply where you operate before taking real money.
 - **Max win cap.** None is set. Add one in the engine if your rules need it, then re-tune.

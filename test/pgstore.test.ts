@@ -18,7 +18,7 @@ import { freeSpinStops, ScriptedRng, wheelStops } from "./helpers.js";
 const url = process.env.TEST_DATABASE_URL;
 const profile = loadProfile("rtp95");
 const rid = () => randomUUID();
-const TABLES = ["players", "txs", "rounds", "jackpots", "sessions", "staff_sessions", "idempotency", "accounts", "ledger"];
+const TABLES = ["players", "txs", "rounds", "jackpots", "sessions", "staff_sessions", "idempotency", "accounts", "ledger", "settings", "change_log"];
 
 async function resetDb() {
   const c = new pg.Client({ connectionString: url });
@@ -167,4 +167,33 @@ test("PostgreSQL: a failed write stops the server instead of carrying on", opts,
   assert.ok(fatal);
   assert.throws(() => svc.play("p1", rid(), "spin", 25), /Database unavailable/);
   await store.close().catch(() => undefined);
+});
+
+test("PostgreSQL: win-ratio settings, change log and operator logins survive a restart", opts, async () => {
+  await resetDb();
+  const profiles = ["rtp94", "rtp95", "rtp96"].map(loadProfile);
+  let store = await PgStore.open({ connectionString: url!, onFatal: () => undefined });
+  let svc = new GameService({ profile, profiles, store });
+  let acc = new AccountService({ store });
+  const op = acc.createOperator("op1", "op-pass-1");
+  const d = acc.createDistributor("dist1", "secret123");
+  svc.setDistributorProfile(d.id, "rtp94", op.id, { allowedOnly: false });
+  svc.updateSettings({ allowedProfileIds: ["rtp94"], maintenance: { on: true, message: "Back soon" } }, op.id);
+  const login = acc.staffLogin("op1", "op-pass-1", "operator", { ip: "10.0.0.1", userAgent: "test" });
+  await store.close();
+
+  store = await PgStore.open({ connectionString: url!, onFatal: () => undefined });
+  svc = new GameService({ profile, profiles, store });
+  acc = new AccountService({ store });
+  try {
+    assert.equal(svc.distributorProfileId(d.id), "rtp94");
+    assert.deepEqual(svc.settings(), { defaultProfileId: "rtp95", allowedProfileIds: ["rtp94"], maintenance: { on: true, message: "Back soon" } });
+    assert.deepEqual(svc.changes().map((c) => c.kind), ["MAINTENANCE", "ALLOWED_PROFILES", "DISTRIBUTOR_PROFILE"]);
+    const me = acc.staffForToken(login.token);
+    assert.equal(me.role, "OPERATOR");
+    assert.ok(me.lastLoginAt);
+    assert.equal(acc.sessions(me, login.token)[0].ip, "10.0.0.1");
+  } finally {
+    await store.close();
+  }
 });

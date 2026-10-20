@@ -46,7 +46,8 @@ export class Loading {
    * Swaps the bar for the player login form and resolves once `submit` accepts
    * the username and password (wrong details show the server's message).
    */
-  login(submit: (username: string, password: string) => Promise<GameState>): Promise<GameState> {
+  /** `notice` shows above the form first, e.g. why the last session ended. */
+  login(submit: (username: string, password: string) => Promise<GameState>, notice = ""): Promise<GameState> {
     clearInterval(this.tipTimer);
     const bar = $(this.el, ".bar");
     const progressHtml = bar.innerHTML;
@@ -61,6 +62,7 @@ export class Loading {
     const form = $(bar, "form") as HTMLFormElement;
     const err = $(form, ".lf-err");
     const btn = $(form, "button") as HTMLButtonElement;
+    err.textContent = notice;
     return new Promise((resolve) => {
       form.addEventListener("submit", async (ev) => {
         ev.preventDefault();

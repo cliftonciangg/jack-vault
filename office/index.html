@@ -4,527 +4,1860 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Back office · Jack Vault</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<title>Back Office · Jack Vault</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* Tokens from design-source/backoffice/project/Tokens.dc.html */
 :root {
-  --bg: #0B0820; --panel: #151030; --panel2: #1D1745; --line: #2E2560; --t1: #F4F1FF; --t2: #B9B3D9; --t3: #8A83AD;
-  --gold: #F5B301; --gold2: #FFE27A; --violet: #7C3AED; --ok: #34D399; --bad: #F87171; --warn: #FBBF24;
+  --navy: #1B2B44; --bg: #F3F4F6; --panel: #FFFFFF; --line: #E5E7EB; --line-input: #D1D5DB; --rail: #E9EDF2;
+  --blue: #1A78B4; --blue-dark: #166FA3; --blue-light: #1E88C8; --blue-tint: #E3F0FA;
+  --green: #15803D; --green-tint: #DCFCE7; --red: #DC2626; --red-tint: #FEF2F2;
+  --amber: #B45309; --amber-tint: #FEF3C7; --balance: #FFF8E6; --balance-line: #F1E3B8;
+  --text: #111827; --text-2: #4B5563; --text-3: #6B7280; --text-decor: #9CA3AF; --zebra: #F9FAFB;
+  --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --radius: 6px; --radius-panel: 8px; --h-row: 36px; --h-row-btn: 28px;
+  --dur-fast: 120ms; --dur-dialog: 160ms;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--bg); color: var(--t1); font: 500 16px/1.4 Rajdhani, system-ui, sans-serif; }
-body { min-height: 100vh; background: #06040F radial-gradient(ellipse 120% 600px at 50% 0%, #2A1F6B 0%, #130E36 45%, #06040F 100%) no-repeat; }
-h1, h2, .display { font-family: Orbitron, sans-serif; font-weight: 900; letter-spacing: 1px; }
-h1 { font-size: 20px; margin: 0; }
-h2 { font-size: 15px; margin: 0 0 12px; color: var(--t2); }
-button, input, select { font: inherit; color: inherit; }
-button { cursor: pointer; border: 0; border-radius: 10px; padding: 8px 14px; background: var(--panel2); color: var(--t1); font-weight: 700; border: 1px solid var(--line); }
-button:hover { border-color: var(--violet); }
-button:disabled { opacity: .5; cursor: default; }
-button.gold { background: linear-gradient(180deg, #FFE27A, #F5B301 60%, #D99A00); color: #0B0820; border: 0; }
-button.violet { background: var(--violet); border: 0; }
-button.small { padding: 4px 10px; font-size: 14px; }
-button.link { background: none; border: 0; color: var(--t2); text-decoration: underline; padding: 0; }
-input, select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: #0F0B28; outline: none; }
-input:focus, select:focus { border-color: var(--violet); }
-label { display: block; font-size: 14px; color: var(--t2); margin: 10px 0 4px; }
-.wrap { max-width: 1100px; margin: 0 auto; padding: 16px; }
-.card { background: rgba(21, 16, 48, .92); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
-.login { max-width: 380px; margin: 10vh auto 0; }
-.login .brand { text-align: center; margin-bottom: 18px; }
-.login .brand b { color: var(--gold); }
-.err { color: var(--bad); min-height: 20px; margin-top: 8px; font-size: 15px; }
-.top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-.top .grow { flex: 1; }
-.badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-family: Orbitron, sans-serif; font-weight: 700; letter-spacing: 1px; background: var(--violet); }
-.badge.AGENT { background: #0E7490; } .badge.PLAYER { background: #4D7C0F; } .badge.OPERATOR { background: #9A3412; }
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px; }
-.stat .k { color: var(--t3); font-size: 14px; }
-.stat .v { font-family: Orbitron, sans-serif; font-weight: 900; font-size: 22px; color: var(--gold2); }
-.grid2 { display: grid; grid-template-columns: 320px 1fr; gap: 16px; align-items: start; }
-.grid2 > * { min-width: 0; }
-@media (max-width: 820px) { .grid2 { grid-template-columns: 1fr; } }
-table { width: 100%; border-collapse: collapse; font-size: 15px; }
-th { text-align: left; color: var(--t3); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-td { padding: 8px; border-bottom: 1px solid rgba(46, 37, 96, .5); vertical-align: middle; }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-td .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
-tr.disabled td:not(:last-child) { opacity: .5; }
-.scroll { overflow-x: auto; }
-.pos { color: var(--ok); } .neg { color: var(--bad); }
-.muted { color: var(--t3); }
-.row { display: flex; gap: 8px; align-items: center; }
-.row > * { flex: 1; }
-.creds { margin-top: 12px; padding: 12px; border-radius: 12px; background: #0F0B28; border: 1px dashed var(--gold); }
-.creds code { font-size: 17px; color: var(--gold2); }
-dialog { background: var(--panel); color: var(--t1); border: 1px solid var(--line); border-radius: 16px; padding: 20px; width: min(380px, calc(100vw - 32px)); }
-dialog::backdrop { background: rgba(6, 4, 15, .7); }
-.quick { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-.quick button { flex: 1; }
-.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 16px; opacity: 0; transition: opacity .2s; pointer-events: none; }
-.toast.on { opacity: 1; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--text); font: 400 14px/20px var(--font); }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--blue); } a:hover { color: var(--blue-dark); }
+.num, td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.nums { font-variant-numeric: tabular-nums; }
+.muted { color: var(--text-2); } .hint { color: var(--text-3); font-size: 13px; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+.in { color: var(--green); } .out { color: var(--red); }
 .hidden { display: none !important; }
-.tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-.tabs button[aria-pressed="true"] { background: var(--violet); border-color: var(--violet); }
-.crumb { margin-bottom: 10px; }
+:focus-visible { outline: 2px solid var(--blue-light); outline-offset: 1px; }
+
+/* Buttons */
+.btn { height: var(--h-row); border-radius: var(--radius); border: 1px solid transparent; padding: 0 14px; font-weight: 600; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; transition: background var(--dur-fast), border-color var(--dur-fast); background: var(--blue); color: #fff; }
+.btn:hover { background: var(--blue-dark); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn.load { background: var(--green); } .btn.load:hover { background: #116632; }
+.btn.redeem { background: #fff; color: var(--red); border-color: var(--red); } .btn.redeem:hover { background: var(--red-tint); }
+.btn.danger { background: var(--red); } .btn.danger:hover { background: #B91C1C; }
+.btn.neutral { background: #fff; color: var(--text); border-color: var(--line-input); font-weight: 500; } .btn.neutral:hover { background: var(--zebra); border-color: var(--text-decor); }
+.btn.link { background: none; border: 0; color: var(--blue); padding: 0; height: auto; font-weight: 500; text-decoration: underline; }
+.btn.sm { height: var(--h-row-btn); padding: 0 10px; font-size: 13px; }
+.btn.wide { width: 100%; }
+.btn .spin { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.shortcuts { display: flex; gap: 6px; flex-wrap: wrap; }
+.shortcuts button { height: 28px; padding: 0 12px; border-radius: var(--radius); border: 0; background: var(--blue-light); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+.shortcuts button[aria-pressed="true"] { background: var(--blue-dark); box-shadow: inset 0 0 0 2px #0E4F78; }
+
+/* Forms */
+input[type=text], input[type=password], input[type=search], input[type=datetime-local], input:not([type]), select, textarea {
+  height: var(--h-row); border: 1px solid var(--line-input); border-radius: var(--radius); padding: 0 10px; background: #fff; min-width: 0; }
+textarea { height: auto; padding: 8px 10px; resize: vertical; }
+input:focus, select:focus, textarea:focus { border-color: var(--blue-light); outline: 2px solid rgba(30,136,200,.25); outline-offset: 0; }
+input::placeholder { color: var(--text-decor); }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field > label, .lbl { font-size: 13px; font-weight: 500; color: var(--text-2); }
+.field .err { color: var(--red); font-size: 13px; min-height: 0; }
+.pw { position: relative; display: flex; } .pw input { flex: 1; padding-right: 40px; }
+.pw .eye { position: absolute; right: 2px; top: 2px; width: 32px; height: 32px; border: 0; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.amount { position: relative; display: flex; } .amount input { flex: 1; text-align: right; padding-right: 58px; font-variant-numeric: tabular-nums; }
+.amount .suffix { position: absolute; right: 10px; top: 8px; color: var(--text-3); font-size: 13px; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.row .grow { flex: 1; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; color: var(--text-2); cursor: pointer; user-select: none; }
+.toggle .sw { width: 40px; height: 22px; border-radius: 11px; border: 1px solid var(--line-input); background: var(--line); position: relative; flex-shrink: 0; transition: background var(--dur-fast); }
+.toggle .sw::after { content: ""; position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 9px; background: #fff; border: 1px solid var(--line-input); transition: left var(--dur-fast); }
+.toggle[aria-checked="true"] .sw { background: var(--blue); border-color: var(--blue); }
+.toggle[aria-checked="true"] .sw::after { left: 19px; border-color: var(--blue); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chips button { height: 28px; padding: 0 12px; border-radius: 14px; border: 1px solid var(--line-input); background: #fff; cursor: pointer; font-variant-numeric: tabular-nums; }
+.chips button:hover { border-color: var(--blue-light); color: var(--blue-dark); }
+
+/* Shell */
+.top { height: 56px; background: var(--navy); color: #fff; display: flex; align-items: center; padding: 0 24px; gap: 12px; position: sticky; top: 0; z-index: 20; }
+.top .brand { font-weight: 700; font-size: 15px; } .top .sub { color: #C7D2E3; }
+.top .sep { color: #8A9AB5; } .top .title { font-weight: 600; font-size: 15px; }
+.top .welcome { color: #C7D2E3; } .top .welcome strong { color: #fff; font-weight: 600; }
+.top .logout { height: 32px; padding: 0 12px; border-radius: var(--radius); border: 1px solid #5B6B85; color: #fff; background: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; cursor: pointer; }
+.top .burger { display: none; width: 36px; height: 36px; border: 0; background: none; color: #fff; cursor: pointer; align-items: center; justify-content: center; }
+.roletag { height: 20px; padding: 0 8px; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center; }
+.roletag.AGENT { background: #0F766E; color: #fff; } .roletag.DISTRIBUTOR { background: var(--blue); color: #fff; } .roletag.OPERATOR { background: var(--line); color: var(--navy); } .roletag.PLAYER { background: #4D7C0F; color: #fff; }
+.strip { height: 36px; background: var(--balance); border-bottom: 1px solid var(--balance-line); display: flex; align-items: center; padding: 0 24px; gap: 10px; position: sticky; top: 56px; z-index: 19; }
+.strip .bal { color: var(--blue); font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums; }
+.strip .refresh { width: 28px; height: 28px; border: 0; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.strip .tz { color: var(--text-2); font-size: 13px; margin-left: auto; }
+.layout { display: flex; min-height: calc(100vh - 92px); }
+.side { width: 240px; flex-shrink: 0; background: var(--rail); border-right: 1px solid var(--line); padding: 12px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 92px; height: calc(100vh - 92px); overflow-y: auto; }
+.side a, .side button { height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: var(--radius); background: #fff; color: var(--text); text-decoration: none; font-weight: 500; border: 0; border-left: 3px solid transparent; cursor: pointer; text-align: left; width: 100%; }
+.side a:hover { background: #F5F8FB; }
+.side a[aria-current="page"] { background: var(--blue-tint); color: var(--blue-dark); font-weight: 600; border-left-color: var(--blue); }
+.side .spacer { flex: 1; }
+.side button { color: var(--text-2); }
+main { flex: 1; min-width: 0; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.scrim { display: none; }
+
+/* Panels and cards */
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.panel.flush { padding: 0; gap: 0; overflow: hidden; }
+.panel.flush > .phead { padding: 16px 24px 10px; margin: 0; }
+.phead { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.phead h2 { margin: 0; font-size: 16px; line-height: 24px; font-weight: 600; color: var(--blue); }
+.cols { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 16px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.stat .k { font-size: 13px; font-weight: 500; color: var(--text-2); }
+.stat .v { font-size: 28px; line-height: 32px; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.stats.small .v { font-size: 20px; line-height: 28px; }
+.banner { border-radius: var(--radius); padding: 10px 14px; display: flex; gap: 10px; align-items: flex-start; }
+.banner.error { background: var(--red-tint); color: #991B1B; border: 1px solid #FECACA; }
+.banner.warn { background: var(--amber-tint); color: #92400E; border: 1px solid #FDE68A; }
+.banner.info { background: var(--blue-tint); color: #0E4F78; border: 1px solid #BFDBF0; }
+.banner.ok { background: var(--green-tint); color: #14532D; border: 1px solid #BBF7D0; }
+.empty { padding: 32px 16px; text-align: center; color: var(--text-2); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.pill { height: 22px; padding: 0 8px; border-radius: 11px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; white-space: nowrap; }
+.pill.ACTIVE, .pill.LOAD, .pill.ISSUE, .pill.ok { background: var(--green-tint); color: var(--green); }
+.pill.DISABLED { background: var(--line); color: var(--text-2); }
+.pill.LOCKED, .pill.low { background: var(--amber-tint); color: var(--amber); }
+.pill.REDEEM, .pill.REVOKE, .pill.bad { background: #FEE2E2; color: #B91C1C; }
+.pill.feat { background: var(--blue-tint); color: var(--blue-dark); }
+.pill.role { background: var(--zebra); color: var(--text-2); border: 1px solid var(--line); font-size: 11px; height: 18px; padding: 0 6px; margin-left: 6px; }
+
+/* Tables */
+.tbl-wrap { overflow: auto; max-height: 70vh; border-top: 1px solid var(--line); }
+.panel > .tbl-wrap:first-child { border-top: 0; }
+table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-variant-numeric: tabular-nums; }
+.tbl th { background: var(--blue); color: #fff; font-size: 13px; font-weight: 600; height: 36px; padding: 0 10px; text-align: left; position: sticky; top: 0; z-index: 2; white-space: nowrap; }
+.tbl th.sortable { cursor: pointer; } .tbl th .arrow { opacity: .8; margin-left: 4px; }
+.tbl td { height: 36px; padding: 4px 10px; border-top: 1px solid var(--line); white-space: nowrap; }
+.tbl tbody tr:nth-child(even) td { background: var(--zebra); }
+.tbl tbody tr:nth-child(odd) td { background: #fff; }
+.tbl tbody tr:hover td { background: #EEF5FB; }
+.tbl tbody tr.sel td { background: var(--blue-tint); }
+.tbl tbody tr.click { cursor: pointer; }
+.tbl tfoot td { font-weight: 700; background: #F3F6F9; border-top: 2px solid var(--line-input); position: sticky; bottom: 0; }
+.tbl .acts { display: flex; gap: 4px; }
+.tbl .acts .btn.sm { padding: 0 8px; }
+.tbl .more { display: none; }
+.tbl .more.always { display: inline-flex; }
+.tbl th:first-child, .tbl td:first-child { padding-left: 16px; }
+.pager { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--text-2); gap: 8px; flex-wrap: wrap; }
+.pager select { height: 28px; padding: 0 6px; font-size: 13px; }
+.older { display: flex; justify-content: center; padding: 10px; border-top: 1px solid var(--line); }
+
+/* Skeleton */
+.skel { display: block; height: 14px; border-radius: 4px; background: linear-gradient(90deg, #ECEFF3 25%, #F6F7F9 50%, #ECEFF3 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* Dialogs, drawer, toasts */
+.overlay { position: fixed; inset: 0; background: rgba(17,24,39,.45); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; animation: fade var(--dur-dialog); }
+.dialog { width: 480px; max-width: 100%; max-height: calc(100vh - 32px); overflow-y: auto; background: #fff; border-radius: var(--radius-panel); box-shadow: 0 10px 30px rgba(0,0,0,.18); display: flex; flex-direction: column; animation: pop var(--dur-dialog); }
+.dialog.wide { width: 640px; }
+.dialog .dh, .drawer .dh { padding: 16px 20px 10px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.dialog .dh h3, .drawer .dh h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.dialog .dh .x, .drawer .dh .x { width: 32px; height: 32px; border: 0; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.dialog .db, .drawer .db { padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
+.dialog .df, .drawer .df { padding: 12px 20px 16px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.kv { display: grid; grid-template-columns: 160px 1fr; gap: 6px 12px; }
+.kv > :nth-child(odd) { color: var(--text-2); }
+.kv > * { min-width: 0; overflow-wrap: anywhere; }
+.preview { background: var(--zebra); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px; font-variant-numeric: tabular-nums; }
+.creds { background: var(--green-tint); border: 1px solid #BBF7D0; border-radius: var(--radius); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 560px; max-width: 100%; background: #fff; z-index: 51; box-shadow: -8px 0 24px rgba(0,0,0,.15); display: flex; flex-direction: column; animation: slide var(--dur-dialog); }
+.drawer .db { overflow-y: auto; }
+@keyframes fade { from { opacity: 0; } }
+@keyframes pop { from { transform: scale(.98); opacity: 0; } }
+@keyframes slide { from { transform: translateX(24px); opacity: 0; } }
+.toasts { position: fixed; top: 100px; right: 16px; z-index: 60; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--green); border-radius: var(--radius); padding: 10px 14px; box-shadow: 0 4px 14px rgba(0,0,0,.1); min-width: 240px; max-width: 360px; transition: opacity 200ms; }
+.toast.error { border-left-color: var(--red); }
+.sheet button { width: 100%; justify-content: flex-start; }
+
+/* Login */
+.login { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 24px 16px; }
+.login .mark { display: flex; align-items: center; gap: 10px; color: var(--navy); }
+.login .mark b { font-size: 20px; } .login .mark span { color: var(--text-2); font-size: 16px; }
+.login form { width: 400px; max-width: 100%; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-panel); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.tabs { display: grid; grid-template-columns: 1fr 1fr; background: var(--bg); border-radius: var(--radius); padding: 3px; gap: 3px; }
+.tabs button { height: 34px; border: 0; border-radius: 5px; background: none; color: var(--text-2); font-weight: 500; cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: #fff; color: var(--text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.ptabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); }
+.ptabs button { height: 36px; padding: 0 16px; border: 0; border-bottom: 2px solid transparent; background: none; cursor: pointer; color: var(--text-2); font-weight: 500; }
+.ptabs button[aria-pressed="true"] { color: var(--blue-dark); border-bottom-color: var(--blue); font-weight: 600; }
+
+/* Domain bits */
+.chart { width: 100%; max-width: 760px; height: auto; display: block; }
+.legend { display: flex; gap: 16px; font-size: 13px; color: var(--text-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.flow .box { border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 12px; background: var(--zebra); display: flex; flex-direction: column; min-width: 130px; }
+.flow .box b { font-variant-numeric: tabular-nums; }
+.profiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.pcard { border: 1px solid var(--line-input); border-radius: var(--radius-panel); padding: 16px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; background: #fff; text-align: left; }
+.pcard[aria-pressed="true"] { border: 2px solid var(--blue); padding: 15px; background: #F5FAFE; }
+.pcard[disabled] { cursor: not-allowed; opacity: .55; background: var(--zebra); }
+.pcard .big { font-size: 28px; line-height: 32px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pcard dl { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; font-size: 13px; }
+.pcard dt { color: var(--text-2); } .pcard dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.grid5 span { height: 34px; border: 1px solid var(--line); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; background: var(--zebra); }
+.grid5 span.hit { background: var(--green-tint); border-color: #86EFAC; color: var(--green); }
+.check { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-top: 1px solid var(--line); }
+.check:first-of-type { border-top: 0; }
+.check .mark { width: 24px; height: 24px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; }
+.check .mark.ok { background: var(--green); } .check .mark.bad { background: var(--red); }
+
+@media print {
+  body.printing > :not(.overlay) { display: none !important; }
+  body.printing .overlay { position: static; background: none; }
+  body.printing .dialog { box-shadow: none; width: 100%; }
+  body.printing .df, body.printing .dh .x { display: none; }
+}
+
+/* Phone */
+@media (max-width: 860px) {
+  .top { padding: 0 12px; gap: 8px; }
+  .top .burger { display: inline-flex; }
+  .top .sub, .top .sep, .top .welcome, .top .logout span, .top .brand { display: none; }
+  .top .title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .strip { padding: 0 16px; }
+  .side { position: fixed; top: 0; left: 0; bottom: 0; height: 100vh; z-index: 40; transform: translateX(-100%); transition: transform 160ms; width: 280px; }
+  body.drawer-open .side { transform: none; }
+  body.drawer-open .scrim { display: block; position: fixed; inset: 0; background: rgba(17,24,39,.4); z-index: 39; }
+  main { padding: 16px; }
+  .panel { padding: 16px; }
+  .panel.flush > .phead { padding: 12px 16px 8px; }
+  .cols { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat { padding: 12px 14px; } .stat .v { font-size: 20px; line-height: 26px; }
+  .tbl td:first-child, .tbl th:first-child { position: sticky; left: 0; z-index: 1; }
+  .tbl th:first-child { z-index: 3; }
+  .tbl .acts.full { display: none; }
+  .tbl .more { display: inline-flex; }
+  .btn, .shortcuts button, .chips button { min-height: 36px; }
+  .kv { grid-template-columns: 1fr; }
+  .drawer { width: 100%; }
+  .row > input, .row > select { flex: 1 1 140px; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <!-- Login -->
-  <section id="login" class="login card hidden">
-    <div class="brand"><h1>JACK <b>VAULT</b></h1><div class="muted">Back office</div></div>
-    <div class="tabs"><button type="button" data-mode="staff" aria-pressed="true">Distributor / Agent</button><button type="button" data-mode="operator" aria-pressed="false">Operator</button></div>
-    <form id="loginForm">
-      <div id="staffFields">
-        <label for="lu">Username</label><input id="lu" autocomplete="username" required>
-        <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password" required>
-      </div>
-      <div id="opFields" class="hidden">
-        <label for="lk">Admin key</label><input id="lk" type="password" autocomplete="off">
-        <div class="muted" style="font-size:14px;margin-top:6px">The server's ADMIN_KEY. Operators create distributors and issue their points.</div>
-      </div>
-      <button class="gold" style="width:100%;margin-top:16px" type="submit">LOG IN</button>
-      <div class="err" id="loginErr"></div>
-    </form>
-  </section>
-
-  <!-- App -->
-  <section id="app" class="hidden">
-    <div class="top">
-      <h1>JACK <span style="color:var(--gold)">VAULT</span></h1>
-      <span class="grow"></span>
-      <span id="who"></span>
-      <button id="refresh" class="small">Refresh</button>
-      <button id="logout" class="small">Log out</button>
-    </div>
-    <div class="stats" id="stats"></div>
-    <div class="grid2">
-      <div class="card">
-        <h2 id="createTitle">CREATE</h2>
-        <form id="createForm">
-          <label for="cu">Username</label><input id="cu" autocomplete="off" required minlength="3" maxlength="32" pattern="[A-Za-z0-9_.\-]{3,32}" title="3-32 letters, digits, _ . or -">
-          <label for="cp">Password</label>
-          <div class="row"><input id="cp" autocomplete="new-password" required minlength="6" maxlength="64"><button type="button" id="gen" class="small" style="flex:0 0 auto">Generate</button></div>
-          <label for="ca">Starting balance (optional)</label><input id="ca" inputmode="decimal" placeholder="0.00">
-          <button class="violet" style="width:100%;margin-top:14px" type="submit" id="createBtn">CREATE</button>
-          <div class="err" id="createErr"></div>
-        </form>
-        <div id="creds" class="creds hidden"></div>
-      </div>
-      <div class="card">
-        <div class="crumb hidden" id="crumb"></div>
-        <div class="row" style="margin-bottom:10px"><h2 id="listTitle" style="margin:0">ACCOUNTS</h2><input id="filter" placeholder="Search username" style="max-width:220px"></div>
-        <div class="scroll"><table id="list"></table></div>
-        <div class="muted hidden" id="empty" style="padding:12px 0">No accounts yet. Create one on the left.</div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <div class="row" style="margin-bottom:10px"><h2 style="margin:0">LEDGER</h2><select id="ledgerFilter" style="max-width:240px"></select></div>
-      <div class="scroll"><table id="ledger"></table></div>
-      <div style="text-align:center;margin-top:10px"><button id="more" class="small hidden">Load older</button></div>
-    </div>
-  </section>
-</div>
-
-<dialog id="dlg">
-  <form method="dialog" id="dlgForm">
-    <h2 id="dlgTitle" style="color:var(--t1)"></h2>
-    <div id="dlgInfo" class="muted"></div>
-    <div id="dlgAmount">
-      <label for="da">Amount</label><input id="da" inputmode="decimal" placeholder="0.00" autocomplete="off">
-      <div class="quick" id="quick"></div>
-    </div>
-    <div id="dlgPass" class="hidden">
-      <label for="dp">New password</label><div class="row"><input id="dp" autocomplete="new-password"><button type="button" id="dgen" class="small" style="flex:0 0 auto">Generate</button></div>
-    </div>
-    <div class="err" id="dlgErr"></div>
-    <div class="row" style="margin-top:12px"><button type="button" id="dlgCancel">Cancel</button><button type="submit" class="gold" id="dlgOk">OK</button></div>
-  </form>
-</dialog>
-<div class="toast" id="toast"></div>
-
+<div id="app"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
 <script>
 "use strict";
-const $ = (s) => document.querySelector(s);
-const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const money = (c) => (c / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const toCents = (s) => {
-  const t = String(s ?? "").replace(/,/g, "").trim();
+/*
+ * Jack Vault back office: one page for operators, distributors and agents.
+ * Plain DOM, no build step. Every value from the server is inserted as text,
+ * never as HTML. Built from design-source/backoffice (Prompts 0-15).
+ */
+
+// ---------------------------------------------------------------- tiny DOM helpers
+
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (v === undefined || v === null || v === false) continue;
+    if (k === "class") el.className = v;
+    else if (k === "style") el.style.cssText = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (k === "value") el.value = v;
+    else if (k === "checked" || k === "disabled" || k === "selected") el[k] = !!v;
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  append(el, kids);
+  return el;
+}
+function append(el, kids) {
+  for (const k of kids.flat(Infinity)) {
+    if (k === null || k === undefined || k === false) continue;
+    el.append(k instanceof Node ? k : document.createTextNode(String(k)));
+  }
+  return el;
+}
+const SVG = "http://www.w3.org/2000/svg";
+function s(tag, attrs, ...kids) {
+  const el = document.createElementNS(SVG, tag);
+  for (const [k, v] of Object.entries(attrs || {})) el.setAttribute(k, v);
+  for (const k of kids.flat()) if (k) el.append(k instanceof Node ? k : document.createTextNode(String(k)));
+  return el;
+}
+const ICONS = {
+  logo: "M3 12h11l4-4M14 12l4 4M14 12h7",
+  dash: "M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z",
+  users: "M9 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M16 5a3 3 0 0 1 0 6M22 20a6 6 0 0 0-5-6",
+  agent: "M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5 21a7 7 0 0 1 14 0M12 14v4M10 18h4",
+  coins: "M8 8a6 3 0 1 0 12 0 6 3 0 0 0-12 0zM8 8v4c0 1.7 2.7 3 6 3s6-1.3 6-3V8M4 13a6 3 0 0 0 6 3M4 13v4c0 1.7 2.7 3 6 3",
+  records: "M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01",
+  game: "M6 9h12a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4c-2 0-3-2-4-2h-4c-1 0-2 2-4 2a4 4 0 0 1-4-4v-2a4 4 0 0 1 4-4zM7 12v4M5 14h4M16 13h.01M18 15h.01",
+  percent: "M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z",
+  settings: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4",
+  shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4",
+  transfer: "M4 8h13l-3-3M20 16H7l3 3",
+  logout: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9",
+  refresh: "M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5",
+  menu: "M4 6h16M4 12h16M4 18h16",
+  close: "M6 6l12 12M18 6L6 18",
+  plus: "M12 5v14M5 12h14",
+  eye: "M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  eyeoff: "M3 3l18 18M10.6 6.1A10 10 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-3.2 3.8M6.6 6.6C3.6 8.4 2 12 2 12s3.5 6 10 6a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2",
+  check: "M5 12l5 5L20 7",
+  x: "M6 6l12 12M18 6L6 18",
+  lock: "M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4",
+  copy: "M9 9h11v11H9zM5 15H4V4h11v1",
+  download: "M12 4v12M7 11l5 5 5-5M4 20h16",
+  more: "M5 12h.01M12 12h.01M19 12h.01",
+  search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5",
+};
+function icon(name, size = 18, color = "currentColor", width = 1.75) {
+  return s("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, "stroke-width": width, "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true" }, s("path", { d: ICONS[name] }));
+}
+function btn(label, cls, onclick, extra = {}) {
+  return h("button", { type: "button", class: "btn " + (cls || ""), onclick, ...extra }, label);
+}
+function panel(title, right, ...body) {
+  return h("section", { class: "panel" }, h("div", { class: "phead" }, h("h2", {}, title), right || null), ...body);
+}
+let fieldSeq = 0;
+/** A labelled form field; the label points at the first control inside `control`. */
+function field(label, control, ...rest) {
+  const el = control instanceof Element && control.matches("input, select, textarea") ? control : control.querySelector && control.querySelector("input, select, textarea");
+  const id = el ? el.id || (el.id = "f" + ++fieldSeq) : null;
+  return h("div", { class: "field" }, h("label", { for: id }, label), control, ...rest);
+}
+/** Label / value pairs in two columns. */
+function kv(...pairs) {
+  return h("div", { class: "kv nums" }, pairs.flat(Infinity).filter((x) => x !== null && x !== undefined && x !== false).map((x) => (x instanceof Node ? x : h("span", {}, String(x)))));
+}
+function stat(label, value, cls) {
+  return h("div", { class: "stat" }, h("div", { class: "k" }, label), h("div", { class: "v " + (cls || "") }, value));
+}
+function pill(text, cls) {
+  return h("span", { class: "pill " + (cls || text) }, text);
+}
+function statusPill(a) {
+  if (a.locked) return pill("Locked", "LOCKED");
+  return a.status === "ACTIVE" ? pill("Active", "ACTIVE") : pill("Disabled", "DISABLED");
+}
+function toggle(label, checked, onchange) {
+  const el = h("span", { class: "toggle", role: "switch", tabindex: "0", "aria-checked": String(!!checked) }, h("span", { class: "sw" }), label);
+  const flip = () => {
+    const v = el.getAttribute("aria-checked") !== "true";
+    el.setAttribute("aria-checked", String(v));
+    onchange(v);
+  };
+  el.addEventListener("click", flip);
+  el.addEventListener("keydown", (e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); } });
+  return el;
+}
+function skeletonRows(n = 5) {
+  return h("div", { style: "display:flex;flex-direction:column;gap:12px;padding:16px" }, Array.from({ length: n }, () => h("span", { class: "skel" })));
+}
+function emptyState(text, action) {
+  return h("div", { class: "empty" }, h("div", {}, text), action || null);
+}
+
+// ---------------------------------------------------------------- formatting
+
+const money = (c) => (Number(c || 0) / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const signed = (c) => (c > 0 ? "+" : c < 0 ? "−" : "") + money(Math.abs(c));
+const pct = (x, d = 2) => (x * 100).toFixed(d) + "%";
+const count = (n) => Number(n || 0).toLocaleString("en-US");
+const shortId = (id) => (id ? String(id).slice(0, 8) : "");
+/** "12.50" or "1,250" -> cents, NaN when it isn't a positive amount with at most 2 decimals. */
+function parseAmount(str) {
+  const t = String(str || "").replace(/,/g, "").trim();
   if (!/^\d+(\.\d{1,2})?$/.test(t)) return NaN;
-  return Math.round(parseFloat(t) * 100);
-};
-const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join(""));
-const genPass = () => {
-  const a = "abcdefghjkmnpqrstuvwxyz23456789";
-  return Array.from(crypto.getRandomValues(new Uint8Array(8)), (b) => a[b % a.length]).join("");
-};
-const store = {
-  get(k) { try { return sessionStorage.getItem(k); } catch { return null; } },
-  set(k, v) { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch {} },
-};
-function toast(msg) {
-  const t = $("#toast");
-  t.textContent = msg;
-  t.classList.add("on");
-  clearTimeout(toast.t);
-  toast.t = setTimeout(() => t.classList.remove("on"), 2200);
+  const [w, f = ""] = t.split(".");
+  return Number(w) * 100 + Number((f + "00").slice(0, 2));
+}
+const amountText = (c) => (c / 100).toFixed(2);
+
+// Times are shown in the account's time zone.
+function tz() { return (S.me && S.me.timeZone) || "UTC"; }
+const fmtCache = new Map();
+function partsFmt(zone) {
+  if (!fmtCache.has(zone)) {
+    fmtCache.set(zone, new Intl.DateTimeFormat("en-US", { timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23", weekday: "short" }));
+  }
+  return fmtCache.get(zone);
+}
+function zparts(ms, zone = tz()) {
+  const o = {};
+  for (const p of partsFmt(zone).formatToParts(new Date(ms))) o[p.type] = p.value;
+  return { y: +o.year, m: +o.month, d: +o.day, h: +o.hour % 24, mi: +o.minute, s: +o.second, wd: o.weekday };
+}
+const pad = (n) => String(n).padStart(2, "0");
+function fmtTime(iso, withSeconds = true) {
+  if (!iso) return "—";
+  const p = zparts(Date.parse(iso));
+  return `${p.y}-${pad(p.m)}-${pad(p.d)} ${pad(p.h)}:${pad(p.mi)}${withSeconds ? ":" + pad(p.s) : ""}`;
+}
+const fmtDate = (iso) => (iso ? fmtTime(iso).slice(0, 10) : "—");
+/** Milliseconds for a wall-clock time in the account's zone. */
+function zoned(y, m, d, hh = 0, mi = 0, ss = 0) {
+  const guess = Date.UTC(y, m - 1, d, hh, mi, ss);
+  const off = (ms) => { const p = zparts(ms); return Date.UTC(p.y, p.m - 1, p.d, p.h, p.mi, p.s) - Math.floor(ms / 1000) * 1000; };
+  let t = guess - off(guess);
+  t = guess - off(t);
+  return t;
+}
+function zoneLabel(zone = tz()) {
+  try {
+    const n = new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "short" }).formatToParts(new Date()).find((p) => p.type === "timeZoneName");
+    return n ? n.value : zone;
+  } catch { return zone; }
+}
+
+/** Period shortcuts -> { from, to } ISO, in the account's time zone. */
+const SHORTCUTS = { today: "Today", yesterday: "Yesterday", week: "This Week", lastweek: "Last Week", month: "This Month", last7: "Last 7 days", all: "All time" };
+function periodFor(key) {
+  const p = zparts(Date.now());
+  const day = (off) => new Date(zoned(p.y, p.m, p.d + off)).toISOString();
+  const dow = (new Date(Date.UTC(p.y, p.m - 1, p.d)).getUTCDay() + 6) % 7; // Monday = 0
+  switch (key) {
+    case "today": return { from: day(0), to: day(1) };
+    case "yesterday": return { from: day(-1), to: day(0) };
+    case "week": return { from: day(-dow), to: day(7 - dow) };
+    case "lastweek": return { from: day(-dow - 7), to: day(-dow) };
+    case "month": return { from: new Date(zoned(p.y, p.m, 1)).toISOString(), to: new Date(zoned(p.y, p.m + 1, 1)).toISOString() };
+    case "last7": return { from: day(-6), to: day(1) };
+    default: return { from: null, to: null };
+  }
+}
+/** ISO -> value for <input type=datetime-local> in the account's zone, and back. */
+function toLocalInput(iso) {
+  if (!iso) return "";
+  const p = zparts(Date.parse(iso));
+  return `${p.y}-${pad(p.m)}-${pad(p.d)}T${pad(p.h)}:${pad(p.mi)}`;
+}
+function fromLocalInput(v) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(v || "");
+  return m ? new Date(zoned(+m[1], +m[2], +m[3], +m[4], +m[5])).toISOString() : null;
+}
+
+/**
+ * Shortcut row plus an optional from ~ to range. `state` is { key, from, to };
+ * onchange runs after a shortcut click (custom ranges apply on Search).
+ */
+function periodBar(state, onchange, keys = ["today", "yesterday", "week", "lastweek", "month"], custom = true) {
+  const fromIn = h("input", { type: "datetime-local", "aria-label": "From" });
+  const toIn = h("input", { type: "datetime-local", "aria-label": "To" });
+  const sync = () => { fromIn.value = toLocalInput(state.from); toIn.value = toLocalInput(state.to); };
+  const buttons = keys.map((k) => h("button", { type: "button", "aria-pressed": String(state.key === k), onclick: () => {
+    Object.assign(state, { key: k }, periodFor(k));
+    buttons.forEach((b, i) => b.setAttribute("aria-pressed", String(keys[i] === k)));
+    sync();
+    onchange();
+  } }, SHORTCUTS[k]));
+  const read = () => {
+    const f = fromLocalInput(fromIn.value), t = fromLocalInput(toIn.value);
+    if (f !== state.from || t !== state.to) {
+      Object.assign(state, { key: "custom", from: f, to: t });
+      buttons.forEach((b) => b.setAttribute("aria-pressed", "false"));
+    }
+  };
+  sync();
+  const el = h("div", { style: "display:flex;flex-direction:column;gap:10px" },
+    custom ? h("div", { class: "row" }, h("span", { class: "lbl" }, "Period"), fromIn, h("span", { class: "muted" }, "~"), toIn, h("span", { class: "hint" }, "Times in " + zoneLabel())) : null,
+    h("div", { class: "shortcuts" }, buttons));
+  return { el, read };
+}
+function periodQuery(st) {
+  const q = new URLSearchParams();
+  if (st.from) q.set("from", st.from);
+  if (st.to) q.set("to", st.to);
+  return q;
+}
+function periodText(st) {
+  if (!st.from && !st.to) return "All time";
+  return `${st.from ? fmtTime(st.from) : "…"} ~ ${st.to ? fmtTime(new Date(Date.parse(st.to) - 1000).toISOString()) : "now"}`;
 }
 
 // ---------------------------------------------------------------- API
 
-const S = {
-  mode: store.get("office.mode") || "staff", // staff | operator
-  token: store.get("office.token"),
-  adminKey: store.get("office.key"),
-  me: null,
-  accounts: [],
-  viewParent: null, // distributor looking at one agent's players
-  ledger: [],
+const S = { token: null, me: null, route: null, games: null, pending: 0 };
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+  set(k, v) { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} },
+  sget(k) { try { return sessionStorage.getItem(k); } catch { return null; } },
+  sset(k, v) { try { v === null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch {} },
 };
 
+class ApiError extends Error {
+  constructor(code, message, status) { super(message); this.code = code; this.status = status; }
+}
 async function api(method, path, body) {
   const headers = { "content-type": "application/json" };
-  if (S.mode === "operator") headers["x-admin-key"] = S.adminKey || "";
-  else if (S.token) headers.authorization = "Bearer " + S.token;
+  if (S.token) headers.authorization = "Bearer " + S.token;
   let res;
   try {
-    res = await fetch(path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+    res = await fetch(path, { method, headers, body: body === undefined ? undefined : JSON.stringify(body) });
   } catch {
-    throw Object.assign(new Error("Can't reach the server. Try again."), { code: "NETWORK" });
+    throw new ApiError("NETWORK", "Can't reach the server. Check your connection and try again.", 0);
   }
-  const data = await res.json().catch(() => null);
+  let data = null;
+  try { data = await res.json(); } catch {}
   if (!res.ok) {
-    if ((res.status === 401 || res.status === 403) && path !== "/api/office/login") {
-      if (S.mode === "staff" || res.status === 403) logout(data && data.error ? data.error.message : "Please log in again");
+    const e = (data && data.error) || { code: "HTTP_" + res.status, message: "Request failed" };
+    if (res.status === 401 && S.token && e.code === "UNAUTHORIZED") {
+      endSession("You were logged out. Please log in again.");
     }
-    throw Object.assign(new Error((data && data.error && data.error.message) || res.statusText), { code: data && data.error && data.error.code });
+    throw new ApiError(e.code, e.message, res.status);
   }
   return data;
 }
+const get = (path, q) => api("GET", q && String(q) ? `${path}?${q}` : path);
+const post = (path, body) => api("POST", path, body || {});
+const newRequestId = () => (crypto.randomUUID ? crypto.randomUUID() : Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join(""));
+
+/** Friendly text for an API error (Prompt 15). */
+function errText(e) {
+  switch (e.code) {
+    case "IDEMPOTENCY_CONFLICT": return "This transfer already went through.";
+    case "ACCOUNT_DISABLED": return e.message.includes("is disabled") ? e.message + ". You can still redeem their coins." : e.message;
+    case "NETWORK": return e.message;
+    default: return e.message + (e.code && !/^[A-Z_]+$/.test(e.message) ? ` (${e.code})` : "");
+  }
+}
+function errorBanner(e, retry) {
+  return h("div", { class: "banner error", role: "alert" }, h("div", { style: "flex:1" }, errText(e), e.code ? h("div", { class: "hint", style: "color:#991B1B" }, "Error code: " + e.code) : null), retry ? btn("Retry", "neutral sm", retry) : null);
+}
+
+// ---------------------------------------------------------------- toasts, dialogs, CSV
+
+function toast(msg, kind) {
+  const t = h("div", { class: "toast " + (kind || ""), role: "status" }, msg);
+  document.getElementById("toasts").append(t);
+  setTimeout(() => { t.style.opacity = "0"; setTimeout(() => t.remove(), 200); }, 3000);
+}
+
+let dialogStack = [];
+/** A modal. `content` is an element or a function (close) -> element; actions are buttons. */
+function dialog({ title, body, actions = [], wide = false, drawer = false, onclose }) {
+  const close = () => {
+    overlay.remove();
+    dialogStack = dialogStack.filter((d) => d !== close);
+    if (onclose) onclose();
+  };
+  const dh = h("div", { class: "dh" }, h("h3", {}, title), h("button", { type: "button", class: "x", "aria-label": "Close", onclick: close }, icon("close", 18, "#4B5563", 2)));
+  const db = h("div", { class: "db" });
+  const df = h("div", { class: "df" });
+  const box = h("div", { class: (drawer ? "drawer" : "dialog") + (wide ? " wide" : ""), role: "dialog", "aria-modal": "true", "aria-label": title }, dh, db, df);
+  const overlay = h("div", { class: "overlay", onmousedown: (e) => { if (e.target === overlay) close(); } }, box);
+  const setBody = (...kids) => { db.replaceChildren(); append(db, kids); };
+  const setActions = (...btns) => { df.replaceChildren(); append(df, btns); df.classList.toggle("hidden", !btns.flat().filter(Boolean).length); };
+  setBody(typeof body === "function" ? body(close) : body);
+  setActions(actions);
+  document.body.append(overlay);
+  dialogStack.push(close);
+  const first = box.querySelector(".db input, .db select, .db textarea") || box.querySelector(".df .btn:last-child");
+  if (first) setTimeout(() => first.focus(), 30);
+  return { close, setBody, setActions, el: box, title: (t) => (dh.firstChild.textContent = t) };
+}
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && dialogStack.length) dialogStack[dialogStack.length - 1](); });
+
+function confirmDialog({ title, text, ok, okClass = "", onok }) {
+  const d = dialog({ title, body: h("div", {}, text) });
+  const okBtn = btn(ok, okClass, async () => {
+    okBtn.disabled = true;
+    try { await onok(); d.close(); }
+    catch (e) { d.setBody(h("div", {}, text), errorBanner(e)); okBtn.disabled = false; }
+  });
+  d.setActions(btn("Cancel", "neutral", d.close), okBtn);
+  return d;
+}
+
+function downloadCsv(name, header, rows) {
+  const cell = (v) => {
+    const t = v === null || v === undefined ? "" : String(v);
+    return /[",\n]/.test(t) || /^[=+\-@]/.test(t) ? `"${(/^[=+\-@]/.test(t) ? "'" : "") + t.replace(/"/g, '""')}"` : t;
+  };
+  const text = [header, ...rows].map((r) => r.map(cell).join(",")).join("\r\n");
+  const url = URL.createObjectURL(new Blob(["﻿" + text], { type: "text/csv" }));
+  const a = h("a", { href: url, download: name });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const t = h("textarea", { style: "position:fixed;opacity:0" });
+    t.value = text;
+    document.body.append(t); t.select();
+    try { document.execCommand("copy"); } catch {}
+    t.remove();
+  }
+  toast("Copied");
+}
+
+function genPassword() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+  const r = crypto.getRandomValues(new Uint32Array(12));
+  let p = Array.from(r, (x) => chars[x % chars.length]).join("");
+  return p.slice(0, 4) + "-" + p.slice(4, 8) + "-" + p.slice(8);
+}
+function passwordInput(attrs = {}) {
+  const input = h("input", { type: "password", autocomplete: "new-password", ...attrs });
+  const eye = h("button", { type: "button", class: "eye", "aria-label": "Show password", onclick: () => {
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    eye.setAttribute("aria-label", show ? "Hide password" : "Show password");
+    eye.replaceChildren(icon(show ? "eyeoff" : "eye", 18, "#4B5563", 2));
+  } }, icon("eye", 18, "#4B5563", 2));
+  return { input, el: h("span", { class: "pw" }, input, eye) };
+}
+
+// ---------------------------------------------------------------- generic table
+
+/**
+ * A table with a blue header, zebra rows, optional sorting, client-side paging
+ * or a "Load older" button, a totals row, and row actions that collapse into
+ * a "..." sheet on phones.
+ *   cols: [{ label, value(row) -> node|text, num, sort(row) -> comparable, csv(row) }]
+ */
+function dataTable({ cols, rows = [], empty = "Nothing to show", totals, onRow, page = 0, older, actions, selected, defaultSort }) {
+  const wrap = h("div", {});
+  let sortIdx = defaultSort ? defaultSort[0] : -1, sortDir = defaultSort ? defaultSort[1] : -1, pageNo = 0, size = page || 0;
+  let sel = selected || null;
+  function render() {
+    let list = rows.slice();
+    if (sortIdx >= 0 && cols[sortIdx].sort) {
+      const f = cols[sortIdx].sort;
+      list.sort((a, b) => { const x = f(a), y = f(b); return (x < y ? -1 : x > y ? 1 : 0) * sortDir; });
+    }
+    const total = list.length;
+    if (size) list = list.slice(pageNo * size, pageNo * size + size);
+    const head = h("tr", {}, cols.map((c, i) => h("th", {
+      class: (c.num ? "num " : "") + (c.sort ? "sortable" : ""),
+      "aria-sort": i === sortIdx ? (sortDir > 0 ? "ascending" : "descending") : null,
+      onclick: c.sort ? () => { if (sortIdx === i) sortDir = -sortDir; else { sortIdx = i; sortDir = -1; } pageNo = 0; render(); } : null,
+    }, c.label, c.sort ? h("span", { class: "arrow" }, i === sortIdx ? (sortDir > 0 ? "▴" : "▾") : "↕") : null)),
+    actions ? h("th", {}, "Actions") : null);
+    const body = list.map((r) => {
+      const tr = h("tr", { class: (onRow ? "click " : "") + (sel && onRow && sel === rowKey(r) ? "sel" : "") },
+        cols.map((c) => h("td", { class: c.num ? "num" : "" }, c.value(r))),
+        actions ? h("td", {}, actionCell(actions(r), r)) : null);
+      if (onRow) tr.addEventListener("click", (e) => { if (e.target.closest("button, a")) return; sel = rowKey(r); onRow(r); render(); });
+      return tr;
+    });
+    const table = h("table", { class: "tbl" }, h("thead", {}, head), h("tbody", {}, body),
+      totals && rows.length ? h("tfoot", {}, h("tr", {}, cols.map((c, i) => h("td", { class: c.num ? "num" : "" }, totals[i] === undefined ? "" : totals[i])), actions ? h("td", {}) : null)) : null);
+    const parts = [h("div", { class: "tbl-wrap" }, table)];
+    if (!rows.length) parts.push(typeof empty === "string" ? emptyState(empty) : empty);
+    if (size && total) {
+      const from = pageNo * size + 1, to = Math.min(total, from + size - 1);
+      const sizeSel = h("select", { "aria-label": "Page size", onchange: () => { size = +sizeSel.value; pageNo = 0; render(); } }, [25, 50, 100].map((n) => h("option", { value: n, selected: n === size }, n)));
+      parts.push(h("div", { class: "pager" }, h("span", {}, `Showing ${count(from)}–${count(to)} of ${count(total)}`),
+        h("div", { class: "row" }, "Page size", sizeSel,
+          btn("Prev", "neutral sm", () => { pageNo--; render(); }, { disabled: pageNo === 0 }),
+          btn("Next", "neutral sm", () => { pageNo++; render(); }, { disabled: to >= total }))));
+    }
+    if (older) parts.push(h("div", { class: "older" }, older));
+    wrap.replaceChildren(...parts);
+  }
+  render();
+  wrap.update = (next) => { rows = next; render(); };
+  return wrap;
+}
+function rowKey(r) { return r.id || r.entryId || r.roundId; }
+/** Row buttons, plus a "..." button that opens them as a sheet on phones. */
+function actionCell(list, row) {
+  list = list.filter(Boolean);
+  const more = h("button", { type: "button", class: "btn neutral sm more", "aria-label": "More actions", title: "More actions", onclick: () => {
+    const d = dialog({ title: row.username || "Actions", body: h("div", { class: "sheet", style: "display:flex;flex-direction:column;gap:8px" },
+      list.map(([label, cls, fn]) => btn(label, cls, () => { d.close(); fn(); }))) });
+  } }, icon("more", 18, "#111827", 3));
+  // Up to four buttons fit in a row; past that the first two stay and every action is under "...".
+  const inline = list.length > 4 ? list.slice(0, 2) : list;
+  if (list.length > 4) more.classList.add("always");
+  return h("span", { style: "display:inline-flex;gap:4px" },
+    h("span", { class: "acts full" }, inline.map(([label, cls, fn]) => btn(label, (cls || "neutral") + " sm", fn))), more);
+}
+
+// ---------------------------------------------------------------- bar chart
+
+function barChart(days, labels = ["Loaded", "Redeemed"]) {
+  const W = 640, H = 180, padL = 56, padB = 24, padT = 8;
+  const max = Math.max(1, ...days.flatMap((d) => [d.a, d.b]));
+  const step = (W - padL - 8) / Math.max(1, days.length);
+  const bw = Math.min(18, step / 3);
+  const y = (v) => padT + (H - padT - padB) * (1 - v / max);
+  const svg = s("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `${labels[0]} vs ${labels[1]} per day` });
+  for (const f of [0, 0.5, 1]) {
+    svg.append(s("line", { x1: padL, x2: W, y1: y(max * f), y2: y(max * f), stroke: "#E5E7EB" }));
+    svg.append(s("text", { x: padL - 6, y: y(max * f) + 4, "text-anchor": "end", "font-size": 11, fill: "#6B7280" }, money(max * f).replace(/\.00$/, "")));
+  }
+  days.forEach((d, i) => {
+    const x = padL + i * step + step / 2;
+    svg.append(s("rect", { x: x - bw - 1, y: y(d.a), width: bw, height: Math.max(0, H - padB - y(d.a)), fill: "#15803D", rx: 2 }, s("title", {}, `${d.label} ${labels[0]} ${money(d.a)}`)));
+    svg.append(s("rect", { x: x + 1, y: y(d.b), width: bw, height: Math.max(0, H - padB - y(d.b)), fill: "#DC2626", rx: 2 }, s("title", {}, `${d.label} ${labels[1]} ${money(d.b)}`)));
+    svg.append(s("text", { x, y: H - 6, "text-anchor": "middle", "font-size": 11, fill: "#6B7280" }, d.label));
+  });
+  return h("div", {}, svg, h("div", { class: "legend" }, h("span", {}, h("i", { style: "background:#15803D" }), labels[0]), h("span", {}, h("i", { style: "background:#DC2626" }), labels[1])));
+}
+/** Fills missing days in a { day, loadedCents, redeemedCents } list for the last n days. */
+function lastDays(list, n = 7) {
+  const p = zparts(Date.now());
+  const map = new Map(list.map((d) => [d.day, d]));
+  return Array.from({ length: n }, (_, i) => {
+    const t = new Date(Date.UTC(p.y, p.m - 1, p.d - (n - 1 - i)));
+    const key = t.toISOString().slice(0, 10);
+    const d = map.get(key) || { loadedCents: 0, redeemedCents: 0 };
+    return { label: key.slice(5), a: d.loadedCents, b: d.redeemedCents };
+  });
+}
+
+// ---------------------------------------------------------------- roles, menus, routing
+
+const CHILD = { OPERATOR: "distributor", DISTRIBUTOR: "agent", AGENT: "player" };
+const CHILD_TITLE = { OPERATOR: "Distributor", DISTRIBUTOR: "Agent", AGENT: "Player" };
+const MENUS = {
+  AGENT: [["dashboard", "Dashboard", "dash"], ["users", "User Management", "users"], ["transactions", "Transaction Records", "records"], ["games", "Game Records", "game"], ["settings", "Settings", "settings"]],
+  DISTRIBUTOR: [["dashboard", "Dashboard", "dash"], ["agents", "Agent Management", "agent"], ["coins", "Coin Management", "coins"], ["winratio", "Win Ratio", "percent"], ["records", "Agent Records", "records"], ["settings", "Settings", "settings"]],
+  OPERATOR: [["distributors", "Distributors", "users"], ["ledger", "Points Ledger", "transfer"], ["audit", "Audit", "shield"], ["games-settings", "Win Ratio & Games", "percent"], ["settings", "Settings", "settings"]],
+};
+const PAGES = {};
+
+function parseRoute() {
+  const raw = location.hash.replace(/^#\/?/, "");
+  const [name, qs] = raw.split("?");
+  return { name: name || "", q: new URLSearchParams(qs || "") };
+}
+function go(name, q) {
+  const qs = q ? "?" + new URLSearchParams(q) : "";
+  if (location.hash === `#/${name}${qs}`) render();
+  else location.hash = `#/${name}${qs}`;
+}
+window.addEventListener("hashchange", () => { if (S.me) render(); });
 
 // ---------------------------------------------------------------- login
 
-function setLoginMode(m) {
-  S.mode = m;
-  document.querySelectorAll("[data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
-  $("#staffFields").classList.toggle("hidden", m !== "staff");
-  $("#opFields").classList.toggle("hidden", m !== "operator");
-  $("#lu").required = $("#lp").required = m === "staff";
-  $("#lk").required = m === "operator";
+function endSession(msg) {
+  S.token = null; S.me = null;
+  store.sset("jv.office.token", null);
+  dialogStack.slice().forEach((c) => c());
+  showLogin(msg ? { kind: "info", text: msg } : null);
 }
-document.querySelectorAll("[data-mode]").forEach((b) => b.addEventListener("click", () => setLoginMode(b.dataset.mode)));
+async function logout() {
+  try { await post("/api/office/logout"); } catch {}
+  endSession();
+}
 
-$("#loginForm").addEventListener("submit", async (ev) => {
-  ev.preventDefault();
-  $("#loginErr").textContent = "";
-  try {
-    if (S.mode === "staff") {
-      const r = await api("POST", "/api/office/login", { username: $("#lu").value, password: $("#lp").value });
-      S.token = r.token;
-      store.set("office.token", r.token);
-    } else {
-      S.adminKey = $("#lk").value;
-      await api("GET", "/api/admin/accounts");
-      store.set("office.key", S.adminKey);
-    }
-    store.set("office.mode", S.mode);
-    $("#lp").value = $("#lk").value = "";
-    await enter();
-  } catch (e) {
-    $("#loginErr").textContent = e.message;
+function showLogin(notice) {
+  document.body.classList.remove("drawer-open");
+  const app = document.getElementById("app");
+  let portal = store.get("jv.office.portal") === "operator" ? "operator" : "staff";
+  const user = h("input", { autocomplete: "username", required: true });
+  const pw = passwordInput({ autocomplete: "current-password", required: true });
+  const err = h("div", { class: "err", role: "alert", style: "color:var(--red);font-size:13px" });
+  const bannerBox = h("div", {});
+  const go = h("button", { type: "submit", class: "btn wide" }, "LOG IN");
+  const tabs = h("div", { class: "tabs", role: "group", "aria-label": "Log in as" },
+    h("button", { type: "button", "aria-pressed": String(portal === "staff"), onclick: () => setPortal("staff") }, "Distributor / Agent"),
+    h("button", { type: "button", "aria-pressed": String(portal === "operator"), onclick: () => setPortal("operator") }, "Operator"));
+  function setPortal(p) {
+    portal = p;
+    store.set("jv.office.portal", p);
+    tabs.children[0].setAttribute("aria-pressed", String(p === "staff"));
+    tabs.children[1].setAttribute("aria-pressed", String(p === "operator"));
   }
-});
-
-function logout(msg) {
-  if (S.mode === "staff" && S.token) fetch("/api/office/logout", { method: "POST", headers: { authorization: "Bearer " + S.token } }).catch(() => {});
-  S.token = S.adminKey = null;
-  S.me = null;
-  store.set("office.token", null);
-  store.set("office.key", null);
-  $("#app").classList.add("hidden");
-  $("#login").classList.remove("hidden");
-  setLoginMode(S.mode);
-  if (typeof msg === "string") $("#loginErr").textContent = msg;
+  if (notice) bannerBox.append(h("div", { class: "banner " + notice.kind }, notice.text));
+  let lockTimer = null;
+  function locked(seconds) {
+    clearInterval(lockTimer);
+    go.disabled = true;
+    const b = h("div", { class: "banner warn", role: "alert" });
+    bannerBox.replaceChildren(b);
+    const tick = () => {
+      b.textContent = `Too many attempts. Try again in ${seconds} seconds.`;
+      if (seconds-- <= 0) { clearInterval(lockTimer); bannerBox.replaceChildren(); go.disabled = false; }
+    };
+    tick();
+    lockTimer = setInterval(tick, 1000);
+  }
+  const form = h("form", { novalidate: true, onsubmit: async (e) => {
+    e.preventDefault();
+    err.textContent = "";
+    if (!user.value.trim() || !pw.input.value) { err.textContent = "Enter your username and password."; return; }
+    go.disabled = true;
+    go.replaceChildren(h("span", { class: "spin" }), "Logging in…");
+    try {
+      const r = await api("POST", "/api/office/login", { username: user.value.trim(), password: pw.input.value, portal });
+      S.token = r.token;
+      store.sset("jv.office.token", r.token);
+      clearInterval(lockTimer);
+      await enter();
+    } catch (e2) {
+      go.replaceChildren("LOG IN");
+      go.disabled = false;
+      if (e2.code === "BAD_LOGIN") { err.textContent = "Wrong username or password."; bannerBox.replaceChildren(); }
+      else if (e2.code === "LOCKED") locked(60);
+      else if (e2.code === "ACCOUNT_DISABLED") bannerBox.replaceChildren(h("div", { class: "banner error", role: "alert" }, "This account is disabled. Contact your " + (portal === "operator" ? "platform administrator." : "distributor.")));
+      else bannerBox.replaceChildren(errorBanner(e2));
+    }
+  } },
+    tabs, bannerBox,
+    field("Username", user),
+    field("Password", pw.el, err),
+    go,
+    h("div", { class: "hint", style: "text-align:center" }, "Accounts are created by your distributor or operator."));
+  user.addEventListener("input", () => (err.textContent = ""));
+  app.replaceChildren(h("div", { class: "login" },
+    h("div", { class: "mark" }, icon("logo", 26, "#1B2B44", 2), h("b", {}, "Jack Vault"), h("span", {}, "Back Office")),
+    form,
+    h("div", { class: "hint" }, "Times are shown in your account's time zone")));
+  user.focus();
 }
-$("#logout").addEventListener("click", () => logout());
-
-// ---------------------------------------------------------------- data
-
-const CHILD = { OPERATOR: "DISTRIBUTOR", DISTRIBUTOR: "AGENT", AGENT: "PLAYER" };
-const NOUN = { DISTRIBUTOR: "distributor", AGENT: "agent", PLAYER: "player" };
 
 async function enter() {
-  $("#login").classList.add("hidden");
-  $("#app").classList.remove("hidden");
-  S.viewParent = null;
-  await refresh();
-}
-
-async function refresh() {
-  if (S.mode === "operator") {
-    const r = await api("GET", "/api/admin/accounts");
-    S.me = { role: "OPERATOR", username: "operator", audit: r.audit };
-    S.all = r.accounts;
-    S.accounts = r.accounts.filter((a) => a.role === "DISTRIBUTOR");
-    S.ledger = [];
-  } else {
-    S.me = await api("GET", "/api/office/me");
-    const q = S.viewParent ? "?parent=" + encodeURIComponent(S.viewParent.id) : "";
-    S.accounts = (await api("GET", "/api/office/accounts" + q)).accounts;
-    if (!S.viewParent) S.children = S.accounts;
-    await loadLedger(true);
+  S.me = await get("/api/office/me");
+  if (!location.hash || !MENUS[S.me.role].some(([k]) => location.hash.startsWith("#/" + k))) {
+    history.replaceState(null, "", "#/" + MENUS[S.me.role][0][0]);
   }
   render();
 }
-
-async function loadLedger(reset) {
-  if (S.mode === "operator") return;
-  const acct = $("#ledgerFilter").value;
-  const before = reset || !S.ledger.length ? "" : "&before=" + S.ledger[S.ledger.length - 1].entryId;
-  const r = await api("GET", "/api/office/ledger?limit=50" + (acct ? "&account=" + encodeURIComponent(acct) : "") + before);
-  S.ledger = reset ? r.entries : S.ledger.concat(r.entries);
-  $("#more").classList.toggle("hidden", r.entries.length < 50);
-  renderLedger();
+async function refreshMe() {
+  try { S.me = await get("/api/office/me"); } catch { return; }
+  const b = document.getElementById("balance");
+  if (b) b.textContent = money(S.me.balanceCents);
 }
-$("#more").addEventListener("click", () => loadLedger(false).catch((e) => toast(e.message)));
-$("#ledgerFilter").addEventListener("change", () => loadLedger(true).catch((e) => toast(e.message)));
-$("#refresh").addEventListener("click", () => refresh().then(() => toast("Updated")).catch((e) => toast(e.message)));
 
-// ---------------------------------------------------------------- render
+// ---------------------------------------------------------------- shell
 
 function render() {
-  const me = S.me;
-  const child = CHILD[me.role];
-  const readOnly = !!S.viewParent;
-  $("#who").innerHTML = `<span class="badge ${esc(me.role)}">${esc(me.role)}</span> <b>${esc(me.username)}</b>`;
+  const r = parseRoute();
+  const menu = MENUS[S.me.role];
+  const item = menu.find(([k]) => k === r.name) || menu[0];
+  S.route = { name: item[0], q: r.q };
+  document.body.classList.remove("drawer-open");
+  const main = h("main", { id: "main" });
+  const showBalance = S.me.role !== "OPERATOR";
+  const app = document.getElementById("app");
+  app.replaceChildren(
+    h("header", { class: "top" },
+      h("button", { type: "button", class: "burger", "aria-label": "Menu", onclick: () => document.body.classList.toggle("drawer-open") }, icon("menu", 22, "#fff", 2)),
+      icon("logo", 22, "#fff", 2), h("span", { class: "brand" }, "Jack Vault"), h("span", { class: "sub" }, "Back Office"),
+      h("span", { class: "roletag " + S.me.role }, S.me.role), h("span", { class: "sep" }, "/"), h("span", { class: "title" }, item[1]),
+      h("span", { style: "flex:1" }),
+      h("span", { class: "welcome" }, "Welcome, ", h("strong", {}, S.me.username)),
+      h("button", { type: "button", class: "logout", onclick: logout, "aria-label": "Log out" }, icon("logout", 16, "#fff", 2), h("span", {}, "Log out"))),
+    h("div", { class: "strip" },
+      showBalance ? [h("span", { class: "muted" }, "Balance:"), h("span", { class: "bal", id: "balance" }, money(S.me.balanceCents)),
+        h("button", { type: "button", class: "refresh", "aria-label": "Refresh balance", onclick: async () => { await refreshMe(); toast("Balance updated"); } }, icon("refresh", 16, "#1A78B4", 2))]
+        : h("span", { class: "muted" }, "Operator · points are issued from here"),
+      h("span", { class: "tz" }, "Times in " + zoneLabel())),
+    h("div", { class: "layout" },
+      h("nav", { class: "side", "aria-label": "Main" },
+        menu.map(([k, label, ic]) => h("a", { href: "#/" + k, "aria-current": k === item[0] ? "page" : null }, icon(ic, 18), label)),
+        h("span", { class: "spacer" }),
+        h("button", { type: "button", onclick: logout }, icon("logout", 18), "Log out")),
+      h("div", { class: "scrim", onclick: () => document.body.classList.remove("drawer-open") }),
+      main));
+  document.title = `${item[1]} · Jack Vault Back Office`;
+  PAGES[item[0]](main, r.q).catch((e) => main.replaceChildren(errorBanner(e, () => render())));
+}
 
-  const stats = [];
-  if (me.role === "OPERATOR") {
-    const a = me.audit;
-    stats.push(["Points issued", money(a.issuedCents)], ["Distributors", String(S.accounts.length)], ["Accounts", String(S.all.length)],
-      ["Ledger check", a.staffBalancesMatchLedger && a.pointsConserved ? "OK" : "MISMATCH"]);
-  } else {
-    stats.push(["My points", money(me.balanceCents)], [me.role === "DISTRIBUTOR" ? "Agents" : "Players", String(me.children)],
-      [me.role === "DISTRIBUTOR" ? "Points with agents" : "Coins with players", money(me.childrenBalanceCents)]);
+/** Loads data into a page with a skeleton while it waits and Retry on failure. */
+async function load(target, fn) {
+  target.replaceChildren(skeletonRows());
+  try { await fn(); }
+  catch (e) { target.replaceChildren(errorBanner(e, () => load(target, fn))); }
+}
+
+// ---------------------------------------------------------------- account dialogs (shared by every role)
+
+function word(role) { return { PLAYER: "player", AGENT: "agent", DISTRIBUTOR: "distributor" }[role] || "account"; }
+
+/**
+ * Load / Redeem (distributor, agent) and Issue / Take back (operator) with
+ * quick chips, a preview, balance checks and one requestId per dialog, so a
+ * retried click never moves coins twice.
+ */
+function transferDialog(kind, target, done) {
+  const op = S.me.role === "OPERATOR";
+  const w = word(target.role);
+  const into = kind === "load" || kind === "issue";
+  const requestId = newRequestId();
+  const titles = { load: `Load coins to ${op ? "" : target.role === "AGENT" ? "agent " : ""}${target.username}`, redeem: `Redeem coins from ${target.role === "AGENT" ? "agent " : ""}${target.username}`, issue: `Issue points to ${target.username}`, revoke: `Take back points from ${target.username}` };
+  const okLabel = { load: "LOAD", redeem: "REDEEM", issue: "ISSUE", revoke: "TAKE BACK" }[kind];
+  const okCls = into ? "load" : "danger";
+  const amount = h("input", { inputmode: "decimal", placeholder: "0.00", "aria-label": "Amount" });
+  const note = h("input", { placeholder: "Optional, e.g. weekly top-up", maxlength: 200 });
+  const err = h("div", { class: "err", role: "alert" });
+  const preview = h("div", { class: "preview" });
+  const chips = op ? [1000, 5000, 10000] : [10, 20, 50, 100];
+  const fill = (c) => { amount.value = amountText(c); check(); };
+  const okBtn = btn(okLabel, okCls, () => submit(false));
+  function check() {
+    const c = parseAmount(amount.value);
+    err.textContent = "";
+    let ok = c > 0;
+    if (amount.value && !(c > 0)) { err.textContent = "Enter an amount like 50 or 12.50"; ok = false; }
+    else if (c > 0 && into && !op && c > S.me.balanceCents) { err.textContent = `You only have ${money(S.me.balanceCents)}. Lower the amount or ask your ${S.me.role === "AGENT" ? "distributor" : "operator"} for more.`; ok = false; }
+    else if (c > 0 && !into && c > target.balanceCents) { err.textContent = `${w[0].toUpperCase() + w.slice(1)} only has ${money(target.balanceCents)}`; ok = false; }
+    const v = c > 0 ? c : 0;
+    const t = target.balanceCents + (into ? v : -v);
+    preview.textContent = !ok ? "After: —" : op ? `After: ${w} ${money(t)}` : `After: you ${money(S.me.balanceCents + (into ? -v : v))}, ${w} ${money(t)}`;
+    okBtn.disabled = !ok;
+    return ok;
   }
-  $("#stats").innerHTML = stats.map(([k, v]) => `<div class="card stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join("");
-
-  $("#createTitle").textContent = "CREATE " + NOUN[child].toUpperCase();
-  $("#createBtn").textContent = "CREATE " + NOUN[child].toUpperCase();
-  $("#createForm").parentElement.classList.toggle("hidden", readOnly);
-
-  const crumb = $("#crumb");
-  crumb.classList.toggle("hidden", !readOnly);
-  if (readOnly) {
-    crumb.innerHTML = `<button class="link" id="back">← My agents</button> <span class="muted">/ ${esc(S.viewParent.username)}'s players (view only)</span>`;
-    $("#back").onclick = () => { S.viewParent = null; refresh().catch((e) => toast(e.message)); };
-  }
-  const listRole = readOnly ? "PLAYER" : child;
-  $("#listTitle").textContent = (readOnly ? "PLAYERS" : "MY " + NOUN[child].toUpperCase() + "S");
-
-  const f = $("#ledgerFilter");
-  const keep = f.value;
-  const opts = (S.children || []).map((a) => `<option value="${esc(a.id)}">${esc(a.username)}</option>`).join("");
-  f.innerHTML = `<option value="">All</option>` + opts;
-  f.value = [...f.options].some((o) => o.value === keep) ? keep : "";
-  f.parentElement.parentElement.classList.toggle("hidden", me.role === "OPERATOR");
-
-  renderList(listRole, readOnly);
-}
-
-function renderList(listRole, readOnly) {
-  const q = $("#filter").value.trim().toLowerCase();
-  const rows = S.accounts.filter((a) => !q || a.username.toLowerCase().includes(q));
-  const kids = listRole !== "PLAYER";
-  const kidNoun = listRole === "DISTRIBUTOR" ? "Agents" : "Players";
-  $("#empty").classList.toggle("hidden", S.accounts.length > 0);
-  $("#list").innerHTML = !S.accounts.length ? "" : `<thead><tr><th>Username</th><th>Status</th><th class="num">Balance</th>${kids ? `<th class="num">${kidNoun}</th><th class="num">Their balance</th>` : ""}<th class="num">Created</th>${readOnly ? "" : "<th></th>"}</tr></thead><tbody>` +
-    rows.map((a) => `<tr class="${a.status === "DISABLED" ? "disabled" : ""}">
-      <td><b>${esc(a.username)}</b></td>
-      <td>${a.status === "ACTIVE" ? '<span class="pos">Active</span>' : '<span class="neg">Disabled</span>'}</td>
-      <td class="num"><b>${money(a.balanceCents)}</b></td>
-      ${kids ? `<td class="num">${a.children ?? 0}</td><td class="num">${money(a.childrenBalanceCents ?? 0)}</td>` : ""}
-      <td class="num muted">${esc(new Date(a.createdAt).toLocaleDateString())}</td>
-      ${readOnly ? "" : `<td><div class="acts">
-        ${S.me.role === "OPERATOR" ? `<button class="small gold" data-act="issue" data-id="${esc(a.id)}">Issue</button><button class="small" data-act="revoke" data-id="${esc(a.id)}">Take back</button>`
-          : `<button class="small gold" data-act="load" data-id="${esc(a.id)}">Load</button><button class="small" data-act="redeem" data-id="${esc(a.id)}">Redeem</button>`}
-        ${S.me.role === "DISTRIBUTOR" ? `<button class="small" data-act="players" data-id="${esc(a.id)}">Players</button>` : ""}
-        <button class="small" data-act="password" data-id="${esc(a.id)}">Password</button>
-        <button class="small" data-act="status" data-id="${esc(a.id)}">${a.status === "ACTIVE" ? "Disable" : "Enable"}</button>
-      </div></td>`}
-    </tr>`).join("") + "</tbody>";
-  $("#list").querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", () => action(b.dataset.act, S.accounts.find((a) => a.id === b.dataset.id))));
-}
-$("#filter").addEventListener("input", () => S.me && renderList(S.viewParent ? "PLAYER" : CHILD[S.me.role], !!S.viewParent));
-
-const TYPE = { ISSUE: "Issued", REVOKE: "Taken back", LOAD: "Load", REDEEM: "Redeem" };
-function renderLedger() {
-  const me = S.me;
-  $("#ledger").innerHTML = !S.ledger.length ? `<tbody><tr><td class="muted">No coin movements yet.</td></tr></tbody>` :
-    `<thead><tr><th>Time</th><th>Type</th><th>From</th><th>To</th><th class="num">Amount</th><th class="num">My balance after</th><th>By</th></tr></thead><tbody>` +
-    S.ledger.map((e) => {
-      const mineOut = e.fromId === me.id, mineIn = e.toId === me.id;
-      const after = mineOut ? e.fromBalanceAfterCents : mineIn ? e.toBalanceAfterCents : null;
-      return `<tr><td class="muted" style="white-space:nowrap">${esc(new Date(e.at).toLocaleString())}</td><td>${esc(TYPE[e.type] || e.type)}</td>
-        <td>${esc(e.from)}</td><td>${esc(e.to)}</td>
-        <td class="num ${mineIn ? "pos" : mineOut ? "neg" : ""}">${mineIn ? "+" : mineOut ? "−" : ""}${money(e.amountCents)}</td>
-        <td class="num">${after == null ? '<span class="muted">—</span>' : money(after)}</td><td class="muted">${esc(e.actor)}</td></tr>`;
-    }).join("") + "</tbody>";
-}
-
-// ---------------------------------------------------------------- create
-
-$("#gen").addEventListener("click", () => ($("#cp").value = genPass()));
-$("#createForm").addEventListener("submit", async (ev) => {
-  ev.preventDefault();
-  $("#createErr").textContent = "";
-  const username = $("#cu").value.trim(), password = $("#cp").value, amt = $("#ca").value.trim();
-  const cents = amt ? toCents(amt) : 0;
-  if (amt && !(cents > 0)) return ($("#createErr").textContent = "Starting balance must be an amount like 50 or 25.50");
-  const btn = $("#createBtn");
-  btn.disabled = true;
-  try {
-    const op = S.me.role === "OPERATOR";
-    const a = await api("POST", op ? "/api/admin/distributors" : "/api/office/accounts", { username, password });
-    let loadErr = "";
-    if (cents > 0) {
-      try {
-        await api("POST", op ? `/api/admin/accounts/${a.id}/issue` : `/api/office/accounts/${a.id}/load`, { requestId: uuid(), amountCents: cents });
-      } catch (e) { loadErr = e.message; }
+  amount.addEventListener("input", check);
+  amount.addEventListener("keydown", (e) => { if (e.key === "Enter" && check()) submit(false); });
+  const d = dialog({ title: titles[kind] });
+  const form = () => [
+    kv(op ? null : ["Your balance", h("b", {}, money(S.me.balanceCents))], `${w[0].toUpperCase() + w.slice(1)} balance`, h("b", {}, money(target.balanceCents))),
+    field("Amount", h("span", { class: "amount" }, amount, h("span", { class: "suffix" }, "coins")), err),
+    h("div", { class: "row" }, h("div", { class: "chips" }, chips.map((c) => h("button", { type: "button", onclick: () => fill(c * 100) }, count(c)))),
+      !into ? h("span", { style: "margin-left:auto" }, btn(kind === "revoke" ? "Take back all" : "Redeem all", "link", () => fill(target.balanceCents))) : null),
+    op ? field("Note", note) : null,
+    preview,
+  ];
+  d.setBody(form());
+  d.setActions(btn("Cancel", "neutral", d.close), okBtn);
+  check();
+  async function submit(confirmed) {
+    if (!check()) return;
+    const c = parseAmount(amount.value);
+    if (kind === "issue" && c > 1_000_000 && !confirmed) {
+      d.setBody(h("div", {}, `Issue ${money(c)} points to ${target.username}? This creates new points.`));
+      d.setActions(btn("Back", "neutral", () => { d.setBody(form()); d.setActions(btn("Cancel", "neutral", d.close), okBtn); check(); }), btn("Issue " + money(c), "load", () => submit(true)));
+      return;
     }
-    $("#createForm").reset();
-    const c = $("#creds");
-    c.classList.remove("hidden");
-    c.innerHTML = `<div style="margin-bottom:6px">${esc(NOUN[a.role][0].toUpperCase() + NOUN[a.role].slice(1))} created. Give these login details to them:</div>
-      <div>Username: <code>${esc(a.username)}</code></div><div>Password: <code>${esc(password)}</code></div>
-      ${a.role === "PLAYER" ? `<div class="muted" style="margin-top:4px">They log in on the game's start screen.</div>` : `<div class="muted" style="margin-top:4px">They log in on this back-office page.</div>`}
-      ${loadErr ? `<div class="err">Account made, but the starting balance failed: ${esc(loadErr)}</div>` : ""}
-      <button class="small" id="copyCreds" style="margin-top:8px">Copy</button>`;
-    $("#copyCreds").onclick = () => navigator.clipboard?.writeText(`Username: ${a.username}\nPassword: ${password}`).then(() => toast("Copied"), () => toast("Copy failed"));
-    await refresh();
-  } catch (e) {
-    $("#createErr").textContent = e.message;
-  } finally {
-    btn.disabled = false;
+    okBtn.disabled = true;
+    okBtn.replaceChildren(h("span", { class: "spin" }), okLabel);
+    try {
+      await post(`/api/office/accounts/${encodeURIComponent(target.id)}/${kind}`, { requestId, amountCents: c, note: note.value || undefined });
+      d.close();
+      const verb = { load: "Loaded", redeem: "Redeemed", issue: "Issued", revoke: "Took back" }[kind];
+      toast(`${verb} ${money(c)} ${into ? "to" : "from"} ${target.username}`);
+      await refreshMe();
+      if (done) done();
+    } catch (e) {
+      okBtn.replaceChildren(okLabel);
+      d.setBody(form(), errorBanner(e));
+      d.setActions(btn("Cancel", "neutral", d.close), okBtn);
+      check();
+    }
   }
-});
-
-// ---------------------------------------------------------------- actions
-
-let dlgAction = null;
-function openDialog({ title, info, amount, password, ok, quick, run }) {
-  $("#dlgTitle").textContent = title;
-  $("#dlgInfo").innerHTML = info || "";
-  $("#dlgAmount").classList.toggle("hidden", !amount);
-  $("#dlgPass").classList.toggle("hidden", !password);
-  $("#da").value = "";
-  $("#dp").value = password ? genPass() : "";
-  $("#dlgErr").textContent = "";
-  $("#dlgOk").textContent = ok;
-  $("#quick").innerHTML = (quick || []).map(([label, v]) => `<button type="button" class="small" data-v="${esc(v)}">${esc(label)}</button>`).join("");
-  $("#quick").querySelectorAll("[data-v]").forEach((b) => b.addEventListener("click", () => ($("#da").value = b.dataset.v)));
-  // One requestId per dialog: a resend after a dropped connection can't move coins twice.
-  dlgAction = { run, requestId: uuid() };
-  $("#dlg").showModal();
-  setTimeout(() => (amount ? $("#da") : password ? $("#dp") : $("#dlgOk")).focus(), 30);
-}
-$("#dlgCancel").addEventListener("click", () => $("#dlg").close());
-$("#dgen").addEventListener("click", () => ($("#dp").value = genPass()));
-$("#dlgForm").addEventListener("submit", async (ev) => {
-  ev.preventDefault();
-  const btn = $("#dlgOk");
-  btn.disabled = true;
-  $("#dlgErr").textContent = "";
-  try {
-    const msg = await dlgAction.run(dlgAction.requestId);
-    $("#dlg").close();
-    if (msg) toast(msg);
-    await refresh();
-  } catch (e) {
-    $("#dlgErr").textContent = e.message;
-    if (e.code !== "NETWORK") dlgAction.requestId = uuid();
-  } finally {
-    btn.disabled = false;
-  }
-});
-
-function amountFromDialog() {
-  const c = toCents($("#da").value);
-  if (!(c > 0)) throw new Error("Enter an amount like 50 or 25.50");
-  return c;
 }
 
-function action(act, a) {
-  if (!a) return;
-  const base = S.me.role === "OPERATOR" ? "/api/admin/accounts/" : "/api/office/accounts/";
-  const quickAmts = [["10", "10"], ["20", "20"], ["50", "50"], ["100", "100"], ["500", "500"]];
-  if (act === "players") {
-    S.viewParent = a;
-    return refresh().catch((e) => toast(e.message));
+function createDialog(done) {
+  const role = S.me.role;
+  const kid = CHILD[role];
+  const user = h("input", { autocomplete: "off", placeholder: "3-32 letters, digits, _ . -" });
+  const pw = passwordInput();
+  const starting = h("input", { inputmode: "decimal", placeholder: "0.00" });
+  const profile = h("select", {});
+  const err = h("div", {});
+  if (role === "OPERATOR") {
+    (S.games ? Promise.resolve(S.games) : get("/api/office/games").then((g) => (S.games = g))).then((g) => {
+      profile.replaceChildren(h("option", { value: "" }, `Platform default (${g.settings.defaultProfileId})`), g.profiles.map((p) => h("option", { value: p.id }, `${p.id} · RTP ${pct(p.rtpMax)}`)));
+    }).catch(() => profile.replaceChildren(h("option", { value: "" }, "Platform default")));
   }
-  if (act === "load" || act === "issue") {
-    const mine = S.me.role === "OPERATOR" ? "" : ` You have <b style="color:var(--gold2)">${money(S.me.balanceCents)}</b>.`;
-    return openDialog({
-      title: (act === "issue" ? "Issue points to " : "Load ") + a.username,
-      info: `Current balance ${money(a.balanceCents)}.${mine}`,
-      amount: true, ok: act === "issue" ? "ISSUE" : "LOAD", quick: quickAmts,
-      run: async (requestId) => {
-        const cents = amountFromDialog();
-        await api("POST", base + a.id + (act === "issue" ? "/issue" : "/load"), { requestId, amountCents: cents });
-        return `${act === "issue" ? "Issued" : "Loaded"} ${money(cents)} to ${a.username}`;
-      },
+  const ok = btn(`Create ${CHILD_TITLE[role]}`, "", submit);
+  const d = dialog({ title: `Create ${CHILD_TITLE[role]}`, body: [
+    field("Username", user),
+    field("Password", h("div", { class: "row" }, h("span", { class: "grow", style: "display:flex" }, pw.el), btn("Generate", "neutral", () => { pw.input.value = genPassword(); pw.input.type = "text"; }))),
+    field(role === "OPERATOR" ? "Starting points (optional)" : "Starting balance (optional)", h("span", { class: "amount" }, starting, h("span", { class: "suffix" }, "coins")),
+      role !== "OPERATOR" ? h("span", { class: "hint" }, `Comes out of your balance (${money(S.me.balanceCents)}).`) : null),
+    role === "OPERATOR" ? field("Win ratio", profile) : null,
+    err,
+  ], actions: [btn("Cancel", "neutral", () => d.close()), ok] });
+  async function submit() {
+    err.replaceChildren();
+    const st = starting.value.trim() ? parseAmount(starting.value) : 0;
+    if (Number.isNaN(st)) { err.replaceChildren(h("div", { class: "banner error" }, "Starting balance must be an amount like 50 or 12.50")); return; }
+    ok.disabled = true;
+    try {
+      const a = await post("/api/office/accounts", { username: user.value.trim(), password: pw.input.value, startingCents: st, profileId: profile.value || undefined });
+      const creds = `Username: ${a.username}\nPassword: ${pw.input.value}`;
+      d.title(`${CHILD_TITLE[role]} created`);
+      d.setBody(h("div", { class: "creds" },
+        kv("Username", h("b", {}, a.username), "Password", h("b", { class: "mono" }, pw.input.value), "Balance", h("b", {}, money(a.balanceCents))),
+        h("div", { class: "hint", style: "color:#14532D" }, `Give these to the ${kid}. The password won't be shown again.`)));
+      d.setActions(btn("Copy", "neutral", () => copyText(creds)), btn("Done", "", d.close));
+      toast(`${CHILD_TITLE[role]} created`);
+      await refreshMe();
+      if (done) done();
+    } catch (e) {
+      ok.disabled = false;
+      err.replaceChildren(errorBanner(e.code === "USERNAME_TAKEN" ? new ApiError(e.code, `“${user.value.trim()}” is already taken. Pick another username.`) : e));
+    }
+  }
+}
+
+function resetPasswordDialog(a, done) {
+  const pw = passwordInput();
+  pw.input.value = genPassword();
+  pw.input.type = "text";
+  const err = h("div", {});
+  const d = dialog({ title: `Reset password for ${a.username}`, body: [
+    field("New password", h("div", { class: "row" }, h("span", { class: "grow", style: "display:flex" }, pw.el), btn("Generate", "neutral", () => { pw.input.value = genPassword(); pw.input.type = "text"; }), btn("Copy", "neutral", () => copyText(pw.input.value)))),
+    h("div", { class: "hint" }, `This logs the ${word(a.role)} out everywhere.`), err] });
+  const ok = btn("Reset Password", "", async () => {
+    ok.disabled = true;
+    try {
+      await post(`/api/office/accounts/${encodeURIComponent(a.id)}/password`, { password: pw.input.value });
+      d.close();
+      toast("Password reset");
+      if (done) done();
+    } catch (e) { ok.disabled = false; err.replaceChildren(errorBanner(e)); }
+  });
+  d.setActions(btn("Cancel", "neutral", d.close), ok);
+}
+
+function statusAction(a, done) {
+  const set = async (status) => {
+    await post(`/api/office/accounts/${encodeURIComponent(a.id)}/status`, { status });
+    toast(`${a.username} ${status === "ACTIVE" ? "enabled" : "disabled"}`);
+    if (done) done();
+  };
+  if (a.status !== "ACTIVE") return () => set("ACTIVE").catch((e) => toast(errText(e), "error"));
+  const notes = {
+    PLAYER: `Disable ${a.username}? They will be logged out and can't play. You can still redeem their coins.`,
+    AGENT: `Disable agent ${a.username}? Disabling an agent logs them out. Their players keep playing.`,
+    DISTRIBUTOR: `Disable distributor ${a.username}? They are logged out and can't log in. Their agents and players keep working.`,
+  };
+  return () => confirmDialog({ title: `Disable ${a.username}`, text: notes[a.role], ok: "Disable", okClass: "danger", onok: () => set("DISABLED") });
+}
+
+/** Opens "pick an account" then the transfer dialog (dashboard quick actions). */
+async function pickThen(kind, done) {
+  const list = (await get("/api/office/accounts")).accounts.filter((a) => kind === "load" ? a.status === "ACTIVE" : a.balanceCents > 0);
+  const sel = h("select", {}, list.map((a) => h("option", { value: a.id }, `${a.username} · ${money(a.balanceCents)}`)));
+  const d = dialog({ title: `${kind === "load" ? "Load" : "Redeem"}: choose a ${CHILD[S.me.role]}`, body: list.length ? field(CHILD_TITLE[S.me.role], sel) : emptyState(`No ${CHILD[S.me.role]}s to ${kind}.`) });
+  d.setActions(btn("Cancel", "neutral", d.close), list.length ? btn("Next", "", () => { d.close(); transferDialog(kind, list.find((a) => a.id === sel.value), done); }) : null);
+}
+
+// ---------------------------------------------------------------- dashboards
+
+/** Agent (Prompt 2) and distributor (Prompt 7) dashboards. */
+PAGES.dashboard = async (main) => {
+  const role = S.me.role;
+  const st = { key: "today", ...periodFor("today") };
+  const cards = h("div", { style: "display:flex;flex-direction:column;gap:16px" });
+  const bar = periodBar(st, () => loadCards(), ["today", "yesterday", "week", "lastweek", "month"], false);
+  const glance = h("div", {});
+  const recent = h("div", {});
+  const chart = h("div", {});
+  const notice = h("div", {});
+  const LOW = 100_000; // 1,000.00
+  const refreshAll = () => { loadCards(); loadRecent(); loadChart(); };
+
+  async function loadCards() {
+    const [sum, kids] = await Promise.all([get("/api/office/summary", periodQuery(st)), get("/api/office/accounts")]);
+    const me = sum.me;
+    const accounts = kids.accounts;
+    const net = me.loadedCents - me.redeemedCents;
+    if (role === "AGENT") {
+      cards.replaceChildren(
+        h("div", { class: "stats" }, stat("My balance", money(S.me.balanceCents)), stat("Loaded " + SHORTCUTS[st.key].toLowerCase(), money(me.loadedCents), "in"), stat("Redeemed " + SHORTCUTS[st.key].toLowerCase(), money(me.redeemedCents), "out"), stat("Net " + SHORTCUTS[st.key].toLowerCase(), signed(net), net < 0 ? "out" : "")),
+        h("div", { class: "stats small" }, stat("Total players", count(accounts.length)), stat("Active players", count(accounts.filter((a) => a.status === "ACTIVE").length)), stat("Disabled players", count(accounts.filter((a) => a.status !== "ACTIVE").length)), stat("Players' total balance", money(me.childrenBalanceCents))));
+    } else {
+      cards.replaceChildren(
+        h("div", { class: "stats" }, stat("My balance", money(S.me.balanceCents)), stat("Loaded to agents", money(me.loadedCents), "in"), stat("Redeemed from agents", money(me.redeemedCents), "out"), stat("Held by my agents", money(me.childrenBalanceCents)), stat("Held by agents' players", money(me.grandchildrenBalanceCents))),
+        h("div", { class: "stats small" }, stat("Total agents", count(accounts.length)), stat("Active agents", count(accounts.filter((a) => a.status === "ACTIVE").length)), stat("Players under my agents", count(accounts.reduce((t, a) => t + (a.children || 0), 0)))));
+      glance.replaceChildren(panelFlush("Agents at a glance", null, dataTable({
+        rows: sum.children,
+        empty: emptyState("No agents yet", btn("Create Agent", "", () => createDialog(refreshAll))),
+        defaultSort: [7, -1],
+        cols: [
+          { label: "Agent", value: (a) => a.username, sort: (a) => a.username },
+          { label: "Status", value: (a) => statusPill(a) },
+          { label: "Balance", num: true, value: (a) => h("span", {}, money(a.balanceCents), a.balanceCents < LOW ? [" ", pill("Low", "low")] : null), sort: (a) => a.balanceCents },
+          { label: "Players", num: true, value: (a) => count(a.children), sort: (a) => a.children },
+          { label: "Players' balance", num: true, value: (a) => money(a.childrenBalanceCents), sort: (a) => a.childrenBalanceCents },
+          { label: "Loaded to players", num: true, value: (a) => h("span", { class: "in" }, money(a.loadedCents)), sort: (a) => a.loadedCents },
+          { label: "Redeemed from players", num: true, value: (a) => h("span", { class: "out" }, money(a.redeemedCents)), sort: (a) => a.redeemedCents },
+          { label: "Net", num: true, value: (a) => signed(a.loadedCents - a.redeemedCents), sort: (a) => a.loadedCents - a.redeemedCents },
+        ],
+        actions: (a) => [["Load", "load", () => transferDialog("load", a, refreshAll)], ["Redeem", "redeem", () => transferDialog("redeem", a, refreshAll)], ["View", "neutral", () => go("records", { agent: a.username })]],
+      })));
+    }
+    notice.replaceChildren(S.me.balanceCents < LOW ? h("div", { class: "banner warn" }, `Your balance is running low. Contact your ${role === "AGENT" ? "distributor" : "operator"} for more ${role === "AGENT" ? "coins" : "points"}.`) : "");
+    if (role === "AGENT" && !accounts.length) {
+      glance.replaceChildren(h("section", { class: "panel" }, emptyState("No players yet", btn("Create Player", "", () => createDialog(refreshAll)))));
+    }
+  }
+  async function loadRecent() {
+    const agent = role === "AGENT";
+    // An agent's activity is its own loads and redeems with players.
+    const { entries } = await get("/api/office/ledger", new URLSearchParams(agent ? { limit: 10, actor: S.me.id } : { limit: 10 }));
+    recent.replaceChildren(panelFlush("Recent activity", btn("View all", "link", () => go(agent ? "transactions" : "coins")), dataTable({
+      rows: entries, empty: "No coin movements yet",
+      cols: agent ? [
+        { label: "Time", value: (e) => fmtTime(e.at) },
+        { label: "Type", value: (e) => pill(e.type) },
+        { label: "Player", value: (e) => (e.type === "LOAD" ? e.to : e.from) },
+        { label: "Amount", num: true, value: (e) => h("span", { class: e.type === "LOAD" ? "in" : "out" }, money(e.amountCents)) },
+        { label: "My balance after", num: true, value: (e) => money(e.fromId === S.me.id ? e.fromBalanceAfterCents : e.toBalanceAfterCents) },
+      ] : ledgerCols(["time", "type", "from", "to", "amount", "by"]),
+    })));
+  }
+  async function loadChart() {
+    const q = new URLSearchParams({ ...nonNull(periodFor("last7")), tz: tz() });
+    const { days } = await get("/api/office/daily", q);
+    chart.replaceChildren(panel(role === "AGENT" ? "Loads vs redeems, last 7 days" : "Coins sent to agents vs redeemed, last 7 days", null, barChart(lastDays(days))));
+  }
+
+  const quick = role === "AGENT" ? (() => {
+    const q = h("input", { type: "search", placeholder: "Find player by username or ID", style: "width:280px" });
+    const find = () => go("users", q.value.trim() ? { q: q.value.trim() } : undefined);
+    q.addEventListener("keydown", (e) => { if (e.key === "Enter") find(); });
+    return panel("Quick actions", null, h("div", { class: "row" }, q, btn("Search", "", find), h("span", { class: "grow" }),
+      btn([icon("plus", 16, "#fff", 2.5), "Create Player"], "", () => createDialog(refreshAll)),
+      btn("Load", "load", () => pickThen("load", refreshAll)), btn("Redeem", "redeem", () => pickThen("redeem", refreshAll))));
+  })() : null;
+
+  main.replaceChildren(...[notice, bar.el, cards, quick, glance, chart, recent].filter(Boolean));
+  await Promise.all([load(cards, loadCards), load(recent, loadRecent), load(chart, loadChart)]);
+};
+
+function panelFlush(title, right, ...body) {
+  return h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, title), right || null), ...body);
+}
+function nonNull(o) { return Object.fromEntries(Object.entries(o).filter(([, v]) => v !== null && v !== undefined)); }
+function roleTag(role) { return role ? h("span", { class: "pill role" }, role === "OPERATOR" ? "OP" : role[0] + role.slice(1).toLowerCase()) : null; }
+
+/** Ledger table columns by name. */
+function ledgerCols(names, myId) {
+  const meId = myId || S.me.id;
+  const all = {
+    time: { label: "Time", value: (e) => fmtTime(e.at), csv: (e) => fmtTime(e.at) },
+    id: { label: "Entry ID", value: (e) => h("span", { class: "mono muted", title: e.entryId }, shortId(e.entryId)), csv: (e) => e.entryId },
+    type: { label: "Type", value: (e) => pill(e.type), csv: (e) => e.type },
+    from: { label: "From", value: (e) => h("span", {}, e.from, roleTag(e.fromRole)), csv: (e) => e.from },
+    to: { label: "To", value: (e) => h("span", {}, e.to, roleTag(e.toRole)), csv: (e) => e.to },
+    amount: { label: "Amount", num: true, value: (e) => h("span", { class: e.toId === meId || e.type === "ISSUE" ? "in" : e.fromId === meId || e.type === "REVOKE" ? "out" : "" }, money(e.amountCents)), csv: (e) => amountText(e.amountCents) },
+    mine: { label: "My balance after", num: true, value: (e) => money(e.fromId === meId ? e.fromBalanceAfterCents : e.toBalanceAfterCents), csv: (e) => amountText(e.fromId === meId ? e.fromBalanceAfterCents : e.toBalanceAfterCents) },
+    fromAfter: { label: "From balance after", num: true, value: (e) => (e.fromBalanceAfterCents === null ? "—" : money(e.fromBalanceAfterCents)), csv: (e) => (e.fromBalanceAfterCents === null ? "" : amountText(e.fromBalanceAfterCents)) },
+    toAfter: { label: "To balance after", num: true, value: (e) => (e.toBalanceAfterCents === null ? "—" : money(e.toBalanceAfterCents)), csv: (e) => (e.toBalanceAfterCents === null ? "" : amountText(e.toBalanceAfterCents)) },
+    by: { label: "By", value: (e) => e.actor, csv: (e) => e.actor },
+    note: { label: "Note", value: (e) => e.note || "", csv: (e) => e.note || "" },
+    request: { label: "Request ID", value: (e) => h("span", { class: "mono muted", title: e.requestId }, shortId(e.requestId)), csv: (e) => e.requestId },
+  };
+  return names.map((n) => all[n]);
+}
+
+/** A ledger list with "Load older" (cursor paging). */
+function ledgerList({ query, cols, empty = "No transactions in this period.", onLoaded, extraCols }) {
+  let entries = [];
+  const holder = h("div", {});
+  const olderBtn = btn("Load older", "neutral sm", () => more());
+  const table = dataTable({ rows: [], cols, empty, older: olderBtn, actions: extraCols });
+  holder.append(table);
+  async function more(reset) {
+    const q = new URLSearchParams(query());
+    q.set("limit", "100");
+    if (!reset && entries.length) q.set("before", entries[entries.length - 1].entryId);
+    olderBtn.disabled = true;
+    const r = await get("/api/office/ledger", q);
+    entries = reset ? r.entries : entries.concat(r.entries);
+    olderBtn.disabled = r.entries.length < 100;
+    olderBtn.classList.toggle("hidden", !entries.length);
+    table.update(entries);
+    if (onLoaded) onLoaded(entries);
+  }
+  holder.reload = () => more(true);
+  holder.entries = () => entries;
+  return holder;
+}
+
+// ---------------------------------------------------------------- user / agent / distributor management
+
+/** Prompt 3 (players), 8 (agents), 12 (distributors): one page, columns per role. */
+async function childrenPage(main, q) {
+  const role = S.me.role;
+  const T = CHILD_TITLE[role];
+  let showDisabled = false, search = q.get("q") || "", rows = [], selected = null;
+  const searchIn = h("input", { type: "search", placeholder: `${T === "Player" ? "Username" : T + " username"} or ID`, value: search, style: "width:260px" });
+  const detail = h("div", {});
+  const tableBox = h("section", { class: "panel flush" });
+  const platform = h("div", {});
+  const drill = h("div", {});
+  const reload = () => fetchRows();
+  searchIn.addEventListener("keydown", (e) => { if (e.key === "Enter") { search = searchIn.value.trim(); draw(); } });
+
+  const actions = (a) => {
+    const base = role === "OPERATOR"
+      ? [["Issue", "load", () => transferDialog("issue", a, reload)], ["Take back", "redeem", () => transferDialog("revoke", a, reload)], ["Agents", "neutral", () => openDrill(a)], ["Win Ratio", "neutral", () => profileDialog(a, reload)]]
+      : role === "DISTRIBUTOR"
+        ? [["Load", "load", () => transferDialog("load", a, reload)], ["Redeem", "redeem", () => transferDialog("redeem", a, reload)], ["Players", "neutral", () => openDrill(a)]]
+        : [["Load", "load", () => transferDialog("load", a, reload)], ["Redeem", "redeem", () => transferDialog("redeem", a, reload)]];
+    const rest = [["Reset Password", "neutral", () => resetPasswordDialog(a, reload)]];
+    if (role === "AGENT") rest.push(["Game Records", "neutral", () => go("games", { player: a.username })], ["Transactions", "neutral", () => go("transactions", { player: a.username })]);
+    if (role === "DISTRIBUTOR") rest.push(["Records", "neutral", () => go("records", { agent: a.username })]);
+    rest.push([a.status === "ACTIVE" ? "Disable" : "Enable", a.status === "ACTIVE" ? "redeem" : "neutral", statusAction(a, reload)]);
+    if (a.status !== "ACTIVE") base[0] = null; // nothing goes into a disabled account; coins can still come out
+    return base.concat(rest);
+  };
+  const colsFor = {
+    AGENT: [
+      { label: "ID", value: (a) => h("span", { class: "mono muted", title: a.id }, shortId(a.id)) },
+      { label: "Username", value: (a) => h("b", { style: "font-weight:500" }, a.username), sort: (a) => a.username.toLowerCase() },
+      { label: "Balance", num: true, value: (a) => money(a.balanceCents), sort: (a) => a.balanceCents, csv: (a) => amountText(a.balanceCents) },
+      { label: "Status", value: statusPill },
+      { label: "Created", value: (a) => fmtDate(a.createdAt), sort: (a) => a.createdAt },
+      { label: "Last login", value: (a) => fmtTime(a.lastLoginAt, false), sort: (a) => a.lastLoginAt || "" },
+    ],
+    DISTRIBUTOR: [
+      { label: "ID", value: (a) => h("span", { class: "mono muted", title: a.id }, shortId(a.id)) },
+      { label: "Username", value: (a) => h("b", { style: "font-weight:500" }, a.username), sort: (a) => a.username.toLowerCase() },
+      { label: "Status", value: statusPill },
+      { label: "Balance", num: true, value: (a) => money(a.balanceCents), sort: (a) => a.balanceCents },
+      { label: "Players", num: true, value: (a) => count(a.children), sort: (a) => a.children },
+      { label: "Players' total balance", num: true, value: (a) => money(a.childrenBalanceCents), sort: (a) => a.childrenBalanceCents },
+      { label: "Created", value: (a) => fmtDate(a.createdAt), sort: (a) => a.createdAt },
+      { label: "Last login", value: (a) => fmtTime(a.lastLoginAt, false), sort: (a) => a.lastLoginAt || "" },
+    ],
+    OPERATOR: [
+      { label: "ID", value: (a) => h("span", { class: "mono muted", title: a.id }, shortId(a.id)) },
+      { label: "Username", value: (a) => h("b", { style: "font-weight:500" }, a.username), sort: (a) => a.username.toLowerCase() },
+      { label: "Status", value: statusPill },
+      { label: "Balance", num: true, value: (a) => money(a.balanceCents), sort: (a) => a.balanceCents },
+      { label: "Agents", num: true, value: (a) => count(a.children), sort: (a) => a.children },
+      { label: "Held by agents", num: true, value: (a) => money(a.childrenBalanceCents), sort: (a) => a.childrenBalanceCents },
+      { label: "Held by players", num: true, value: (a) => money(a.grandchildrenBalanceCents), sort: (a) => a.grandchildrenBalanceCents },
+      { label: "Win ratio", value: (a) => a.profileId ? `RTP ${a.profileId.replace(/^rtp/, "")}%` : "—", sort: (a) => a.profileId || "" },
+      { label: "Created", value: (a) => fmtDate(a.createdAt), sort: (a) => a.createdAt },
+    ],
+  };
+
+  function draw() {
+    const term = search.toLowerCase();
+    const list = rows.filter((a) => (showDisabled || a.status === "ACTIVE") && (!term || a.username.toLowerCase().includes(term) || a.id.toLowerCase().includes(term)));
+    if (selected) {
+      const a = rows.find((x) => x.id === selected);
+      detail.replaceChildren(a ? panel(`${T}: ${a.username}`, btn("Close", "link", () => { selected = null; draw(); }),
+        kv("ID", h("span", { class: "mono" }, a.id), "Username", a.username, "Balance", h("b", {}, money(a.balanceCents)), "Status", h("span", {}, statusPill(a)),
+          "Created", fmtTime(a.createdAt), "Last login", fmtTime(a.lastLoginAt),
+          a.children !== undefined ? [role === "AGENT" ? null : [role === "OPERATOR" ? "Agents" : "Players", count(a.children)]] : null),
+        h("div", { class: "row" }, actions(a).filter(Boolean).map(([l, c, f]) => btn(l, c, f)))) : "");
+    } else detail.replaceChildren();
+    tableBox.replaceChildren(dataTable({
+      rows: list, cols: colsFor[role], page: 50, selected,
+      defaultSort: role === "AGENT" ? [4, -1] : [role === "OPERATOR" ? 8 : 6, -1],
+      empty: rows.length ? `No ${CHILD[role]}s match` : emptyState(`No ${CHILD[role]}s yet`, btn(`Create ${T}`, "", () => createDialog(reload))),
+      onRow: (a) => { selected = a.id; draw(); window.scrollTo({ top: 0, behavior: "smooth" }); },
+      actions,
+    }));
+  }
+  async function fetchRows() {
+    if (role === "OPERATOR") {
+      const [list, sum, audit] = await Promise.all([get("/api/office/accounts"), get("/api/office/summary"), get("/api/office/audit")]);
+      const flows = new Map(sum.children.map((f) => [f.id, f]));
+      rows = list.accounts.map((a) => ({ ...a, grandchildrenBalanceCents: (flows.get(a.id) || {}).grandchildrenBalanceCents || 0 }));
+      const p = sum.platform;
+      const ok = audit.checks.every((c) => c.ok);
+      platform.replaceChildren(h("div", { class: "stats" },
+        stat("Points issued", money(p.issuedCents), "in"), stat("Points taken back", money(p.revokedCents), "out"), stat("In circulation", money(p.circulationCents)),
+        stat("Held by distributors", money(p.heldByDistributorsCents)), stat("Held by agents", money(p.heldByAgentsCents)), stat("Held by players", money(p.heldByPlayersCents))),
+        h("div", { class: "row" }, ok ? pill("Ledger balanced", "ok") : pill("Mismatch", "bad"), h("span", { class: "hint" }, ok ? "All audit checks pass." : "An audit check failed."), ok ? null : btn("Open Audit", "link", () => go("audit"))));
+    } else {
+      rows = (await get("/api/office/accounts")).accounts;
+    }
+    draw();
+  }
+
+  /** Read-only drill-down: agent's players (distributor), distributor's agents and their players (operator). */
+  async function openDrill(parent, back) {
+    const box = h("div", {});
+    drill.replaceChildren(box);
+    main.querySelectorAll(".mgmt").forEach((el) => el.classList.add("hidden"));
+    const close = () => { drill.replaceChildren(); main.querySelectorAll(".mgmt").forEach((el) => el.classList.remove("hidden")); };
+    await load(box, async () => {
+      const kids = (await get("/api/office/accounts", new URLSearchParams({ parent: parent.id }))).accounts;
+      const kidWord = parent.role === "DISTRIBUTOR" ? "agents" : "players";
+      box.replaceChildren(panel(`${parent.username}'s ${kidWord}`, null,
+        h("div", { class: "row" }, btn(back ? `← Back to ${back.username}` : `← Back to my ${CHILD[role]}s`, "link", () => (back ? openDrill(back) : close())),
+          h("span", { class: "grow" }), h("span", { class: "muted" }, `${word(parent.role)[0].toUpperCase() + word(parent.role).slice(1)} balance: `, h("b", { class: "nums" }, money(parent.balanceCents)))),
+        h("div", { class: "hint" }, kidWord === "players" ? "Players are managed by their agent." : "Agents are managed by their distributor.")),
+      h("section", { class: "panel flush" }, dataTable({
+        rows: kids, page: 50, empty: `No ${kidWord} yet`,
+        cols: [
+          { label: "ID", value: (a) => h("span", { class: "mono muted" }, shortId(a.id)) },
+          { label: "Username", value: (a) => a.username, sort: (a) => a.username },
+          { label: "Balance", num: true, value: (a) => money(a.balanceCents), sort: (a) => a.balanceCents },
+          kidWord === "agents" ? { label: "Players", num: true, value: (a) => count(a.children), sort: (a) => a.children } : null,
+          { label: "Status", value: statusPill },
+          { label: "Created", value: (a) => fmtDate(a.createdAt), sort: (a) => a.createdAt },
+        ].filter(Boolean),
+        actions: kidWord === "agents" ? (a) => [["Players", "neutral", () => openDrill(a, parent)]] : null,
+      })));
     });
   }
-  if (act === "redeem" || act === "revoke") {
-    return openDialog({
-      title: (act === "revoke" ? "Take points back from " : "Redeem from ") + a.username,
-      info: `${a.username} has <b style="color:var(--gold2)">${money(a.balanceCents)}</b>. Redeemed coins go back to ${act === "revoke" ? "the operator" : "your balance"}.`,
-      amount: true, ok: act === "revoke" ? "TAKE BACK" : "REDEEM",
-      quick: [["All", (a.balanceCents / 100).toFixed(2)]],
-      run: async (requestId) => {
-        const cents = amountFromDialog();
-        await api("POST", base + a.id + (act === "revoke" ? "/issue" : "/redeem"), { requestId, amountCents: act === "revoke" ? -cents : cents });
-        return `${act === "revoke" ? "Took back" : "Redeemed"} ${money(cents)} from ${a.username}`;
-      },
-    });
+
+  const showToggle = toggle(`Show disabled ${CHILD[role]}s`, false, (v) => { showDisabled = v; draw(); });
+  main.replaceChildren(
+    role === "OPERATOR" ? h("div", { class: "mgmt", style: "display:flex;flex-direction:column;gap:12px" }, platform) : "",
+    h("div", { class: "mgmt" }, panel(role === "OPERATOR" ? "Distributors" : role === "DISTRIBUTOR" ? "Agent Management" : "User Management", null,
+      h("div", { class: "row" }, searchIn, btn("Search", "", () => { search = searchIn.value.trim(); draw(); }), showToggle, h("span", { class: "grow" }),
+        btn([icon("plus", 16, "#fff", 2.5), `Create ${T}`], "", () => createDialog(reload))))),
+    h("div", { class: "mgmt" }, detail), h("div", { class: "mgmt" }, tableBox), drill);
+  await load(tableBox, fetchRows);
+}
+PAGES.users = childrenPage;
+PAGES.agents = childrenPage;
+PAGES.distributors = childrenPage;
+
+// ---------------------------------------------------------------- transaction records (agent, Prompt 4)
+
+PAGES.transactions = async (main, q) => {
+  const st = { key: "today", ...periodFor("today") };
+  const player = h("input", { type: "search", placeholder: "Username or ID (empty = all my players)", value: q.get("player") || "", style: "width:280px" });
+  const type = h("select", { "aria-label": "Type" }, h("option", { value: "" }, "All"), h("option", { value: "LOAD" }, "Load"), h("option", { value: "REDEEM" }, "Redeem"));
+  if (q.get("player")) Object.assign(st, { key: "all", from: null, to: null });
+  const bar = periodBar(st, () => search(), ["today", "yesterday", "week", "lastweek", "month", "all"]);
+  const summaryBox = h("section", { class: "panel flush" });
+  const err = h("div", {});
+  // Only moves this agent made, i.e. with its players (not loads from its distributor).
+  const query = () => nonNull({ account: player.value.trim() || null, actor: S.me.id, type: type.value || "LOAD,REDEEM", from: st.from, to: st.to });
+  const list = ledgerList({
+    query,
+    cols: [
+      { label: "Time", value: (e) => fmtTime(e.at) },
+      { label: "Entry ID", value: (e) => h("span", { class: "mono muted", title: e.entryId }, shortId(e.entryId)) },
+      { label: "Type", value: (e) => pill(e.type) },
+      { label: "Player", value: (e) => playerOf(e) },
+      { label: "Player before", num: true, value: (e) => money(playerAfter(e) + (e.type === "LOAD" ? -e.amountCents : e.amountCents)) },
+      { label: "Loaded", num: true, value: (e) => (e.type === "LOAD" ? h("span", { class: "in" }, money(e.amountCents)) : "") },
+      { label: "Redeemed", num: true, value: (e) => (e.type === "REDEEM" ? h("span", { class: "out" }, money(e.amountCents)) : "") },
+      { label: "Player after", num: true, value: (e) => money(playerAfter(e)) },
+      { label: "My balance after", num: true, value: (e) => money(e.fromId === S.me.id ? e.fromBalanceAfterCents : e.toBalanceAfterCents) },
+      { label: "By", value: (e) => e.actor },
+    ],
+    extraCols: (e) => [["Receipt", "neutral", () => receipt(e)]],
+  });
+  function playerOf(e) { return e.type === "LOAD" ? e.to : e.from; }
+  function playerAfter(e) { return e.type === "LOAD" ? e.toBalanceAfterCents : e.fromBalanceAfterCents; }
+  async function search() {
+    bar.read();
+    err.replaceChildren();
+    try {
+      await list.reload();
+      const sum = await get("/api/office/summary", periodQuery(st));
+      const who = player.value.trim().toLowerCase();
+      const rows = sum.children.filter((c) => !who || c.username.toLowerCase() === who || c.id === who).filter((c) => who || c.receivedCents || c.returnedCents);
+      const tot = rows.reduce((t, r) => [t[0] + r.receivedCents, t[1] + r.returnedCents], [0, 0]);
+      summaryBox.replaceChildren(h("div", { class: "phead" }, h("h2", {}, "Summary"), h("span", { class: "hint" }, periodText(st))), dataTable({
+        rows, empty: "No transactions in this period.",
+        cols: [
+          { label: "Username", value: (r) => r.username, sort: (r) => r.username },
+          { label: "Total loaded", num: true, value: (r) => h("span", { class: "in" }, money(r.receivedCents)), sort: (r) => r.receivedCents },
+          { label: "Total redeemed", num: true, value: (r) => h("span", { class: "out" }, money(r.returnedCents)), sort: (r) => r.returnedCents },
+          { label: "Net", num: true, value: (r) => signed(r.receivedCents - r.returnedCents), sort: (r) => r.receivedCents - r.returnedCents },
+        ],
+        totals: rows.length > 1 ? ["Total", money(tot[0]), money(tot[1]), signed(tot[0] - tot[1])] : null,
+      }));
+    } catch (e) { err.replaceChildren(errorBanner(e, search)); }
   }
-  if (act === "password") {
-    return openDialog({
-      title: "New password for " + a.username, info: "They'll be logged out everywhere and must use the new password.",
-      password: true, ok: "SET PASSWORD",
-      run: async () => {
-        const password = $("#dp").value;
-        await api("POST", base + a.id + "/password", { password });
-        $("#creds").classList.remove("hidden");
-        $("#creds").innerHTML = `<div>New login for <b>${esc(a.username)}</b>:</div><div>Password: <code>${esc(password)}</code></div>`;
-        return "Password changed";
-      },
-    });
+  function exportCsv() {
+    const rows = list.entries().map((e) => [fmtTime(e.at), e.entryId, e.type, playerOf(e), amountText(playerAfter(e) + (e.type === "LOAD" ? -e.amountCents : e.amountCents)),
+      e.type === "LOAD" ? amountText(e.amountCents) : "", e.type === "REDEEM" ? amountText(e.amountCents) : "", amountText(playerAfter(e)),
+      amountText(e.fromId === S.me.id ? e.fromBalanceAfterCents : e.toBalanceAfterCents), e.actor]);
+    downloadCsv("transactions.csv", ["Time", "Entry ID", "Type", "Player", "Player balance before", "Loaded", "Redeemed", "Player balance after", "My balance after", "By"], rows);
   }
-  if (act === "status") {
-    const disable = a.status === "ACTIVE";
-    return openDialog({
-      title: (disable ? "Disable " : "Enable ") + a.username,
-      info: disable ? "They're logged out and can't log in until you enable them. You can still redeem their balance." : "They'll be able to log in again.",
-      ok: disable ? "DISABLE" : "ENABLE",
-      run: async () => {
-        await api("POST", base + a.id + "/status", { status: disable ? "DISABLED" : "ACTIVE" });
-        return `${a.username} ${disable ? "disabled" : "enabled"}`;
-      },
-    });
+  function receipt(e) {
+    const d = dialog({ title: "Receipt", body: kv(
+      "Entry ID", h("span", { class: "mono" }, e.entryId), "Time", fmtTime(e.at) + " " + zoneLabel(), "Player", playerOf(e), "Type", e.type === "LOAD" ? "Load" : "Redeem",
+      "Amount", h("b", {}, money(e.amountCents)), "Player balance after", money(playerAfter(e)), "Agent", e.actor, "Agent balance after", money(e.fromId === S.me.id ? e.fromBalanceAfterCents : e.toBalanceAfterCents)) });
+    d.setActions(btn("Close", "neutral", d.close), btn("Print", "", () => { document.body.classList.add("printing"); window.print(); document.body.classList.remove("printing"); }));
   }
+  main.replaceChildren(
+    panel("Transaction Records", null,
+      h("div", { class: "row" }, h("span", { class: "lbl" }, "Player"), player, h("span", { class: "lbl" }, "Type"), type, btn([icon("search", 16, "#fff", 2), "Search"], "", search), btn([icon("download", 16), "Export CSV"], "neutral", exportCsv)),
+      bar.el),
+    err, summaryBox, h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "Transaction Detail")), list));
+  player.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
+  await search();
+};
+
+// ---------------------------------------------------------------- game records (agent, Prompt 5)
+
+const SYMBOL_LABEL = { CROWN: "Crown", GEM: "Gem", PLANET: "Planet", COMET: "Comet", A: "A", K: "K", Q: "Q", J: "J", TEN: "10", WILD: "Wild", SCATTER: "Scatter", BONUS: "Bonus" };
+PAGES.games = async (main, q) => {
+  const st = { key: "all", from: null, to: null };
+  const player = h("input", { type: "search", placeholder: "Username or ID", value: q.get("player") || "", list: "jv-players", style: "width:260px", "aria-label": "Player" });
+  const players = h("datalist", { id: "jv-players" });
+  get("/api/office/accounts").then((r) => players.replaceChildren(...r.accounts.filter((a) => a.role === "PLAYER").map((a) => h("option", { value: a.username })))).catch(() => {});
+  const game = h("select", { "aria-label": "Game" }, h("option", {}, "All"), h("option", {}, "Jack Vault"));
+  const bar = periodBar(st, () => search(), ["today", "yesterday", "week", "lastweek", "all"]);
+  const out = h("div", { style: "display:flex;flex-direction:column;gap:16px" });
+  let rounds = [], who = null;
+  const olderBtn = btn("Load older", "neutral sm", () => more());
+  const table = dataTable({
+    rows: [], empty: "No rounds found", older: olderBtn,
+    onRow: (r) => openRound(r.roundId),
+    cols: [
+      { label: "Time", value: (r) => fmtTime(r.startedAt) },
+      { label: "Round ID", value: (r) => h("span", { class: "mono muted", title: r.roundId }, shortId(r.roundId)) },
+      { label: "Game", value: () => "Jack Vault" },
+      { label: "Bet", num: true, value: (r) => money(r.betCents) },
+      { label: "Win", num: true, value: (r) => h("span", { class: r.totalWinCents > 0 ? "in" : "" }, money(r.totalWinCents)) },
+      { label: "Net", num: true, value: (r) => h("span", { class: r.totalWinCents - r.betCents < 0 ? "out" : "in" }, signed(r.totalWinCents - r.betCents)) },
+      { label: "Balance before", num: true, value: (r) => money(r.balanceBeforeCents) },
+      { label: "Balance after", num: true, value: (r) => money(r.balanceAfterCents) },
+      { label: "Feature", value: (r) => features(r) },
+    ],
+  });
+  function features(r) {
+    const f = [];
+    if (r.features.includes("FREE")) f.push(pill("FREE SPINS", "feat"));
+    if (r.features.includes("WHEEL")) f.push(pill("WHEEL", "feat"));
+    for (const t of r.jackpots || []) f.push(pill("JACKPOT " + t, "low"));
+    if (r.status === "OPEN") f.push(pill("IN PROGRESS", "DISABLED"));
+    return f.length ? h("span", { style: "display:inline-flex;gap:4px" }, f) : h("span", { class: "muted" }, "none");
+  }
+  async function more(reset) {
+    const q2 = periodQuery(st);
+    q2.set("limit", "100");
+    if (!reset && rounds.length) q2.set("before", rounds[rounds.length - 1].roundId);
+    const r = await get(`/api/office/accounts/${encodeURIComponent(player.value.trim())}/rounds`, q2);
+    rounds = reset ? r.rounds : rounds.concat(r.rounds);
+    olderBtn.classList.toggle("hidden", r.rounds.length < 100);
+    table.update(rounds);
+    return r;
+  }
+  async function search() {
+    bar.read();
+    if (!player.value.trim()) {
+      out.replaceChildren(h("section", { class: "panel" }, emptyState("Search for a player to see their rounds")));
+      return;
+    }
+    out.replaceChildren(skeletonRows());
+    try {
+      const r = await more(true);
+      who = r.player;
+      const t = r.totals;
+      const net = t.winCents - t.betCents;
+      out.replaceChildren(
+        h("div", { class: "stats small" }, stat("Player", who.username), stat("Rounds played", count(t.rounds)), stat("Total bet", money(t.betCents)), stat("Total win", money(t.winCents), "in"),
+          stat("Net", signed(net), net < 0 ? "out" : "in"), stat("Biggest win", money(t.biggestWinCents)), stat("Features hit", `${t.freeSpins} FS · ${t.wheels} wheel · ${t.jackpots} JP`)),
+        h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "Rounds"), h("span", { class: "hint" }, periodText(st))), table));
+    } catch (e) {
+      out.replaceChildren(e.code === "ACCOUNT_NOT_FOUND" ? h("div", { class: "banner warn" }, `No player “${player.value.trim()}” among your players.`) : errorBanner(e, search));
+    }
+  }
+  async function openRound(id) {
+    const d = dialog({ title: "Round " + shortId(id), drawer: true, body: skeletonRows(6) });
+    try {
+      const { round, verified } = await get(`/api/office/rounds/${encodeURIComponent(id)}`);
+      const reel = round.steps.find((s) => s.grid) || null;
+      const hits = new Set();
+      if (reel) for (const lw of reel.lineWins) for (const [x, y] of lw.positions) hits.add(`${x},${y}`);
+      if (reel) for (const [x, y] of reel.scatter.positions || []) if (reel.scatter.winCents) hits.add(`${x},${y}`);
+      const gridEl = reel ? h("div", { class: "grid5", role: "img", "aria-label": "Reel grid" },
+        Array.from({ length: 4 }, (_, row) => Array.from({ length: 5 }, (_, col) => h("span", { class: hits.has(`${col},${row}`) ? "hit" : "" }, SYMBOL_LABEL[reel.grid[col][row]] || reel.grid[col][row])))) : null;
+      d.setBody(
+        h("div", { class: "row" }, verified ? pill("✓ Verified", "ok") : pill("Not verified", "bad"), h("span", { class: "hint" }, "The server replayed this round from its recorded draws.")),
+        kv("Round ID", h("span", { class: "mono" }, round.roundId), "Started", fmtTime(round.startedAt), "Profile", `${round.profileId} · ${round.profileHash.slice(0, 12)}`,
+          "Bet", money(round.betCents), "Total win", h("b", { class: round.totalWinCents ? "in" : "" }, money(round.totalWinCents)), "Balance", `${money(round.balanceBeforeCents)} → ${money(round.balanceAfterCents)}`, "Status", round.status === "OPEN" ? "In progress" : "Complete"),
+        reel ? [h("div", { class: "lbl" }, "Base spin"), gridEl] : null,
+        reel && reel.lineWins.length ? dataTable({ rows: reel.lineWins.map((w, i) => ({ ...w, id: String(i) })), cols: [
+          { label: "Line", num: true, value: (w) => w.line }, { label: "Symbol", value: (w) => SYMBOL_LABEL[w.symbol] || w.symbol }, { label: "Count", num: true, value: (w) => w.count }, { label: "Pay", num: true, value: (w) => money(w.winCents) }] }) : h("div", { class: "hint" }, "No line wins on the base spin."),
+        h("div", { class: "lbl" }, "Steps"),
+        h("ol", { style: "margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px" }, round.steps.map((s) => h("li", { class: "nums" }, stepText(s)))));
+    } catch (e) { d.setBody(errorBanner(e)); }
+  }
+  function stepText(s) {
+    if (s.type === "WHEEL") {
+      const seg = s.segment.kind === "CREDIT" ? `${s.segment.multiplier}x bet` : s.segment.kind === "FREE_SPINS" ? `${s.segment.spins} free spins` : `${s.segment.tier} jackpot`;
+      return `Wheel: ${seg}, won ${money(s.winCents + (s.jackpotWinCents || 0))}`;
+    }
+    const extra = [s.freeSpinsAwarded ? `+${s.freeSpinsAwarded} free spins` : "", s.wheelTriggered ? "wheel triggered" : "", s.multiplier > 1 ? `x${s.multiplier}` : ""].filter(Boolean).join(", ");
+    return `${s.type === "BASE" ? "Base spin" : "Free spin"}: won ${money(s.winCents)}${extra ? " (" + extra + ")" : ""}`;
+  }
+  player.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
+  main.replaceChildren(panel("Game Records", null,
+    h("div", { class: "row" }, h("span", { class: "lbl" }, "Player"), player, players, h("span", { class: "lbl" }, "Game"), game, btn([icon("search", 16, "#fff", 2), "Search"], "", search)),
+    bar.el), out);
+  await search();
+};
+
+// ---------------------------------------------------------------- coin management (distributor, Prompt 9)
+
+PAGES.coins = async (main) => {
+  const st = { key: "month", ...periodFor("month") };
+  const type = h("select", { "aria-label": "Type" }, h("option", { value: "" }, "All"), h("option", { value: "ISSUE" }, "Issued to me"), h("option", { value: "REVOKE" }, "Taken back"), h("option", { value: "LOAD" }, "Loaded to agents"), h("option", { value: "REDEEM" }, "Redeemed from agents"));
+  const bar = periodBar(st, () => search(), ["today", "yesterday", "week", "lastweek", "month", "all"]);
+  const overview = h("div", { style: "display:flex;flex-direction:column;gap:16px" });
+  const periodRow = h("div", {});
+  const list = ledgerList({ query: () => nonNull({ account: S.me.id, type: type.value || null, from: st.from, to: st.to }), cols: ledgerCols(["time", "id", "type", "from", "to", "amount", "mine", "by"]), empty: "No coin movements in this period." });
+  const quick = h("div", {});
+
+  async function loadOverview() {
+    const [all, kids] = await Promise.all([get("/api/office/summary"), get("/api/office/accounts")]);
+    const me = all.me;
+    overview.replaceChildren(
+      h("div", { class: "stats" }, stat("My balance", money(S.me.balanceCents)), stat("Received from operator", money(me.receivedCents), "in"), stat("Taken back by operator", money(me.returnedCents), "out"), stat("Held by my agents now", money(me.childrenBalanceCents))),
+      panel("Where the coins are", null, h("div", { class: "flow" },
+        h("div", { class: "box" }, h("span", { class: "hint" }, "Operator issued (net)"), h("b", {}, money(me.receivedCents - me.returnedCents))), "→",
+        h("div", { class: "box" }, h("span", { class: "hint" }, "Me · " + S.me.username), h("b", {}, money(S.me.balanceCents))), "→",
+        h("div", { class: "box" }, h("span", { class: "hint" }, `My ${count(me.children)} agents`), h("b", {}, money(me.childrenBalanceCents))), "→",
+        h("div", { class: "box" }, h("span", { class: "hint" }, "Their players"), h("b", {}, money(me.grandchildrenBalanceCents))))));
+    // Quick transfer
+    const agentSel = h("select", { "aria-label": "Agent" }, kids.accounts.map((a) => h("option", { value: a.id }, `${a.username} · ${money(a.balanceCents)}`)));
+    const go2 = (kind) => { const a = kids.accounts.find((x) => x.id === agentSel.value); if (a) transferDialog(kind, a, () => { loadOverview(); search(); }); };
+    quick.style.cssText = "display:flex;flex-direction:column;gap:16px";
+    quick.replaceChildren(panel("Quick transfer", null, kids.accounts.length ? [field("Agent", agentSel),
+      h("div", { class: "row" }, btn("Load", "load", () => go2("load")), btn("Redeem", "redeem", () => go2("redeem"))), h("div", { class: "hint" }, "Opens the amount dialog with the same checks and preview.")]
+      : emptyState("No agents yet", btn("Create Agent", "", () => createDialog(loadOverview)))),
+      panel("Need more points?", null, h("div", { class: "muted" }, "Points are issued by the operator. Contact them for a top-up; in-app requests come in a later update.")));
+  }
+  async function search() {
+    bar.read();
+    await list.reload();
+    const sum = await get("/api/office/summary", periodQuery(st));
+    const m = sum.me;
+    periodRow.replaceChildren(h("div", { class: "stats small" }, stat("Received", money(m.receivedCents), "in"), stat("Taken back", money(m.returnedCents), "out"), stat("Loaded to agents", money(m.loadedCents)), stat("Redeemed from agents", money(m.redeemedCents)),
+      stat("Net change", signed(m.receivedCents - m.returnedCents - m.loadedCents + m.redeemedCents))));
+  }
+  function exportCsv() {
+    const cols = ledgerCols(["time", "id", "type", "from", "to", "amount", "mine", "by"]);
+    downloadCsv("my-ledger.csv", cols.map((c) => c.label), list.entries().map((e) => cols.map((c) => c.csv(e))));
+  }
+  main.replaceChildren(overview,
+    h("div", { class: "cols" },
+      panel("Period search", null, h("div", { class: "row" }, h("span", { class: "lbl" }, "Type"), type, btn([icon("search", 16, "#fff", 2), "Search"], "", search), btn([icon("download", 16), "Export CSV"], "neutral", exportCsv)), bar.el),
+      quick),
+    periodRow,
+    h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "My Ledger")), list));
+  await Promise.all([load(overview, loadOverview), search()]);
+};
+
+// ---------------------------------------------------------------- win ratio (distributor, Prompt 10)
+
+function profileCards(profiles, chosen, onPick, lockedNote = "Not enabled by operator") {
+  const sorted = profiles.slice().sort((a, b) => a.rtpMax - b.rtpMax);
+  const notes = {};
+  sorted.forEach((p, i) => (notes[p.id] = i === sorted.length - 1 ? "Most generous" : i === 0 ? "Highest margin" : "Standard"));
+  return h("div", { class: "profiles" }, sorted.map((p) => h("button", { type: "button", class: "pcard", "aria-pressed": String(p.id === chosen), disabled: !p.allowed, onclick: () => onPick(p.id) },
+    h("div", { class: "row" }, h("span", { class: "big" }, pct(p.rtpMax)), h("span", { class: "grow" }), p.allowed ? null : icon("lock", 18, "#6B7280", 2)),
+    h("div", { class: "muted" }, `${p.id} · ${p.allowed ? notes[p.id] : lockedNote}`),
+    h("dl", {}, h("dt", {}, "House edge"), h("dd", {}, pct(1 - p.rtpMax)), h("dt", {}, "RTP range by bet"), h("dd", {}, `${pct(p.rtpMin)}–${pct(p.rtpMax)}`),
+      h("dt", {}, "Hit frequency"), h("dd", {}, pct(p.hitFrequency, 1)), h("dt", {}, "Free spins"), h("dd", {}, `1 in ${Math.round(p.freeSpinsEvery)}`), h("dt", {}, "Wheel"), h("dd", {}, `1 in ${Math.round(p.wheelEvery)}`)))));
+}
+
+PAGES.winratio = async (main) => {
+  const box = h("div", { style: "display:flex;flex-direction:column;gap:16px" });
+  main.replaceChildren(box);
+  let st = { key: "month", ...periodFor("month") };
+  await load(box, async function draw() {
+    const w = await get("/api/office/win-ratio", periodQuery(st));
+    let chosen = w.current.profileId;
+    const cur = w.profiles.find((p) => p.id === w.current.profileId);
+    const cardsBox = h("div", {});
+    const save = btn("Save", "", () => {
+      const to = w.profiles.find((p) => p.id === chosen);
+      confirmDialog({ title: "Change win ratio", text: `Change your players from RTP ${pct(cur.rtpMax)} to RTP ${pct(to.rtpMax)}?`, ok: "Change", onok: async () => {
+        await post("/api/office/win-ratio", { profileId: chosen });
+        toast(`Win ratio changed to ${to.id}`);
+        await load(box, draw);
+      } });
+    }, { disabled: true });
+    const pick = (id) => { chosen = id; save.disabled = id === w.current.profileId; cardsBox.replaceChildren(profileCards(w.profiles, chosen, pick)); };
+    pick(chosen);
+    const a = w.actual;
+    const periodBtns = h("div", { class: "shortcuts" }, ["today", "week", "month", "all"].map((k) => h("button", { type: "button", "aria-pressed": String(st.key === k), onclick: () => { st = { key: k, ...periodFor(k) }; load(box, draw); } }, SHORTCUTS[k])));
+    box.replaceChildren(
+      panel("Current setting", null,
+        h("div", { style: "font-size:20px;font-weight:600" }, "Your players play at RTP ", h("span", { style: "color:var(--blue)" }, pct(cur.rtpMax))),
+        h("div", { class: "muted" }, `Profile ${cur.id} · fingerprint `, h("span", { class: "mono" }, w.current.hash.slice(0, 12)), w.current.followsDefault ? " · platform default" : ""),
+        h("div", { class: "hint" }, `Since ${fmtTime(w.current.since, false)}${w.current.by ? " by " + w.current.by : ""}`)),
+      panel("Choose profile", null, cardsBox,
+        h("div", { class: "hint" }, "A change applies from each player's next round. Rounds already in progress finish on their old profile. Every round records the profile it was played on."),
+        h("div", { class: "row" }, h("span", { class: "grow" }), save)),
+      panel("Actual vs expected", periodBtns,
+        h("div", { class: "stats small" }, stat("Total bet", money(a.betCents)), stat("Total win", money(a.winCents)), stat("Actual RTP", a.betCents ? pct(a.winCents / a.betCents) : "—"),
+          stat("Expected RTP", a.betCents ? pct(a.expectedWinCents / a.betCents) : "—"), stat("Rounds", count(a.rounds))),
+        h("div", { class: "hint" }, "Actual RTP moves around a lot over short periods. It gets close to the expected figure only after many rounds.")),
+      h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "Change history")), dataTable({ rows: w.history, empty: "No changes yet", cols: [
+        { label: "Time", value: (c) => fmtTime(c.at) }, { label: "From profile", value: (c) => c.from }, { label: "To profile", value: (c) => c.to }, { label: "Changed by", value: (c) => c.by }] })));
+  });
+};
+
+// ---------------------------------------------------------------- agent records (distributor, Prompt 11)
+
+PAGES.records = async (main, q) => {
+  const st = { key: "month", ...periodFor("month") };
+  const agentIn = h("input", { type: "search", placeholder: "Username or ID (empty = all)", value: q.get("agent") || "", style: "width:260px", "aria-label": "Agent" });
+  const bar = periodBar(st, () => search(), ["today", "yesterday", "week", "lastweek", "month"]);
+  const summaryBox = h("section", { class: "panel flush" });
+  const detail = h("div", { style: "display:flex;flex-direction:column;gap:16px" });
+  let rows = [];
+  let selected = null;
+  const cols = [
+    { label: "Agent", value: (r) => r.username, sort: (r) => r.username, csv: (r) => r.username },
+    { label: "Received from me", num: true, value: (r) => money(r.receivedCents), sort: (r) => r.receivedCents, csv: (r) => amountText(r.receivedCents) },
+    { label: "Returned to me", num: true, value: (r) => money(r.returnedCents), sort: (r) => r.returnedCents, csv: (r) => amountText(r.returnedCents) },
+    { label: "Loaded to players", num: true, value: (r) => h("span", { class: "in" }, money(r.loadedCents)), sort: (r) => r.loadedCents, csv: (r) => amountText(r.loadedCents) },
+    { label: "Redeemed from players", num: true, value: (r) => h("span", { class: "out" }, money(r.redeemedCents)), sort: (r) => r.redeemedCents, csv: (r) => amountText(r.redeemedCents) },
+    { label: "Agent net", num: true, value: (r) => signed(r.loadedCents - r.redeemedCents), sort: (r) => r.loadedCents - r.redeemedCents, csv: (r) => amountText(r.loadedCents - r.redeemedCents) },
+    { label: "Players' bet", num: true, value: (r) => money(r.play.betCents), sort: (r) => r.play.betCents, csv: (r) => amountText(r.play.betCents) },
+    { label: "Players' win", num: true, value: (r) => money(r.play.winCents), sort: (r) => r.play.winCents, csv: (r) => amountText(r.play.winCents) },
+    { label: "Active players", num: true, value: (r) => count(r.play.activePlayers), sort: (r) => r.play.activePlayers, csv: (r) => r.play.activePlayers },
+  ];
+  async function search() {
+    bar.read();
+    const sum = await get("/api/office/summary", periodQuery(st));
+    const term = agentIn.value.trim().toLowerCase();
+    rows = sum.children.filter((r) => !term || r.username.toLowerCase() === term || r.id === term || r.username.toLowerCase().includes(term));
+    const tot = (f) => rows.reduce((t, r) => t + f(r), 0);
+    summaryBox.replaceChildren(h("div", { class: "phead" }, h("h2", {}, "Agent Summary"), h("span", { class: "hint" }, periodText(st) + " · click an agent for detail")), dataTable({
+      rows, cols, empty: "No agents found", onRow: (r) => showDetail(r), selected: selected && selected.id,
+      totals: ["Total", money(tot((r) => r.receivedCents)), money(tot((r) => r.returnedCents)), money(tot((r) => r.loadedCents)), money(tot((r) => r.redeemedCents)), signed(tot((r) => r.loadedCents - r.redeemedCents)), money(tot((r) => r.play.betCents)), money(tot((r) => r.play.winCents)), count(tot((r) => r.play.activePlayers))],
+    }));
+    if (rows.length === 1) showDetail(rows[0]);
+    else if (selected) { const s2 = rows.find((r) => r.id === selected.id); if (s2) showDetail(s2); else detail.replaceChildren(); }
+  }
+  async function showDetail(agent) {
+    selected = agent;
+    let tab = "me";
+    const tabs = h("div", { class: "ptabs" });
+    const listBox = h("div", {});
+    const chart = h("div", {});
+    const all = ledgerList({ query: () => nonNull({ account: agent.id, from: st.from, to: st.to }), cols: ledgerCols(["time", "type", "from", "to", "amount", "by"]).concat([{ label: "Agent balance after", num: true, value: (e) => money(e.fromId === agent.id ? e.fromBalanceAfterCents : e.toBalanceAfterCents) }]),
+      empty: "No coin movements in this period.", onLoaded: () => filter() });
+    function filter() {
+      const tbody = all.querySelector("tbody");
+      if (!tbody) return;
+      const entries = all.entries();
+      [...tbody.children].forEach((tr, i) => {
+        const e = entries[i];
+        const withMe = e && (e.fromId === S.me.id || e.toId === S.me.id);
+        tr.classList.toggle("hidden", tab === "me" ? !withMe : withMe);
+      });
+    }
+    const setTab = (t) => { tab = t; [...tabs.children].forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.t === t))); filter(); };
+    tabs.append(h("button", { type: "button", "data-t": "me", "aria-pressed": "true", onclick: () => setTab("me") }, "Coins with me"), h("button", { type: "button", "data-t": "players", "aria-pressed": "false", onclick: () => setTab("players") }, "Coins with players"));
+    listBox.append(all);
+    detail.replaceChildren(chart, h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, `Agent detail: ${agent.username}`), h("span", { class: "hint" }, `Balance ${money(agent.balanceCents)} · ${count(agent.children)} players`)), tabs, listBox));
+    await all.reload();
+    const { days } = await get("/api/office/daily", new URLSearchParams(nonNull({ account: agent.id, from: st.from, to: st.to, tz: tz() })));
+    chart.replaceChildren(panel(`${agent.username}: loaded vs redeemed per day`, null, days.length ? barChart(days.map((d) => ({ label: d.day.slice(5), a: d.loadedCents, b: d.redeemedCents }))) : emptyState("No loads or redeems in this period.")));
+  }
+  function exportCsv() {
+    downloadCsv("agent-records.csv", cols.map((c) => c.label), rows.map((r) => cols.map((c) => c.csv(r))));
+  }
+  agentIn.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
+  main.replaceChildren(panel("Agent Records", null,
+    h("div", { class: "row" }, h("span", { class: "lbl" }, "Agent"), agentIn, btn([icon("search", 16, "#fff", 2), "Search"], "", search), btn([icon("download", 16), "Export CSV"], "neutral", exportCsv)), bar.el),
+    summaryBox, detail);
+  await load(summaryBox, search);
+};
+
+// ---------------------------------------------------------------- operator: points ledger (Prompt 13A)
+
+PAGES.ledger = async (main) => {
+  const st = { key: "today", ...periodFor("today") };
+  const account = h("input", { type: "search", placeholder: "Username or ID, any level", style: "width:240px", "aria-label": "Account" });
+  const type = h("select", { "aria-label": "Type" }, ["", "ISSUE", "REVOKE", "LOAD", "REDEEM"].map((t) => h("option", { value: t }, t || "All")));
+  const bar = periodBar(st, () => search(), ["today", "yesterday", "week", "lastweek", "month", "all"]);
+  const sumBox = h("div", {});
+  const err = h("div", {});
+  const cols = ledgerCols(["time", "id", "type", "from", "to", "amount", "fromAfter", "toAfter", "by", "note", "request"]);
+  const list = ledgerList({ query: () => nonNull({ account: account.value.trim() || null, type: type.value || null, from: st.from, to: st.to }), cols });
+  async function search() {
+    bar.read();
+    err.replaceChildren();
+    try {
+      await list.reload();
+      const p = (await get("/api/office/summary", periodQuery(st))).platform;
+      sumBox.replaceChildren(h("div", { class: "stats small" },
+        stat("Issued", money(p.periodIssuedCents), "in"), stat("Taken back", money(p.periodRevokedCents), "out"),
+        stat("Loaded: distributor → agent", money(p.distributorLoadedCents)), stat("Loaded: agent → player", money(p.agentLoadedCents)),
+        stat("Redeemed: agent → distributor", money(p.distributorRedeemedCents)), stat("Redeemed: player → agent", money(p.agentRedeemedCents)),
+        stat("Net new points", signed(p.periodIssuedCents - p.periodRevokedCents))));
+    } catch (e) { err.replaceChildren(errorBanner(e, search)); }
+  }
+  account.addEventListener("keydown", (e) => { if (e.key === "Enter") search(); });
+  main.replaceChildren(panel("Points Ledger", null,
+    h("div", { class: "row" }, h("span", { class: "lbl" }, "Account"), account, h("span", { class: "lbl" }, "Type"), type, btn([icon("search", 16, "#fff", 2), "Search"], "", search),
+      btn([icon("download", 16), "Export CSV"], "neutral", () => downloadCsv("points-ledger.csv", cols.map((c) => c.label), list.entries().map((e) => cols.map((c) => c.csv(e)))))), bar.el),
+    err, sumBox, h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "Ledger"), h("span", { class: "hint" }, "Newest first")), list));
+  await search();
+};
+
+// ---------------------------------------------------------------- operator: audit (Prompt 13B)
+
+PAGES.audit = async (main) => {
+  const box = h("section", { class: "panel" });
+  const run = () => load(box, async () => {
+    const a = await get("/api/office/audit");
+    const def = a.profiles.find((p) => p.isDefault);
+    const rowsEl = a.checks.map((c) => {
+      const open = h("div", { class: c.ok ? "hidden" : "" });
+      if (c.mismatches.length) open.append(dataTable({ rows: c.mismatches, cols: [
+        { label: "Account", value: (m) => m.username }, { label: "Balance", num: true, value: (m) => money(m.balanceCents) },
+        { label: "Expected", num: true, value: (m) => money(m.expectedCents) }, { label: "Difference", num: true, value: (m) => h("span", { class: "out" }, signed(m.balanceCents - m.expectedCents)) }] }));
+      return h("div", { class: "check" },
+        h("span", { class: "mark " + (c.ok ? "ok" : "bad") }, icon(c.ok ? "check" : "x", 14, "#fff", 3)),
+        h("div", { style: "display:flex;flex-direction:column;gap:4px;min-width:0" }, h("b", { style: "font-weight:600" }, c.title), h("span", { class: "hint" }, c.detail), open),
+        c.ok ? h("span", { class: "hint" }, fmtTime(a.checkedAt, false)) : btn("Details", "link", () => open.classList.toggle("hidden")));
+    });
+    rowsEl.push(h("div", { class: "check" }, h("span", { class: "mark ok" }, icon("check", 14, "#fff", 3)),
+      h("div", { style: "display:flex;flex-direction:column;gap:4px" }, h("b", { style: "font-weight:600" }, "Current math profile and its fingerprint"),
+        h("span", { class: "hint" }, `Default ${def ? def.id : "—"} · `, h("span", { class: "mono" }, def ? def.hash : ""), ` · loaded: ${a.profiles.map((p) => p.id).join(", ")}`)),
+      h("span", { class: "hint" }, fmtTime(a.checkedAt, false))));
+    box.replaceChildren(h("div", { class: "phead" }, h("h2", {}, "Audit"), h("div", { class: "row" }, h("span", { class: "hint" }, "Last checked " + fmtTime(a.checkedAt)), btn([icon("refresh", 16, "#fff", 2), "Run checks now"], "", run))), ...rowsEl);
+  });
+  main.replaceChildren(box);
+  await run();
+};
+
+// ---------------------------------------------------------------- operator: win ratio & games (Prompt 14)
+
+function profileDialog(dist, done) {
+  const sel = h("select", {});
+  const d = dialog({ title: `Win ratio for ${dist.username}`, body: skeletonRows(2) });
+  get("/api/office/games").then((g) => {
+    S.games = g;
+    sel.replaceChildren(...g.profiles.map((p) => h("option", { value: p.id, selected: p.id === dist.profileId }, `${p.id} · RTP ${pct(p.rtpMax)}${p.allowed ? "" : " (not offered to distributors)"}`)));
+    d.setBody(field("Profile", sel), h("div", { class: "hint" }, "Applies from each player's next round. Rounds in progress finish on their old profile."));
+    d.setActions(btn("Cancel", "neutral", d.close), btn("Save", "", async () => {
+      try {
+        await post(`/api/office/accounts/${encodeURIComponent(dist.id)}/profile`, { profileId: sel.value });
+        d.close(); toast(`${dist.username} now plays on ${sel.value}`); if (done) done();
+      } catch (e) { d.setBody(field("Profile", sel), errorBanner(e)); }
+    }));
+  }).catch((e) => d.setBody(errorBanner(e)));
+}
+
+PAGES["games-settings"] = async (main) => {
+  const box = h("div", { style: "display:flex;flex-direction:column;gap:16px" });
+  main.replaceChildren(box);
+  let filter = "";
+  await load(box, async function draw() {
+    const g = (S.games = await get("/api/office/games"));
+    const update = async (patch, msg) => {
+      try { await post("/api/office/games", patch); toast(msg); await load(box, draw); }
+      catch (e) { toast(errText(e), "error"); }
+    };
+    const profilesTable = dataTable({ rows: g.profiles, cols: [
+      { label: "Name", value: (p) => h("b", { style: "font-weight:600" }, p.id) },
+      { label: "RTP", num: true, value: (p) => pct(p.rtpMax) },
+      { label: "House edge", num: true, value: (p) => pct(1 - p.rtpMax) },
+      { label: "Hit frequency", num: true, value: (p) => pct(p.hitFrequency, 1) },
+      { label: "Fingerprint", value: (p) => h("span", { class: "row", style: "gap:4px;flex-wrap:nowrap" }, h("span", { class: "mono" }, p.hash.slice(0, 12)), h("button", { type: "button", class: "btn link", "aria-label": "Copy fingerprint", onclick: () => copyText(p.hash) }, icon("copy", 14))) },
+      { label: "Distributors", num: true, value: (p) => count(p.distributors) },
+      { label: "Allowed for distributors", value: (p) => toggle("", p.allowed, (v) => update({ allowedProfileIds: g.profiles.filter((x) => (x.id === p.id ? v : x.allowed)).map((x) => x.id) }, `${p.id} ${v ? "allowed" : "no longer offered"}`)) },
+      { label: "Default", value: (p) => h("input", { type: "radio", name: "def", checked: p.isDefault, "aria-label": `Default ${p.id}`, onchange: () => confirmDialog({ title: "Change default", text: `Make ${p.id} the default? Distributors without their own choice move to it from their players' next round.`, ok: "Change", onok: () => update({ defaultProfileId: p.id }, `Default is now ${p.id}`) }) }) },
+    ] });
+    const assignRows = () => g.assignments.filter((a) => !filter || a.profileId === filter);
+    const assign = dataTable({ rows: assignRows(), empty: "No distributors yet", page: 50, cols: [
+      { label: "Distributor", value: (a) => a.username, sort: (a) => a.username },
+      { label: "Current profile", value: (a) => [a.profileId, a.followsDefault ? h("span", { class: "hint" }, " (default)") : null], sort: (a) => a.profileId },
+      { label: "Since", value: (a) => fmtTime(a.since, false), sort: (a) => a.since },
+      { label: "Changed by", value: (a) => a.by || "—" },
+      { label: "Change", value: (a) => h("select", { "aria-label": `Profile for ${a.username}`, onchange: (e) => {
+        const v = e.target.value;
+        e.target.value = a.profileId; // until confirmed
+        confirmDialog({ title: "Change win ratio", text: `Move ${a.username}'s players from ${a.profileId} to ${v}?`, ok: "Change", onok: async () => {
+          await post(`/api/office/accounts/${encodeURIComponent(a.id)}/profile`, { profileId: v }); toast(`${a.username} now plays on ${v}`); await load(box, draw);
+        } });
+      } }, g.profiles.map((p) => h("option", { value: p.id, selected: p.id === a.profileId }, p.id))) },
+    ] });
+    const filterSel = h("select", { "aria-label": "Filter by profile", onchange: (e) => { filter = e.target.value; assign.update(assignRows()); } }, h("option", { value: "" }, "All profiles"), g.profiles.map((p) => h("option", { value: p.id, selected: p.id === filter }, p.id)));
+    const maintOn = { v: g.settings.maintenance.on };
+    const maintMsg = h("input", { value: g.settings.maintenance.message, placeholder: "Message shown to players, e.g. Back at 06:00", maxlength: 200, style: "flex:1" });
+    const bets = g.game.betLevelsCents;
+    const contrib = Object.values(g.game.jackpotContributionBps).reduce((a, b) => a + b, 0);
+    box.replaceChildren(
+      h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "Profiles")), profilesTable,
+        h("div", { class: "hint", style: "padding:10px 16px" }, "Profiles are built and verified offline. They can't be edited here, only enabled or disabled.")),
+      h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "Distributor assignments"), filterSel), assign),
+      panel("Game settings", null, kv(
+        "Game", g.game.name, "Lines", String(g.game.lines), "Bet range", `${money(bets[0])} – ${money(bets[bets.length - 1])}`,
+        "Jackpot seeds", Object.entries(g.game.jackpotSeedsCents).map(([t, c]) => `${t} ${money(c)}`).join(" · "),
+        "Jackpot contribution", `${(contrib / 100).toFixed(2)}% of each bet`),
+        h("div", { class: "row" }, toggle("Maintenance mode", maintOn.v, (v) => (maintOn.v = v)), maintMsg,
+          btn("Save", "", () => update({ maintenance: { on: maintOn.v, message: maintMsg.value } }, maintOn.v ? "Maintenance mode on" : "Maintenance mode off"))),
+        h("div", { class: "hint" }, "While on, players can finish rounds already in progress but can't start new spins.")),
+      h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "Change history")), dataTable({ rows: g.history, empty: "No changes yet", page: 25, cols: [
+        { label: "Time", value: (c) => fmtTime(c.at) },
+        { label: "What changed", value: (c) => ({ DISTRIBUTOR_PROFILE: `Win ratio for ${c.target}`, DEFAULT_PROFILE: "Default profile", ALLOWED_PROFILES: "Profiles offered to distributors", MAINTENANCE: "Maintenance mode" })[c.kind] },
+        { label: "Old value", value: (c) => c.from }, { label: "New value", value: (c) => c.to }, { label: "By", value: (c) => c.by }] })));
+  });
+};
+
+// ---------------------------------------------------------------- settings (all roles, Prompt 6)
+
+const ZONES = ["UTC", "America/New_York", "America/Chicago", "America/Denver", "America/Phoenix", "America/Los_Angeles", "America/Anchorage", "Pacific/Honolulu", "Europe/London", "Asia/Manila", "Asia/Singapore", "Asia/Tokyo", "Australia/Sydney"];
+PAGES.settings = async (main) => {
+  const me = S.me;
+  // Account + change password
+  const cur = passwordInput({ autocomplete: "current-password" });
+  const next = passwordInput();
+  const again = passwordInput();
+  const rule = h("div", { class: "hint" }, "At least 10 characters with an upper-case letter and a number");
+  const pwErr = h("div", {});
+  const strong = (p) => p.length >= 10 && /[A-Z]/.test(p) && /[0-9]/.test(p);
+  next.input.addEventListener("input", () => { rule.style.color = next.input.value && !strong(next.input.value) ? "var(--red)" : ""; });
+  const savePw = btn("Save", "", async () => {
+    pwErr.replaceChildren();
+    if (!strong(next.input.value)) { rule.style.color = "var(--red)"; return; }
+    if (next.input.value !== again.input.value) { pwErr.replaceChildren(h("div", { class: "banner error" }, "The new passwords don't match.")); return; }
+    savePw.disabled = true;
+    try {
+      await post("/api/office/me/password", { currentPassword: cur.input.value, newPassword: next.input.value });
+      [cur, next, again].forEach((p) => (p.input.value = ""));
+      toast("Password changed. Other sessions were logged out.");
+      loadSessions();
+    } catch (e) { pwErr.replaceChildren(errorBanner(e.code === "BAD_PASSWORD" ? new ApiError(e.code, e.message) : e)); }
+    savePw.disabled = false;
+  });
+  // Preferences
+  const zones = ZONES.includes(me.timeZone) ? ZONES : [me.timeZone, ...ZONES];
+  const zoneSel = h("select", { "aria-label": "Time zone" }, zones.map((z) => h("option", { value: z, selected: z === me.timeZone }, `${z.replace(/_/g, " ")} (${zoneLabel(z)})`)));
+  const lang = h("select", { "aria-label": "Language" }, h("option", {}, "English"), h("option", { disabled: true }, "More languages later"));
+  const savePrefs = btn("Save", "", async () => {
+    try { await post("/api/office/me/prefs", { timeZone: zoneSel.value }); await refreshMe(); toast("Preferences saved"); render(); }
+    catch (e) { toast(errText(e), "error"); }
+  });
+  // Sessions
+  const sessions = h("div", {});
+  async function loadSessions() {
+    const r = await get("/api/office/me/sessions");
+    sessions.replaceChildren(dataTable({ rows: r.sessions, empty: "No sessions", cols: [
+      { label: "Device / browser", value: (s) => [browserName(s.userAgent), s.current ? h("span", { class: "pill ok", style: "margin-left:6px" }, "This session") : null] },
+      { label: "IP", value: (s) => s.ip || "—" }, { label: "Logged in", value: (s) => fmtTime(s.createdAt, false) }, { label: "Last active", value: (s) => fmtTime(s.lastSeenAt, false) }] }),
+      h("div", { style: "padding:10px 0 0" }, btn("Log out all other sessions", "neutral", async () => { const x = await post("/api/office/me/sessions/logout-others"); toast(`Logged out ${x.loggedOut} other session${x.loggedOut === 1 ? "" : "s"}`); loadSessions(); }, { disabled: r.sessions.length < 2 })));
+  }
+  main.replaceChildren(
+    panel("Account", null,
+      kv("Account", h("b", {}, me.username), "Role", h("span", {}, h("span", { class: "roletag " + me.role }, me.role)), "Created", fmtTime(me.createdAt, false),
+        "Parent", me.parent ? `${me.parent.role[0] + me.parent.role.slice(1).toLowerCase()}: ${me.parent.username}` : me.role === "DISTRIBUTOR" ? "Operator" : "—"),
+      h("div", { style: "display:grid;gap:12px;max-width:420px" },
+        h("div", { class: "lbl", style: "font-size:14px;color:var(--text);font-weight:600" }, "Change password"),
+        field("Current password", cur.el),
+        field("New password", next.el, rule),
+        field("Confirm new password", again.el), pwErr, h("div", {}, savePw))),
+    panel("Preferences", null, h("div", { style: "display:grid;gap:12px;max-width:420px" },
+      field("Time zone", zoneSel, h("span", { class: "hint" }, "All times on every page use it.")),
+      field("Language", lang), h("div", {}, savePrefs))),
+    panel("Security", null,
+      h("div", { class: "row" }, h("b", { style: "font-weight:600" }, "Authenticator app (2FA)"), pill("Off", "bad"), h("span", { class: "hint" }, "Two-step codes are coming in a later update."), h("span", { class: "grow" }), btn("Set up", "neutral", null, { disabled: true })),
+      h("div", { class: "lbl", style: "font-size:14px;color:var(--text);font-weight:600" }, "Active sessions"), sessions));
+  await load(sessions, loadSessions);
+};
+function browserName(ua) {
+  if (!ua) return "Unknown device";
+  const b = /Edg\//.test(ua) ? "Edge" : /Chrome\//.test(ua) ? "Chrome" : /Firefox\//.test(ua) ? "Firefox" : /Safari\//.test(ua) ? "Safari" : ua.split(" ")[0];
+  const os = /iPhone|iPad/.test(ua) ? "iOS" : /Android/.test(ua) ? "Android" : /Windows/.test(ua) ? "Windows" : /Mac OS/.test(ua) ? "macOS" : /Linux/.test(ua) ? "Linux" : "";
+  return os ? `${b} on ${os}` : b;
 }
 
 // ---------------------------------------------------------------- start
 
-setLoginMode(S.mode);
-if ((S.mode === "staff" && S.token) || (S.mode === "operator" && S.adminKey)) {
-  enter().catch(() => logout());
-} else {
-  $("#login").classList.remove("hidden");
-}
+(async () => {
+  S.token = store.sget("jv.office.token");
+  if (!S.token) return showLogin();
+  try { await enter(); }
+  catch { endSession(); }
+})();
 </script>
 </body>
 </html>

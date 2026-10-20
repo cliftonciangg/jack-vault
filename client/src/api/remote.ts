@@ -29,8 +29,12 @@ export class RemoteApi implements GameApi {
   private balanceSubs = new Set<(c: number) => void>();
   private cachedConfig: GameConfig | null = null;
   private closed = false;
-  /** Called when the server drops the session mid-game (logged out elsewhere, disabled, password reset). */
-  onAuthLost: (() => void) | null = null;
+  /**
+   * Called once when the server ends the session mid-game. `reason` is LOGGED_IN_ELSEWHERE when
+   * the account logged in on another device (one device at a time), otherwise SIGNED_OUT
+   * (logged out, disabled, password reset).
+   */
+  onAuthLost: ((reason: string) => void) | null = null;
 
   constructor(private readonly base = "") {}
 
@@ -49,9 +53,10 @@ export class RemoteApi implements GameApi {
       throw new ApiError("NETWORK", "Connection lost");
     }
     if (res.status === 401 && auth) {
-      this.dropSession();
-      this.onAuthLost?.();
-      throw new ApiError("LOGIN_REQUIRED", "Please log in again", 401);
+      const code = (await res.json().catch(() => null))?.error?.code;
+      const reason = code === "LOGGED_IN_ELSEWHERE" ? code : "SIGNED_OUT";
+      this.authLost(reason);
+      throw new ApiError(reason === "SIGNED_OUT" ? "LOGIN_REQUIRED" : reason, "Please log in again", 401);
     }
     const data = res.status === 204 ? null : await res.json().catch(() => null);
     if (!res.ok) {
@@ -59,6 +64,12 @@ export class RemoteApi implements GameApi {
       throw new ApiError(e.code ?? "HTTP_" + res.status, e.message ?? res.statusText, res.status);
     }
     return data as T;
+  }
+
+  private authLost(reason: string) {
+    if (!this.token) return; // already handled (the socket and a request can both notice)
+    this.dropSession();
+    this.onAuthLost?.(reason);
   }
 
   private dropSession() {
@@ -113,12 +124,18 @@ export class RemoteApi implements GameApi {
         if (m.type === "jackpots") this.jackpotSubs.forEach((f) => f(m.jackpots));
         if (m.type === "jackpotWon") this.wonSubs.forEach((f) => f(m.tier, m.amountCents));
         if (m.type === "balance") this.balanceSubs.forEach((f) => f(m.balanceCents));
+        if (m.type === "sessionEnded") this.authLost(m.reason === "LOGGED_IN_ELSEWHERE" ? m.reason : "SIGNED_OUT");
       } catch {
         /* ignore malformed pushes */
       }
     };
-    ws.onclose = () => {
+    ws.onclose = (ev) => {
       this.ws = null;
+      // 4409: logged in on another device; 4401: session no longer valid. Don't reconnect with a dead token.
+      if (ev.code === 4409 || ev.code === 4401) {
+        this.authLost(ev.code === 4409 ? "LOGGED_IN_ELSEWHERE" : "SIGNED_OUT");
+        return;
+      }
       setTimeout(() => this.openSocket(), 3000);
     };
   }
