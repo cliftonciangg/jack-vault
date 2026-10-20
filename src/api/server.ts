@@ -9,13 +9,19 @@ import { Store } from "../store/store.js";
 /**
  * Environment:
  *   PORT                 default 8080
- *   MATH_PROFILE         rtp94 | rtp95 | rtp96 (default rtp95)
+ *   MATH_PROFILE         rtp94 | rtp95 | rtp96 (default rtp95): the default win ratio on first start. After
+ *                        that the operator sets the default and each distributor's profile in the back office.
  *   DATABASE_URL         PostgreSQL connection string (postgres://user:pass@host:5432/db). When set,
  *                        PostgreSQL is the database and DATA_DIR is ignored.
  *   DATA_DIR             journal location without a database (default ./data); DATA_DIR=memory keeps nothing
  *   ALLOW_PLAYER_CREATE  "1" lets /api/sessions create players with STARTING_BALANCE_CENTS (default off: players log in with agent-made accounts)
  *   STARTING_BALANCE_CENTS default 100000 (1,000.00)
- *   ADMIN_KEY            enables /api/admin routes
+ *   ADMIN_KEY            enables /api/admin routes (including POST /api/admin/operators)
+ *   OWNER_HOST, AGENT_HOST  back-office hostnames (e.g. owner.example.com, agent.example.com). When both are set,
+ *                        operators log in only on OWNER_HOST, distributors and agents only on AGENT_HOST,
+ *                        and /office on other hosts redirects to AGENT_HOST.
+ *   SEED_OPERATOR        "username:password" of an operator login created at start if missing
+ *                        (default demo-operator:demo1234 outside production, unset in production)
  *   CORS_ORIGIN          allowed browser origin
  *   SEED_DISTRIBUTOR     "username:password" of a distributor created at start if missing
  *                        (default demo-distributor:demo1234 outside production, unset in production)
@@ -33,7 +39,14 @@ const service = new GameService({
   store,
   startingBalanceCents: Number(env.STARTING_BALANCE_CENTS ?? 100_000),
 });
-const accounts = new AccountService({ store });
+service.warmProfileStats();
+const accounts = new AccountService({ store, profileFor: (id) => service.distributorProfileId(id) });
+const seedOp = env.SEED_OPERATOR ?? (env.NODE_ENV === "production" ? "" : "demo-operator:demo1234");
+if (seedOp.includes(":")) {
+  const [user, ...pw] = seedOp.split(":");
+  const op = accounts.seedOperator(user, pw.join(":"));
+  if (op) console.log(`Created operator login '${op.username}'. Change its password before going live.`);
+}
 const seed = env.SEED_DISTRIBUTOR ?? (env.NODE_ENV === "production" ? "" : "demo-distributor:demo1234");
 if (seed.includes(":")) {
   const [user, ...pw] = seed.split(":");
@@ -48,6 +61,7 @@ const { server } = createApp({
   adminKey: env.ADMIN_KEY,
   corsOrigin: env.CORS_ORIGIN,
   store,
+  staffHosts: env.OWNER_HOST && env.AGENT_HOST ? { operator: env.OWNER_HOST.toLowerCase(), staff: env.AGENT_HOST.toLowerCase() } : undefined,
 });
 const port = Number(env.PORT ?? 8080);
 server.listen(port, () => {

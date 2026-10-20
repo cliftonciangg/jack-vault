@@ -53,6 +53,10 @@ export class Game {
       this.refreshSpinButton();
       toast(`${ICON.coin(22)} ${added ? "Coins added" : "Coins redeemed"}: balance <span class="num" style="color:#FFE27A">${money(c)}</span>`);
     });
+    // Coming back to the tab: the balance may have changed elsewhere (agent, another device).
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && this.phase === "idle" && !this.auto) void this.syncBalance();
+    });
     api.onJackpotWon((tier, amount) => {
       if (Date.now() - this.ownJackpotAt < 20000) return;
       toast(`${ICON.crown(22, "ct")} A player just won the <b style="color:#FFE27A">${tier}</b>: <span class="num" style="color:#FFE27A">${money(amount)}</span>`);
@@ -357,8 +361,12 @@ export class Game {
       this.screen.setBalance(before);
       this.setPhase("idle");
       this.stopAuto();
-      if (e instanceof ApiError && e.code === "INSUFFICIENT_FUNDS") await this.insufficient();
-      else await this.showError(e);
+      if (e instanceof ApiError && e.status === 401) return; // the "logged out" dialog takes over
+      if (e instanceof ApiError && e.code === "INSUFFICIENT_FUNDS") {
+        // The shown balance was stale (e.g. coins spent on another device): show the server's.
+        await this.syncBalance();
+        await this.insufficient();
+      } else await this.showError(e);
       return;
     }
     await minSpin;
@@ -562,6 +570,24 @@ export class Game {
     this.setJackpots(res.jackpots);
     if (roundWin > 0) this.screen.setMessage(`ROUND WIN ${money(roundWin)}`, "#FFE27A");
     return res;
+  }
+
+  /** Replaces the shown balance with the server's. The server is the only authority on coins. */
+  async syncBalance() {
+    try {
+      const s = await this.api.state();
+      if (this.phase !== "idle") return; // a spin started meanwhile; its response carries the balance
+      this.balance = s.balanceCents;
+      this.screen.setBalance(this.balance);
+      this.refreshSpinButton();
+    } catch {
+      /* offline or logged out: the next spin asks the server anyway */
+    }
+  }
+
+  /** The session ended on the server: stop autoplay so nothing else is sent. */
+  stopForAuth() {
+    this.stopAuto();
   }
 
   private async insufficient() {

@@ -1,0 +1,12 @@
+{"v":3,"createdOnFiles":{"v":1,"at":"2026-10-20T06:30:00Z"},"title":"Jack Vault 777 — Splash & Login","launch":{"view":"canvas"},"pages":[],"boards":{
+"Main.dc.html":{"x":0,"y":0,"w":800,"h":560,"title":"Logo · Jack Vault 777"},
+"Mark.dc.html":{"x":880,"y":0,"w":800,"h":560,"title":"Logo · Jack Vault"},
+"Loading.dc.html":{"x":0,"y":1040,"w":390,"h":844,"title":"Loading · portrait"},
+"Ready.dc.html":{"x":470,"y":1040,"w":390,"h":844,"title":"Ready · tap to play"},
+"Login.dc.html":{"x":940,"y":1040,"w":390,"h":844,"title":"Player login"},
+"LoadingL.dc.html":{"x":1410,"y":1040,"w":844,"h":390,"title":"Loading · landscape"}
+},"order":["Main.dc.html","Mark.dc.html","Loading.dc.html","Ready.dc.html","Login.dc.html","LoadingL.dc.html"],
+"notes":{
+"t1":{"x":0,"y":-300,"text":"Jack Vault 777 · Platform logo","kind":"title1","maxW":1680},
+"t2":{"x":0,"y":740,"text":"Splash & login screens","kind":"title1","maxW":2254}
+},"designSystems":[]}

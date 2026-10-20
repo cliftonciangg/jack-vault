@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import pg from "pg";
 import type { JackpotState } from "../engine/jackpots.js";
-import { Commit, Store } from "./store.js";
+import { Commit, GameSettings, Store } from "./store.js";
 
 /** Advisory lock key held for the life of the process: one game server per database. */
 const SERVER_LOCK = 777_000_777;
@@ -82,6 +82,12 @@ const WRITERS = {
     },
     "nothing",
   ),
+  changes: upsert(
+    "change_log",
+    "id",
+    { id: txt("id"), kind: txt("kind"), target_id: txt("targetId"), actor_id: txt("actorId"), at: ts("at") },
+    "nothing",
+  ),
 } satisfies Partial<Record<keyof Commit, Writer>>;
 
 /** Keys that identify a record, to drop earlier duplicates inside one batch. */
@@ -94,6 +100,7 @@ const KEY: Record<keyof typeof WRITERS, string> = {
   idempotency: "key",
   accounts: "id",
   ledger: "entryId",
+  changes: "id",
 };
 
 function lastByKey<T>(rows: T[], key: string): T[] {
@@ -174,9 +181,12 @@ export class PgStore extends Store {
       staffSessions: await q("SELECT data FROM staff_sessions ORDER BY seq"),
       idempotency: await q("SELECT data FROM idempotency ORDER BY seq"),
       ledger: await q("SELECT data FROM ledger ORDER BY seq"),
+      changes: await q("SELECT data FROM change_log ORDER BY seq"),
     };
     const j = await q<JackpotState>("SELECT data FROM jackpots WHERE id = 1");
     if (j.length) c.jackpots = j[0];
+    const st = await q<GameSettings>("SELECT data FROM settings WHERE id = 1");
+    if (st.length) c.settings = st[0];
     this.apply(c);
   }
 
@@ -212,6 +222,13 @@ export class PgStore extends Store {
         await client.query(
           "INSERT INTO jackpots (id, data) VALUES (1, $1::jsonb) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data",
           [JSON.stringify(jackpots)],
+        );
+      }
+      const settings = [...batch].reverse().find((c) => c.settings)?.settings;
+      if (settings) {
+        await client.query(
+          "INSERT INTO settings (id, data) VALUES (1, $1::jsonb) ON CONFLICT (id) DO UPDATE SET data = EXCLUDED.data",
+          [JSON.stringify(settings)],
         );
       }
       const revoked = batch.flatMap((c) => c.revokeSessions ?? []);

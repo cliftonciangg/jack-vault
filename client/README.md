@@ -23,7 +23,7 @@ Open http://localhost:5173 and log in with a player account. Players are created
 
 To play on a phone, use the "Network" URL Vite prints (same Wi-Fi), e.g. `http://192.168.1.20:5173`.
 
-Without the server running, the client switches to **demo mode** on its own: the same game math runs in the browser with a saved demo balance and no login. Force a mode with `?mode=demo` or `?mode=server`, and point at another server with `?server=https://host`. With `npm run dev` you can also force features to test them: `?force=fs`, `?force=wheel`, `?force=big`, `?force=jackpot` (dev builds only).
+Without the server running on localhost, the client switches to **demo mode** on its own (on any other host it keeps retrying the server, so a player can never land on a browser-side wallet): the same game math runs in the browser with a saved demo balance and no login. Force a mode with `?mode=demo` or `?mode=server`, and point at another server with `?server=https://host`. With `npm run dev` you can also force features to test them: `?force=fs`, `?force=wheel`, `?force=big`, `?force=jackpot` (dev builds only).
 
 | Command | What it does |
 |---|---|

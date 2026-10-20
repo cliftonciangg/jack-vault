@@ -10,7 +10,7 @@ Source files for the Claude Design canvas "Jack Vault — Style Guide", built fr
 | Prompt | Files |
 |---|---|
 | 0 Style guide | `Main` (logo), `Colors`, `Type`, `Buttons`, `Panels`, `Icons`, `Motion`, `Layout`, `Tokens` |
-| 1 Loading | `Load1`, `Load2` (tap to play), `LoadL` (landscape) |
+| 1 Loading | `Load1`, `Load2` (tap to play), `LoadL` (landscape); superseded by `../splash-login/` |
 | 2 Lobby | `Lobby`, `LobbyL`, `LobbyStates` |
 | 3 Reels | `Reels` (base component with a `mode` switch), `ReelsSpin`, `ReelsAntic`, `ReelsAuto`, `ReelsThumb`, `ReelsL` |
 | 4 Symbols | `Symbols` |

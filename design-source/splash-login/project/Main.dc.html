@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault 777 logo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 800px; height: 560px; position: relative; overflow: visible; background: {{bg}}; font-family: 'Lilita One', 'Arial Black', sans-serif">
+  <svg width="800" height="560" viewBox="0 0 800 560" style="position: absolute; inset: 0; overflow: visible" role="img" aria-label="{{label}}">
+    <defs>
+      <radialGradient id="jvm-glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFC24A" stop-opacity=".55"></stop><stop offset=".45" stop-color="#E0457B" stop-opacity=".26"></stop><stop offset="1" stop-color="#2A0F6E" stop-opacity="0"></stop></radialGradient>
+      <radialGradient id="jvm-door" cx="34%" cy="28%" r="80%"><stop offset="0" stop-color="#D9C2FF"></stop><stop offset=".22" stop-color="#9D6BFF"></stop><stop offset=".55" stop-color="#6230DE"></stop><stop offset=".85" stop-color="#330F96"></stop><stop offset="1" stop-color="#1B0752"></stop></radialGradient>
+      <linearGradient id="jvm-ring" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B86A00"></stop><stop offset=".2" stop-color="#FFE58A"></stop><stop offset=".5" stop-color="#F5B301"></stop><stop offset=".8" stop-color="#FFF3C4"></stop><stop offset="1" stop-color="#B86A00"></stop></linearGradient>
+      <linearGradient id="jvm-rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF3B0"></stop><stop offset=".35" stop-color="#FFC92E"></stop><stop offset=".7" stop-color="#D98200"></stop><stop offset="1" stop-color="#FFE07A"></stop></linearGradient>
+      <linearGradient id="jvm-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFBD6"></stop><stop offset=".3" stop-color="#FFE15A"></stop><stop offset=".5" stop-color="#FFC21E"></stop><stop offset=".56" stop-color="#E07F00"></stop><stop offset=".78" stop-color="#FFB21E"></stop><stop offset="1" stop-color="#FFE47A"></stop></linearGradient>
+      <linearGradient id="jvm-goldEdge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF3B0"></stop><stop offset="1" stop-color="#A85A00"></stop></linearGradient>
+      <linearGradient id="jvm-gem" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0FFFF"></stop><stop offset=".3" stop-color="#7DF0FF"></stop><stop offset=".5" stop-color="#22C7F2"></stop><stop offset=".56" stop-color="#0A7FD0"></stop><stop offset=".8" stop-color="#2CB8FF"></stop><stop offset="1" stop-color="#A8EEFF"></stop></linearGradient>
+      <linearGradient id="jvm-gemEdge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D8FBFF"></stop><stop offset="1" stop-color="#0B4FA0"></stop></linearGradient>
+      <linearGradient id="jvm-gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".85"></stop><stop offset=".42" stop-color="#FFFFFF" stop-opacity=".15"></stop><stop offset=".46" stop-color="#FFFFFF" stop-opacity="0"></stop></linearGradient>
+      <radialGradient id="jvm-safe" cx="36%" cy="26%" r="80%"><stop offset="0" stop-color="#FFB3B3"></stop><stop offset=".3" stop-color="#FF4D6A"></stop><stop offset=".7" stop-color="#D4123F"></stop><stop offset="1" stop-color="#7A0A2A"></stop></radialGradient>
+      <linearGradient id="jvm-panel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6680"></stop><stop offset=".5" stop-color="#E11D48"></stop><stop offset="1" stop-color="#A3123A"></stop></linearGradient>
+      <linearGradient id="jvm-arm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6A82"></stop><stop offset="1" stop-color="#B0123C"></stop></linearGradient>
+      <linearGradient id="jvm-hat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9F6BFF"></stop><stop offset=".55" stop-color="#5B21D6"></stop><stop offset="1" stop-color="#2E0B85"></stop></linearGradient>
+      <radialGradient id="jvm-coin" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFF7C8"></stop><stop offset=".4" stop-color="#FFD53D"></stop><stop offset=".85" stop-color="#E89400"></stop><stop offset="1" stop-color="#B86A00"></stop></radialGradient>
+      <linearGradient id="jvm-ribbon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6A82"></stop><stop offset=".5" stop-color="#E11D48"></stop><stop offset="1" stop-color="#9F1239"></stop></linearGradient>
+      <linearGradient id="jvm-trim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF4B8"></stop><stop offset=".45" stop-color="#FFC92E"></stop><stop offset="1" stop-color="#C97400"></stop></linearGradient>
+    </defs>
+
+    <!-- glow + starburst -->
+    <circle cx="400" cy="300" r="290" fill="url(#jvm-glow)"></circle>
+    <g transform="translate(400 300)">
+      <sc-for list="{{rays}}" as="r" hint-placeholder-count="18">
+        <path d="M0 0 L-20 -330 L20 -330 Z" fill="{{r.c}}" opacity="{{r.o}}" transform="rotate({{r.a}})"></path>
+      </sc-for>
+    </g>
+
+    <!-- vault door medallion -->
+    <circle cx="400" cy="300" r="186" fill="#12053A"></circle>
+    <circle cx="400" cy="300" r="172" fill="none" stroke="url(#jvm-rim)" stroke-width="22"></circle>
+    <circle cx="400" cy="300" r="183" fill="none" stroke="#5A2E00" stroke-width="3"></circle>
+    <circle cx="400" cy="300" r="160" fill="none" stroke="#5A2E00" stroke-width="3"></circle>
+    <sc-for list="{{rivets}}" as="v" hint-placeholder-count="16">
+      <circle cx="{{v.x}}" cy="{{v.y}}" r="6" fill="#FFE58A" stroke="#7A4200" stroke-width="2.5"></circle>
+    </sc-for>
+    <circle cx="400" cy="300" r="158" fill="url(#jvm-door)"></circle>
+    <circle cx="400" cy="300" r="132" fill="none" stroke="#2A0B7A" stroke-width="4" opacity=".45"></circle>
+    <circle cx="400" cy="300" r="104" fill="none" stroke="#C9A8FF" stroke-width="3" opacity=".25"></circle>
+    <ellipse cx="336" cy="196" rx="54" ry="28" fill="#FFFFFF" opacity=".2" transform="rotate(-30 336 196)"></ellipse>
+    <g transform="rotate(-9 400 318)">
+      <ellipse cx="400" cy="318" rx="308" ry="62" fill="none" stroke="#3A1600" stroke-width="22"></ellipse>
+      <ellipse cx="400" cy="318" rx="308" ry="62" fill="none" stroke="url(#jvm-ring)" stroke-width="15"></ellipse>
+      <ellipse cx="400" cy="318" rx="294" ry="54" fill="none" stroke="#FFF3C4" stroke-width="2" opacity=".7"></ellipse>
+    </g>
+
+    <!-- back coins (blurred) -->
+    <sc-for list="{{backCoins}}" as="c" hint-placeholder-count="4">
+      <g transform="{{c.t}}" style="filter: blur({{c.blur}})">
+        <circle cx="2.5" cy="3.5" r="24" fill="#8A4A00"></circle>
+        <circle cx="0" cy="0" r="24" fill="url(#jvm-coin)" stroke="#9A5200" stroke-width="2"></circle>
+        <circle cx="0" cy="0" r="17" fill="none" stroke="#C27800" stroke-width="2.5"></circle>
+        <path d="M0 -8 L2.1 -2.9 L7.6 -2.5 L3.4 1.1 L4.7 6.5 L0 3.6 L-4.7 6.5 L-3.4 1.1 L-7.6 -2.5 L-2.1 -2.9 Z" fill="#FFE98A" stroke="#B86A00" stroke-width="1.2"></path>
+      </g>
+    </sc-for>
+
+    <!-- casino chips -->
+    <sc-for list="{{chips}}" as="c" hint-placeholder-count="2">
+      <g transform="{{c.t}}" style="filter: drop-shadow(0 4px 5px rgba(10,2,40,.5))">
+        <ellipse cx="0" cy="6" rx="26" ry="26" fill="{{c.dark}}"></ellipse>
+        <circle cx="0" cy="0" r="26" fill="{{c.c}}" stroke="#1A0B3D" stroke-width="2.5"></circle>
+        <circle cx="0" cy="0" r="22" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-dasharray="8.6 8.6"></circle>
+        <circle cx="0" cy="0" r="14" fill="{{c.c}}" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="3 3"></circle>
+        <text x="0" y="5.5" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="15" fill="#FFFFFF">7</text>
+      </g>
+    </sc-for>
+
+    <!-- ===== MASCOT: Jack the safe ===== -->
+    <g style="filter: drop-shadow(0 6px 10px rgba(10,2,40,.55))">
+      <!-- left arm (waving) -->
+      <path d="M322 178 C296 166 276 146 268 122" fill="none" stroke="#1A0B3D" stroke-width="32" stroke-linecap="round"></path>
+      <path d="M322 178 C296 166 276 146 268 122" fill="none" stroke="url(#jvm-arm)" stroke-width="22" stroke-linecap="round"></path>
+      <path d="M278 138 L264 132" stroke="#FFD23A" stroke-width="6" stroke-linecap="round"></path>
+      <ellipse cx="250" cy="86" rx="7" ry="11" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="4" transform="rotate(-22 250 86)"></ellipse>
+      <ellipse cx="263" cy="81" rx="7" ry="12" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="4"></ellipse>
+      <ellipse cx="276" cy="86" rx="7" ry="11" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="4" transform="rotate(22 276 86)"></ellipse>
+      <ellipse cx="263" cy="106" rx="20" ry="21" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="5"></ellipse>
+      <ellipse cx="282" cy="110" rx="7" ry="11" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="4" transform="rotate(32 282 110)"></ellipse>
+      <path d="M254 100 Q263 96 272 100" fill="none" stroke="#C8C2E0" stroke-width="3" stroke-linecap="round"></path>
+      <path d="M226 78 Q216 98 224 118" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".85"></path>
+      <path d="M212 70 Q200 98 210 126" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity=".55"></path>
+
+      <!-- right arm holding the hero coin -->
+      <path d="M478 186 C504 176 522 162 530 144" fill="none" stroke="#1A0B3D" stroke-width="32" stroke-linecap="round"></path>
+      <path d="M478 186 C504 176 522 162 530 144" fill="none" stroke="url(#jvm-arm)" stroke-width="22" stroke-linecap="round"></path>
+      <path d="M520 158 L534 150" stroke="#FFD23A" stroke-width="6" stroke-linecap="round"></path>
+      <g transform="translate(560 110) rotate(14)">
+        <circle cx="4" cy="5" r="38" fill="#8A4A00"></circle>
+        <circle cx="0" cy="0" r="38" fill="url(#jvm-coin)" stroke="#9A5200" stroke-width="3"></circle>
+        <circle cx="0" cy="0" r="28" fill="none" stroke="#C27800" stroke-width="3.5"></circle>
+        <text x="0" y="14" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="40" fill="#C2410C" stroke="#7A2E00" stroke-width="2">7</text>
+        <ellipse cx="-13" cy="-15" rx="11" ry="5" fill="#FFFFFF" opacity=".75" transform="rotate(-35 -13 -15)"></ellipse>
+      </g>
+      <ellipse cx="530" cy="138" rx="19" ry="20" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="5"></ellipse>
+      <ellipse cx="544" cy="124" rx="7" ry="11" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="4" transform="rotate(-30 544 124)"></ellipse>
+
+      <!-- hinges (left side) -->
+      <rect x="300" y="108" width="16" height="26" rx="5" fill="url(#jvm-trim)" stroke="#5A2E00" stroke-width="3.5"></rect>
+      <rect x="300" y="196" width="16" height="26" rx="5" fill="url(#jvm-trim)" stroke="#5A2E00" stroke-width="3.5"></rect>
+
+      <!-- body -->
+      <rect x="310" y="72" width="180" height="182" rx="36" fill="url(#jvm-safe)" stroke="#1A0B3D" stroke-width="6"></rect>
+      <rect x="326" y="88" width="148" height="150" rx="22" fill="url(#jvm-panel)" stroke="#5A2E00" stroke-width="2"></rect>
+      <rect x="326" y="88" width="148" height="150" rx="22" fill="none" stroke="url(#jvm-trim)" stroke-width="7"></rect>
+      <circle cx="334" cy="96" r="5.5" fill="#FFE58A" stroke="#5A2E00" stroke-width="2.5"></circle>
+      <circle cx="466" cy="96" r="5.5" fill="#FFE58A" stroke="#5A2E00" stroke-width="2.5"></circle>
+      <circle cx="334" cy="230" r="5.5" fill="#FFE58A" stroke="#5A2E00" stroke-width="2.5"></circle>
+      <circle cx="466" cy="230" r="5.5" fill="#FFE58A" stroke="#5A2E00" stroke-width="2.5"></circle>
+      <ellipse cx="346" cy="92" rx="26" ry="9" fill="#FFFFFF" opacity=".4" transform="rotate(-16 346 92)"></ellipse>
+
+      <!-- combination dial (right side, like an ear) -->
+      <g transform="translate(494 164)">
+        <circle r="22" fill="#1A0B3D"></circle>
+        <circle r="18" fill="url(#jvm-trim)"></circle>
+        <sc-for list="{{ticks}}" as="k" hint-placeholder-count="8">
+          <path d="M0 -15 L0 -10" stroke="#7A4200" stroke-width="2.5" stroke-linecap="round" transform="rotate({{k}})"></path>
+        </sc-for>
+        <circle r="7" fill="#E11D48" stroke="#5A2E00" stroke-width="2.5"></circle>
+        <circle cx="-2" cy="-2" r="2" fill="#FFFFFF" opacity=".8"></circle>
+      </g>
+
+      <!-- brows -->
+      <path d="M352 122 Q368 110 386 118" fill="none" stroke="#1A0B3D" stroke-width="5" stroke-linecap="round"></path>
+      <path d="M414 118 Q432 110 448 122" fill="none" stroke="#1A0B3D" stroke-width="5" stroke-linecap="round"></path>
+      <!-- eyes -->
+      <ellipse cx="373" cy="152" rx="21" ry="26" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="4"></ellipse>
+      <ellipse cx="427" cy="152" rx="21" ry="26" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="4"></ellipse>
+      <ellipse cx="377" cy="157" rx="12" ry="15" fill="#2B0F5E"></ellipse>
+      <ellipse cx="431" cy="157" rx="12" ry="15" fill="#2B0F5E"></ellipse>
+      <circle cx="377" cy="160" r="6.5" fill="#7C3AED"></circle>
+      <circle cx="431" cy="160" r="6.5" fill="#7C3AED"></circle>
+      <circle cx="371" cy="148" r="5.5" fill="#FFFFFF"></circle>
+      <circle cx="425" cy="148" r="5.5" fill="#FFFFFF"></circle>
+      <circle cx="382" cy="166" r="2.5" fill="#FFFFFF"></circle>
+      <circle cx="436" cy="166" r="2.5" fill="#FFFFFF"></circle>
+      <!-- cheeks -->
+      <ellipse cx="348" cy="188" rx="12" ry="7" fill="#FFB0C4" opacity=".75"></ellipse>
+      <ellipse cx="452" cy="188" rx="12" ry="7" fill="#FFB0C4" opacity=".75"></ellipse>
+      <!-- grin with a gold tooth -->
+      <path d="M366 186 Q400 230 434 186 Q400 198 366 186 Z" fill="#4A0A24" stroke="#1A0B3D" stroke-width="4.5" stroke-linejoin="round"></path>
+      <path d="M386 204 Q400 218 414 204 Q400 208 386 204 Z" fill="#FF6F91"></path>
+      <path d="M380 190 L382 199 L390 192 Z" fill="#FFFFFF"></path>
+      <path d="M408 192 L416 199 L419 190 Z" fill="#FFD23A" stroke="#7A4200" stroke-width="1.5"></path>
+
+      <!-- top hat -->
+      <g transform="rotate(-12 400 70)">
+        <ellipse cx="400" cy="74" rx="66" ry="13" fill="url(#jvm-hat)" stroke="#1A0B3D" stroke-width="5"></ellipse>
+        <path d="M362 72 L366 16 Q400 8 434 16 L438 72 Q400 80 362 72 Z" fill="url(#jvm-hat)" stroke="#1A0B3D" stroke-width="5" stroke-linejoin="round"></path>
+        <path d="M364 52 Q400 58 436 52 L437 66 Q400 72 363 66 Z" fill="url(#jvm-trim)" stroke="#5A2E00" stroke-width="3" stroke-linejoin="round"></path>
+        <path d="M376 22 L374 46" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".45"></path>
+        <g transform="translate(428 40) rotate(16)">
+          <rect x="-11" y="-15" width="22" height="30" rx="3" fill="#FFFFFF" stroke="#1A0B3D" stroke-width="3"></rect>
+          <path d="M0 6 C-8 0 -8 -7 -3 -7 C-1 -7 0 -5 0 -4 C0 -5 1 -7 3 -7 C8 -7 8 0 0 6 Z" fill="#E11D48"></path>
+        </g>
+      </g>
+    </g>
+
+    <!-- ===== WORDMARK ===== -->
+    <!-- JACK -->
+    <g transform="{{jackT}}" style="filter: drop-shadow(0 8px 12px rgba(10,2,40,.6))">
+      <text x="400" y="362" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="166" textLength="410" lengthAdjust="spacingAndGlyphs" fill="#2A0A00" stroke="#2A0A00" stroke-width="26" stroke-linejoin="round">JACK</text>
+      <text x="400" y="352" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="166" textLength="410" lengthAdjust="spacingAndGlyphs" fill="#5A2200" stroke="#3A1200" stroke-width="22" stroke-linejoin="round">JACK</text>
+      <text x="400" y="352" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="166" textLength="410" lengthAdjust="spacingAndGlyphs" fill="url(#jvm-goldEdge)" stroke="url(#jvm-goldEdge)" stroke-width="9" stroke-linejoin="round">JACK</text>
+      <text x="400" y="352" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="166" textLength="410" lengthAdjust="spacingAndGlyphs" fill="url(#jvm-gold)">JACK</text>
+      <text x="400" y="352" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="166" textLength="410" lengthAdjust="spacingAndGlyphs" fill="url(#jvm-gloss)">JACK</text>
+    </g>
+
+    <!-- 777 ribbon -->
+    <sc-if value="{{show777}}" hint-placeholder="true">
+      <g style="filter: drop-shadow(0 4px 6px rgba(10,2,40,.5))">
+        <path d="M300 380 L246 384 L264 400 L246 418 L300 416 Z" fill="#7A0A2A" stroke="#1A0B3D" stroke-width="4" stroke-linejoin="round"></path>
+        <path d="M500 380 L554 384 L536 400 L554 418 L500 416 Z" fill="#7A0A2A" stroke="#1A0B3D" stroke-width="4" stroke-linejoin="round"></path>
+        <path d="M290 374 Q400 362 510 374 L510 414 Q400 402 290 414 Z" fill="url(#jvm-ribbon)" stroke="#1A0B3D" stroke-width="4.5" stroke-linejoin="round"></path>
+        <path d="M296 380 Q400 368 504 380" fill="none" stroke="#FFD23A" stroke-width="2.5" opacity=".9"></path>
+        <path d="M296 408 Q400 396 504 408" fill="none" stroke="#FFD23A" stroke-width="2.5" opacity=".9"></path>
+        <path d="M336 384 L338.6 390 L345 390.5 L340 394.6 L341.6 401 L336 397.5 L330.4 401 L332 394.6 L327 390.5 L333.4 390 Z" fill="#FFE58A" stroke="#7A2E00" stroke-width="1.5"></path>
+        <path d="M464 384 L466.6 390 L473 390.5 L468 394.6 L469.6 401 L464 397.5 L458.4 401 L460 394.6 L455 390.5 L461.4 390 Z" fill="#FFE58A" stroke="#7A2E00" stroke-width="1.5"></path>
+        <text x="400" y="406" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="38" letter-spacing="6" fill="#3A0A00" stroke="#3A0A00" stroke-width="7" stroke-linejoin="round">777</text>
+        <text x="400" y="406" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="38" letter-spacing="6" fill="url(#jvm-gold)">777</text>
+      </g>
+    </sc-if>
+
+    <!-- VAULT -->
+    <g transform="{{vaultT}}" style="filter: drop-shadow(0 8px 12px rgba(10,2,40,.6))">
+      <text x="400" y="538" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="146" textLength="480" lengthAdjust="spacingAndGlyphs" fill="#04102E" stroke="#04102E" stroke-width="26" stroke-linejoin="round">VAULT</text>
+      <text x="400" y="528" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="146" textLength="480" lengthAdjust="spacingAndGlyphs" fill="#0A2766" stroke="#071A4A" stroke-width="22" stroke-linejoin="round">VAULT</text>
+      <text x="400" y="528" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="146" textLength="480" lengthAdjust="spacingAndGlyphs" fill="url(#jvm-gemEdge)" stroke="url(#jvm-gemEdge)" stroke-width="9" stroke-linejoin="round">VAULT</text>
+      <text x="400" y="528" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="146" textLength="480" lengthAdjust="spacingAndGlyphs" fill="url(#jvm-gem)">VAULT</text>
+      <text x="400" y="528" text-anchor="middle" font-family="Lilita One, Arial Black, sans-serif" font-size="146" textLength="480" lengthAdjust="spacingAndGlyphs" fill="url(#jvm-gloss)">VAULT</text>
+    </g>
+
+    <!-- front coins -->
+    <sc-for list="{{frontCoins}}" as="c" hint-placeholder-count="8">
+      <g transform="{{c.t}}" style="filter: drop-shadow(0 4px 4px rgba(10,2,40,.45))">
+        <circle cx="2.5" cy="3.5" r="24" fill="#8A4A00"></circle>
+        <circle cx="0" cy="0" r="24" fill="url(#jvm-coin)" stroke="#9A5200" stroke-width="2"></circle>
+        <circle cx="0" cy="0" r="17" fill="none" stroke="#C27800" stroke-width="2.5"></circle>
+        <path d="M0 -8 L2.1 -2.9 L7.6 -2.5 L3.4 1.1 L4.7 6.5 L0 3.6 L-4.7 6.5 L-3.4 1.1 L-7.6 -2.5 L-2.1 -2.9 Z" fill="#FFE98A" stroke="#B86A00" stroke-width="1.2"></path>
+        <ellipse cx="-8" cy="-10" rx="8" ry="3.5" fill="#FFFFFF" opacity=".7" transform="rotate(-35 -8 -10)"></ellipse>
+      </g>
+    </sc-for>
+
+    <!-- gems -->
+    <sc-for list="{{gems}}" as="g" hint-placeholder-count="3">
+      <g transform="{{g.t}}" style="filter: drop-shadow(0 0 8px {{g.glow}})">
+        <path d="M-12 -6 L-6 -14 L6 -14 L12 -6 L0 14 Z" fill="{{g.c}}" stroke="#1A0B3D" stroke-width="2.5" stroke-linejoin="round"></path>
+        <path d="M-6 -14 L6 -14 L3 -6 L-3 -6 Z" fill="#FFFFFF" opacity=".55"></path>
+        <path d="M-12 -6 L12 -6 M-3 -6 L0 14 L3 -6" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity=".6"></path>
+      </g>
+    </sc-for>
+
+    <!-- sparkles -->
+    <sc-for list="{{sparks}}" as="s" hint-placeholder-count="9">
+      <path d="M0 -14 L3 -3 L14 0 L3 3 L0 14 L-3 3 L-14 0 L-3 -3 Z" fill="#FFFFFF" transform="{{s.t}}" style="filter: drop-shadow(0 0 6px rgba(255,236,160,.95))"></path>
+    </sc-for>
+  </svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"wordmark":{"editor":"enum","default":"777","options":["777","plain"]},"backdrop":{"editor":"boolean","default":true},"$preview":{"width":800,"height":560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const backdrop = this.props.backdrop ?? true;
+    const show777 = (this.props.wordmark ?? '777') !== 'plain';
+    const rays = Array.from({ length: 18 }, (_, i) => ({ a: i * 20, c: i % 2 ? '#FFD23A' : '#FF7AA2', o: i % 2 ? .16 : .11 }));
+    const rivets = Array.from({ length: 16 }, (_, i) => { const a = (i * 22.5 + 11.25) * Math.PI / 180; return { x: (400 + 172 * Math.cos(a)).toFixed(1), y: (300 + 172 * Math.sin(a)).toFixed(1) }; });
+    const ticks = Array.from({ length: 8 }, (_, i) => i * 45);
+    const coin = (x, y, s, r, sy, blur) => ({ t: `translate(${x} ${y}) rotate(${r}) scale(${s} ${s * sy})`, blur: (blur || 0) + 'px' });
+    const backCoins = [coin(140, 170, 1.15, -20, .88, 2.5), coin(690, 196, 1.2, 25, .85, 2.5), coin(108, 430, .95, 10, .7, 1.8), coin(700, 436, 1.05, -15, .8, 1.8)];
+    const frontCoins = [coin(196, 262, 1.0, -30, .72), coin(618, 272, .92, 30, .7), coin(232, 486, .82, 15, .6), coin(584, 494, .86, -20, .66), coin(166, 346, .62, 0, .92), coin(652, 362, .7, 40, .8), coin(640, 64, .55, 20, .9), coin(196, 40, .5, -10, .85)];
+    const chips = [{ t: 'translate(100 238) rotate(-18) scale(.95 .8)', c: '#E11D48', dark: '#7A0A2A' }, { t: 'translate(716 314) rotate(16) scale(.9 .78)', c: '#2563EB', dark: '#13306E' }];
+    const gems = [{ t: 'translate(126 312) rotate(-12) scale(1.1)', c: '#22D3EE', glow: 'rgba(34,211,238,.9)' }, { t: 'translate(700 250) rotate(14) scale(1.2)', c: '#FF4D8D', glow: 'rgba(255,77,141,.9)' }, { t: 'translate(708 522) rotate(8) scale(.9)', c: '#A78BFA', glow: 'rgba(167,139,250,.9)' }];
+    const sp = (x, y, s) => ({ t: `translate(${x} ${y}) scale(${s})` });
+    const sparks = [sp(232, 168, .9), sp(612, 186, .85), sp(318, 30, .6), sp(522, 450, .6), sp(92, 508, .6), sp(740, 90, .7), sp(486, 22, .55), sp(196, 410, .5), sp(668, 534, .5)];
+    return {
+      bg: backdrop ? 'radial-gradient(ellipse 90% 80% at 50% 45%, #2A1A6E 0%, #120A38 55%, #070418 100%)' : 'transparent',
+      label: show777 ? 'Jack Vault 777' : 'Jack Vault',
+      show777,
+      jackT: show777 ? 'translate(0 0)' : 'translate(0 12)',
+      vaultT: show777 ? 'translate(0 0)' : 'translate(0 -22)',
+      rays, rivets, ticks, backCoins, frontCoins, chips, gems, sparks
+    };
+  }
+}
+</script>
+</body>
+</html>

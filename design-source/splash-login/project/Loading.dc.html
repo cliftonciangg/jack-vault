@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault 777 loading screen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&amp;family=Orbitron:wght@700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#C4B5FD}a:hover{color:#FFFFFF}
+button,input{font:inherit;cursor:pointer}
+input{cursor:text}
+input::placeholder{color:#9F97C8}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #070418; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif">
+  <!-- nebula -->
+  <div style="position: absolute; inset: 0; background: radial-gradient(ellipse 70% 40% at 18% 26%, rgba(124,58,237,.55) 0%, rgba(124,58,237,0) 70%), radial-gradient(ellipse 60% 35% at 86% 16%, rgba(34,211,238,.26) 0%, rgba(34,211,238,0) 70%), radial-gradient(ellipse 80% 40% at 60% 64%, rgba(219,39,119,.30) 0%, rgba(219,39,119,0) 70%), radial-gradient(ellipse 100% 45% at 50% 100%, rgba(245,179,1,.22) 0%, rgba(245,179,1,0) 70%), linear-gradient(180deg, #0B0624 0%, #120A38 45%, #0A0520 100%)"></div>
+  <svg width="390" height="844" viewBox="0 0 390 844" style="position: absolute; inset: 0" aria-hidden="true">
+    <defs>
+      <radialGradient id="jl-far" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#9AF5FF"></stop><stop offset=".45" stop-color="#1FA6C9"></stop><stop offset="1" stop-color="#0A2A4A"></stop></radialGradient>
+      <radialGradient id="jl-moon" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#F9C6FF"></stop><stop offset=".5" stop-color="#B14DDB"></stop><stop offset="1" stop-color="#3A0F5E"></stop></radialGradient>
+      <linearGradient id="jl-comet" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0"></stop><stop offset="1" stop-color="#FFF3C4" stop-opacity=".9"></stop></linearGradient>
+      <radialGradient id="jl-halo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFD23A" stop-opacity=".32"></stop><stop offset=".5" stop-color="#8B5CF6" stop-opacity=".16"></stop><stop offset="1" stop-color="#8B5CF6" stop-opacity="0"></stop></radialGradient>
+    </defs>
+    <sc-for list="{{stars}}" as="s" hint-placeholder-count="80"><circle cx="{{s.x}}" cy="{{s.y}}" r="{{s.r}}" fill="#FFFFFF" opacity="{{s.o}}"></circle></sc-for>
+    <g opacity=".85">
+      <circle cx="350" cy="110" r="52" fill="url(#jl-far)"></circle>
+      <ellipse cx="350" cy="114" rx="88" ry="15" fill="none" stroke="#9AF5FF" stroke-width="3" opacity=".5" transform="rotate(-16 350 114)"></ellipse>
+    </g>
+    <circle cx="24" cy="708" r="62" fill="url(#jl-moon)" opacity=".5"></circle>
+    <path d="M-10 64 L112 108" stroke="url(#jl-comet)" stroke-width="3" stroke-linecap="round"></path>
+    <circle cx="112" cy="108" r="3.5" fill="#FFF3C4" style="filter: drop-shadow(0 0 6px #FFF3C4)"></circle>
+    <circle cx="195" cy="{{haloY}}" r="220" fill="url(#jl-halo)"></circle>
+  </svg>
+  <div style="position: absolute; inset: 0; background: radial-gradient(ellipse 85% 70% at 50% 45%, rgba(0,0,0,0) 55%, rgba(4,2,14,.65) 100%)"></div>
+
+  <div style="position: relative; height: 100%; box-sizing: border-box; padding: 59px 20px 34px; display: flex; flex-direction: column; align-items: center">
+    <div style="height: {{topGap}}; flex-shrink: 0"></div>
+    <!-- logo -->
+    <div style="width: {{logoW}}; height: {{logoH}}; position: relative; flex-shrink: 0">
+      <div style="position: absolute; left: 0; top: 0; width: 800px; height: 560px; transform: scale({{logoScale}}); transform-origin: 0 0">
+        <dc-import name="Main" wordmark="{{variant}}" backdrop="{{no}}" hint-size="800px,560px"></dc-import>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <sc-if value="{{isLoading}}" hint-placeholder-val="{{true}}">
+      <div style="flex: 1"></div>
+      <div style="width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <span style="font-size: 14px; letter-spacing: 2px; font-weight: 700; color: #C4B5FD">OPENING THE VAULT…</span>
+          <span style="font-family: 'Lilita One', sans-serif; font-size: 24px; color: #FFD23A; text-shadow: 0 2px 0 #5A2200, 0 0 12px rgba(245,179,1,.6)">{{pct}}%</span>
+        </div>
+        <div style="position: relative; height: 26px; border-radius: 13px; background: #12082E; border: 3px solid #F5B301; box-shadow: 0 0 0 2px #2A0A00, inset 0 3px 6px rgba(0,0,0,.6), 0 0 18px rgba(245,179,1,.35)">
+          <div style="position: absolute; left: 2px; top: 2px; bottom: 2px; width: {{fillW}}; border-radius: 10px; background: repeating-linear-gradient(-45deg, rgba(255,255,255,.18) 0 8px, rgba(255,255,255,0) 8px 16px), linear-gradient(180deg, #FFF3B0 0%, #FFD23A 45%, #E08A00 55%, #FFB21E 100%); box-shadow: 0 0 12px rgba(255,210,58,.8)">
+            <div style="position: absolute; left: 6px; right: 6px; top: 2px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.65)"></div>
+          </div>
+          <svg width="40" height="40" viewBox="-20 -20 40 40" style="position: absolute; top: -10px; left: calc({{fillW}} - 16px); filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)) drop-shadow(0 0 8px rgba(255,210,58,.9))" aria-hidden="true">
+            <defs><radialGradient id="jl-coin" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFF7C8"></stop><stop offset=".45" stop-color="#FFD53D"></stop><stop offset="1" stop-color="#B86A00"></stop></radialGradient></defs>
+            <circle cx="1.5" cy="2" r="16" fill="#8A4A00"></circle>
+            <circle r="16" fill="url(#jl-coin)" stroke="#9A5200" stroke-width="2"></circle>
+            <circle r="11" fill="none" stroke="#C27800" stroke-width="2"></circle>
+            <path d="M0 -6 L1.6 -2.2 L5.7 -1.9 L2.5 .8 L3.5 4.9 L0 2.7 L-3.5 4.9 L-2.5 .8 L-5.7 -1.9 L-1.6 -2.2 Z" fill="#FFF0A0" stroke="#B86A00" stroke-width="1"></path>
+          </svg>
+        </div>
+      </div>
+      <div style="width: 100%; max-width: 320px; margin-top: 18px; border-radius: 16px; background: rgba(21,16,48,.78); border: 1px solid rgba(167,139,250,.45); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); padding: 12px 14px; display: flex; gap: 12px; align-items: center; box-sizing: border-box">
+        <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="flex-shrink: 0; filter: drop-shadow(0 0 8px rgba(245,179,1,.6))">
+          <circle cx="20" cy="20" r="18" fill="#2A1580" stroke="#F5B301" stroke-width="2.5"></circle>
+          <path d="M20 8 L20 32 M8 20 L32 20 M11.5 11.5 L28.5 28.5 M28.5 11.5 L11.5 28.5" stroke="#FFD23A" stroke-width="2.5" stroke-linecap="round"></path>
+          <circle cx="20" cy="20" r="6" fill="#E11D2E" stroke="#F5B301" stroke-width="2"></circle>
+        </svg>
+        <div style="display: flex; flex-direction: column; gap: 1px">
+          <span style="font-size: 12px; letter-spacing: 2px; font-weight: 700; color: #FFD23A">TIP</span>
+          <span style="font-size: 16px; font-weight: 600; line-height: 1.25">Four progressive jackpots are shared across every Jack Vault game. <strong style="color: #FFD23A">GRAND</strong> keeps growing until someone hits it.</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 6px; margin-top: 10px"><span style="width: 16px; height: 5px; border-radius: 3px; background: #FFD23A"></span><span style="width: 5px; height: 5px; border-radius: 3px; background: #4B4766"></span><span style="width: 5px; height: 5px; border-radius: 3px; background: #4B4766"></span></div>
+      <div style="flex: 1"></div>
+    </sc-if>
+
+    <!-- READY -->
+    <sc-if value="{{isReady}}" hint-placeholder-val="{{false}}">
+      <div style="flex: 1"></div>
+      <div style="position: relative; width: 100%; max-width: 300px; height: 76px; display: flex; align-items: center; justify-content: center">
+        <span style="position: absolute; inset: -8px -6px; border-radius: 44px; border: 3px solid rgba(255,210,58,.45); box-shadow: 0 0 24px rgba(255,210,58,.45)"></span>
+        <a href="Login.dc.html" style="position: relative; width: 100%; height: 66px; box-sizing: border-box; border-radius: 33px; border: 3px solid #5A2E00; background: linear-gradient(180deg, #FFF3B0 0%, #FFD23A 42%, #F5A400 58%, #FFC23A 100%); box-shadow: 0 6px 0 #8A4A00, 0 10px 18px rgba(0,0,0,.5), 0 0 30px rgba(255,190,40,.55), inset 0 2px 0 rgba(255,255,255,.7); font-family: 'Lilita One', sans-serif; font-size: 28px; letter-spacing: 2px; color: #3A1600; text-shadow: 0 1px 0 rgba(255,255,255,.6); text-decoration: none; display: flex; align-items: center; justify-content: center">TAP TO PLAY</a>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; margin-top: 22px">
+        <span style="font-size: 15px; font-weight: 700; color: #C4B5FD">Sound</span>
+        <div style="display: flex; background: rgba(21,16,48,.85); border: 1px solid #3B2F7A; border-radius: 24px; padding: 3px">
+          <button aria-pressed="true" style="height: 42px; padding: 0 18px; border-radius: 21px; border: 0; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 14px rgba(139,92,246,.6)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 9h4l6-5v16l-6-5H3zM16 8l2 4-2 4"></path></svg>ON</button>
+          <button aria-pressed="false" style="height: 42px; padding: 0 18px; border-radius: 21px; border: 0; background: transparent; color: #B9B3D9; font-weight: 700; font-size: 15px">OFF</button>
+        </div>
+      </div>
+      <div style="flex: 1"></div>
+    </sc-if>
+
+    <!-- LOGIN -->
+    <sc-if value="{{isLogin}}" hint-placeholder-val="{{false}}">
+      <form style="width: 100%; max-width: 330px; display: flex; flex-direction: column; gap: 14px; margin-top: 18px">
+        <div style="text-align: center; font-family: 'Lilita One', sans-serif; font-size: 24px; letter-spacing: 3px; color: #E9D5FF; text-shadow: 0 2px 0 #1A0B3D, 0 0 14px rgba(167,139,250,.7)">PLAYER LOGIN</div>
+        <label style="position: relative; display: flex; align-items: center; height: 56px; border-radius: 16px; background: rgba(11,8,32,.85); border: 1.5px solid #5B47B8; box-shadow: inset 0 2px 8px rgba(0,0,0,.5), 0 0 12px rgba(124,58,237,.25)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin: 0 10px 0 16px; flex-shrink: 0"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"></path></svg>
+          <input aria-label="Username" placeholder="Username" style="flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; color: #FFFFFF; font-size: 18px; font-weight: 600; outline: none; padding-right: 16px">
+        </label>
+        <label style="position: relative; display: flex; align-items: center; height: 56px; border-radius: 16px; background: rgba(11,8,32,.85); border: 1.5px solid #5B47B8; box-shadow: inset 0 2px 8px rgba(0,0,0,.5), 0 0 12px rgba(124,58,237,.25)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin: 0 10px 0 16px; flex-shrink: 0"><path d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+          <input type="password" aria-label="Password" placeholder="Password" style="flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; color: #FFFFFF; font-size: 18px; font-weight: 600; outline: none">
+          <button type="button" aria-label="Show password" style="width: 48px; height: 48px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0; margin-right: 4px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+        </label>
+        <div style="position: relative; margin-top: 6px">
+          <button type="submit" style="width: 100%; height: 62px; border-radius: 31px; border: 3px solid #5A2E00; background: linear-gradient(180deg, #FFF3B0 0%, #FFD23A 42%, #F5A400 58%, #FFC23A 100%); box-shadow: 0 6px 0 #8A4A00, 0 10px 18px rgba(0,0,0,.5), 0 0 28px rgba(255,190,40,.5), inset 0 2px 0 rgba(255,255,255,.7); font-family: 'Lilita One', sans-serif; font-size: 26px; letter-spacing: 3px; color: #3A1600; text-shadow: 0 1px 0 rgba(255,255,255,.6)">LOG IN</button>
+        </div>
+        <div style="text-align: center; font-size: 16px; color: #B9B3D9; margin-top: 6px">Get your login from your agent.</div>
+      </form>
+      <div style="flex: 1"></div>
+    </sc-if>
+
+    <!-- footer -->
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+      <div style="display: flex; align-items: baseline; gap: 6px; transform: skewX(-12deg)">
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 14px; color: #FFFFFF">JACK</span>
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 14px; color: #F5B301">VAULT</span>
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 14px; color: #F87171">777</span>
+      </div>
+      <div style="font-size: 14px; color: #8A83AD; display: flex; gap: 12px"><span>v1.0.0</span><a href="#" style="text-decoration: underline">Play responsibly</a></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","default":"loading","options":["loading","ready","login"]},"logo":{"editor":"enum","default":"777","options":["777","plain"]},"progress":{"editor":"range","default":60,"min":0,"max":100,"step":1,"unit":"%"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const state = this.props.state ?? 'loading';
+    const p = this.props.progress ?? 60;
+    const variant = this.props.logo ?? '777';
+    const login = state === 'login';
+    const scale = login ? .4 : .46;
+    let seed = 7;
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const stars = Array.from({ length: 80 }, () => ({ x: (rnd() * 390).toFixed(1), y: (rnd() * 844).toFixed(1), r: (rnd() < .12 ? 1.6 : rnd() * .9 + .3).toFixed(2), o: (rnd() * .6 + .3).toFixed(2) }));
+    return {
+      stars, no: false, variant, pct: p, fillW: `calc(${p}% - 4px)`,
+      isLoading: state === 'loading', isReady: state === 'ready', isLogin: login,
+      logoScale: scale, logoW: Math.round(800 * scale) + 'px', logoH: Math.round(560 * scale) + 'px',
+      topGap: login ? '16px' : '70px', haloY: login ? 200 : 260
+    };
+  }
+}
+</script>
+</body>
+</html>
