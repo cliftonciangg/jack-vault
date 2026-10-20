@@ -13,6 +13,7 @@ import { Lobby } from "./ui/lobby";
 import { setOverlayHost } from "./ui/overlays";
 import { GameScreen, Orientation } from "./ui/screen";
 import { unlockAudio } from "./ui/sound";
+import { fullscreenOnTap } from "./ui/fullscreen";
 import { Starfield } from "./ui/stars";
 import { loadSymbolArt } from "./art/symbols";
 import { backgroundUrl } from "./art/background";
@@ -130,6 +131,7 @@ async function pickApi(): Promise<GameApi> {
 }
 
 async function main() {
+  fullscreenOnTap();
   startClock();
   setOverlayHost(root);
   let orientation = fitRoot();
