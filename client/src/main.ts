@@ -140,7 +140,7 @@ async function main() {
   loading.progress(0.05);
 
   await Promise.race([
-    Promise.all(["700 12px Orbitron", "900 12px Orbitron", "700 12px Rajdhani", "900 12px Cinzel"].map((f) => document.fonts.load(f))),
+    Promise.all(["700 12px Orbitron", "900 12px Orbitron", "700 12px Rajdhani", "900 12px Cinzel", "400 12px \"Lilita One\""].map((f) => document.fonts.load(f))),
     timeout(3500),
   ]);
   loading.progress(0.3);
