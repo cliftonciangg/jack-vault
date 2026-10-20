@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault color palette</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1480px; box-sizing: border-box; padding: 56px 64px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 36px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">02 · COLOR</div>
+      <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900">Palette &amp; tokens</h1>
+    </div>
+    <div style="font-size: 17px; color: #B9B3D9; max-width: 460px; text-align: right">Contrast ratios are measured against bg/base #0B0820. WCAG AA needs 4.5:1 for body text and 3:1 for text 24 px and up.</div>
+  </div>
+
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 15px; letter-spacing: 3px; font-weight: 700; color: #B9B3D9">{{g.title}}</div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+        <sc-for list="{{g.items}}" as="s" hint-placeholder-count="4">
+          <div style="background: #151030; border: 1px solid #2E2560; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column">
+            <div style="height: 88px; background: {{s.fill}}; display: flex; align-items: flex-end; padding: 10px 14px; box-sizing: border-box; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px; color: {{s.ink}}; letter-spacing: 1px">{{s.label}}</div>
+            <div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 2px">
+              <div style="font-size: 17px; font-weight: 700">{{s.name}}</div>
+              <div style="font-size: 14px; color: #B9B3D9; font-variant-numeric: tabular-nums">{{s.token}} · {{s.hex}}</div>
+              <div style="font-size: 14px; color: {{s.ratioColor}}; font-weight: 600">{{s.ratio}}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="display: flex; gap: 16px; align-items: stretch">
+    <div style="flex: 1; background: #1F1844; border: 1px solid #EF4444; border-radius: 16px; padding: 18px 20px; display: flex; gap: 16px; align-items: center">
+      <div style="width: 120px; height: 48px; border-radius: 24px; background: #8B5CF6; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; flex-shrink: 0">PLAY</div>
+      <div style="font-size: 16px; color: #B9B3D9; line-height: 1.35"><strong style="color: #F87171">4.2:1 fails.</strong> White text on violet #8B5CF6 is too low. Keep #8B5CF6 for glows and borders only.</div>
+    </div>
+    <div style="flex: 1; background: #1F1844; border: 1px solid #22C55E; border-radius: 16px; padding: 18px 20px; display: flex; gap: 16px; align-items: center">
+      <div style="width: 120px; height: 48px; border-radius: 24px; background: #7C3AED; box-shadow: 0 0 18px rgba(139,92,246,.6); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; flex-shrink: 0">PLAY</div>
+      <div style="font-size: 16px; color: #B9B3D9; line-height: 1.35"><strong style="color: #4ADE80">5.7:1 passes.</strong> Button fills use violet/600 #7C3AED, with the #8B5CF6 glow around it.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ok = '#4ADE80', no = '#F87171', mid = '#FBBF24';
+    const sw = (name, token, hex, fill, ratio, ratioColor, label, ink) => ({ name, token, hex, fill: fill || hex, ratio, ratioColor: ratioColor || ok, label: label || '', ink: ink || '#FFFFFF' });
+    const groups = [
+      { title: 'SURFACES', items: [
+        sw('Base', 'bg/base', '#0B0820', '#0B0820', 'Page background', '#B9B3D9', 'Aa'),
+        sw('Raised', 'bg/raised', '#151030', '', 'White text 18.3:1', ok, 'Aa'),
+        sw('Overlay', 'bg/overlay', '#1F1844', '', 'White text 16.5:1', ok, 'Aa'),
+        sw('Border', 'line/neon', '#2E2560', '', 'Hairlines and dividers', '#B9B3D9', '')
+      ]},
+      { title: 'NEON & AFTERBURNER', items: [
+        sw('Electric violet', 'neon/violet', '#8B5CF6', '', '4.6:1 · AA, not on fills', mid),
+        sw('Violet glow', 'neon/violet-glow', '#A78BFA', '', '7.2:1 · AA', ok, '', '#0B0820'),
+        sw('Cyan', 'neon/cyan', '#22D3EE', '', '10.9:1 · AA', ok, '', '#0B0820'),
+        sw('Afterburner', 'burn/gradient', '#FF7A1A → #FFF3E0', 'linear-gradient(90deg,#FF7A1A,#FFB066 55%,#FFF3E0)', '7.5 to 17.9:1 · AA', ok, 'TURBO', '#0B0820')
+      ]},
+      { title: 'WIN & CURRENCY', items: [
+        sw('Gold light', 'gold/100', '#FFE27A', '', '15.3:1 · AA', ok, '', '#0B0820'),
+        sw('Gold', 'gold/500', '#F5B301', '', '10.6:1 · AA', ok, '', '#0B0820'),
+        sw('Gold deep', 'gold/800', '#B87400', '', '5.2:1 · AA', ok),
+        sw('Gold gradient', 'gold/gradient', '#FFE27A → #B87400', 'linear-gradient(180deg,#FFE27A,#F5B301 55%,#B87400)', 'Win amounts, jackpots', '#B9B3D9', '1,250.00', '#0B0820')
+      ]},
+      { title: 'JACKPOT TIERS', items: [
+        sw('Grand', 'jp/grand', '#FFC94A → #E11D2E → #7A0A14', 'linear-gradient(160deg,#FFC94A,#E11D2E 55%,#7A0A14)', 'White label 4.8:1 on red', ok, 'GRAND'),
+        sw('Major', 'jp/major', '#F0ABFC → #C026D3 → #6D28D9', 'linear-gradient(160deg,#F0ABFC,#C026D3 50%,#6D28D9)', 'White label 6.3:1', ok, 'MAJOR'),
+        sw('Minor', 'jp/minor', '#67E8F9 → #2563EB → #1E3A8A', 'linear-gradient(160deg,#67E8F9,#2563EB 50%,#1E3A8A)', 'White label 6.7:1', ok, 'MINOR'),
+        sw('Mini', 'jp/mini', '#6EE7B7 → #0D9488 → #065F46', 'linear-gradient(160deg,#6EE7B7,#0D9488 50%,#065F46)', 'White label 5.5:1 on deep', ok, 'MINI')
+      ]},
+      { title: 'STATUS & TEXT', items: [
+        sw('Success', 'status/success', '#22C55E', '', '8.6:1 · AA', ok, '', '#0B0820'),
+        sw('Warning / Error', 'status/warn · status/error', '#F59E0B · #EF4444', 'linear-gradient(90deg,#F59E0B 50%,#EF4444 50%)', '9.1:1 · 5.2:1 · AA', ok),
+        sw('Disabled', 'status/disabled', '#6B6690', '', '3.7:1 · exempt', '#B9B3D9'),
+        sw('Text', 'text/primary · secondary · muted', '#FFF · #B9B3D9 · #8A83AD', 'linear-gradient(90deg,#FFFFFF 33%,#B9B3D9 33% 66%,#8A83AD 66%)', '19.6 · 9.8 · 5.5:1 · AA', ok)
+      ]}
+    ];
+    return { groups };
+  }
+}
+</script>
+</body>
+</html>

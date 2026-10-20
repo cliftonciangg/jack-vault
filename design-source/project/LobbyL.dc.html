@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault lobby, landscape</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 844px; height: 390px; box-sizing: border-box; position: relative; overflow: hidden; background: radial-gradient(ellipse 60% 100% at 50% 0%, #1E1450 0%, #0B0820 60%); color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; padding: 0 59px 21px">
+  <!-- LEFT RAIL -->
+  <nav style="width: 64px; flex-shrink: 0; margin: 12px 0 0; border-radius: 18px; background: rgba(21,16,48,.95); border: 1px solid #2E2560; display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 8px 0">
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <a href="#" aria-label="{{n.label}}" style="width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: {{n.bg}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{n.color}}" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="{{n.d}}"></path></svg>
+      </a>
+    </sc-for>
+  </nav>
+
+  <div style="flex: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px 0 0 12px; min-width: 0">
+    <!-- SLIM TOP + JACKPOT STRIP -->
+    <div style="height: 48px; border-radius: 14px; border: 1px solid #F5B301; background: rgba(21,16,48,.9); box-shadow: 0 0 20px rgba(255,122,26,.3); display: flex; align-items: center; gap: 8px; padding: 0 6px 0 12px">
+      <div style="display: flex; align-items: baseline; gap: 4px; transform: skewX(-12deg); flex-shrink: 0">
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 12px">JACK</span>
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 14px; color: #F5B301">VAULT</span>
+      </div>
+      <div style="flex: 1; display: flex; gap: 6px; justify-content: center">
+        <sc-for list="{{jackpots}}" as="j" hint-placeholder-count="4">
+          <div style="height: 36px; border-radius: 9px; background: {{j.bg}}; padding: 0 10px; display: flex; align-items: center; gap: 6px">
+            <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 11px">{{j.name}}</span>
+            <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 12px; color: #FFE27A">{{j.amt}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; align-items: center; height: 36px; border-radius: 18px; background: #0B0820; border: 1px solid #F5B301; padding: 0 3px 0 10px; gap: 6px; flex-shrink: 0">
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px; color: #FFE27A">1,250.00</span>
+        <button aria-label="Add coins" style="width: 30px; height: 30px; border-radius: 15px; border: 0; background: linear-gradient(180deg,#FFE27A,#F5B301 60%,#D99A00); color: #0B0820; font-size: 20px; font-weight: 700; padding: 0; line-height: 1">+</button>
+      </div>
+      <button aria-label="Profile" style="width: 36px; height: 36px; border-radius: 11px; border: 0; background: linear-gradient(160deg,#7C3AED,#22D3EE); font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 13px; color: #0B0820; padding: 0; flex-shrink: 0">LA</button>
+    </div>
+
+    <!-- TABS -->
+    <div style="display: flex; gap: 6px; align-items: center">
+      <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #8B5CF6; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 14px">All</button>
+      <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 14px">Slots</button>
+      <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 14px">Fish</button>
+      <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 14px">Arcade</button>
+      <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 14px">Favorites</button>
+      <div style="flex: 1"></div>
+      <span style="font-size: 13px; color: #8A83AD; font-weight: 700">Rows scroll sideways →</span>
+    </div>
+
+    <!-- ROWS -->
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px; min-height: 0">
+      <div style="display: flex; gap: 10px; align-items: stretch; flex: 1; min-height: 0">
+        <div style="width: 220px; flex-shrink: 0; border-radius: 14px; background: radial-gradient(ellipse 80% 100% at 80% 50%, #3B2F7A 0%, #130E36 70%); border: 1px solid #3B2F7A; padding: 12px; display: flex; flex-direction: column; justify-content: space-between">
+          <span style="font-size: 12px; letter-spacing: 2px; font-weight: 700; color: #22D3EE">FEATURED</span>
+          <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 15px; color: #FFE27A; line-height: 1.1">CROWN OF THE COSMOS</span>
+          <button style="height: 40px; padding: 0 16px; border-radius: 20px; border: 0; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 14px; align-self: flex-start">PLAY NOW</button>
+        </div>
+        <sc-for list="{{games}}" as="g" hint-placeholder-count="5">
+          <a href="#" style="width: 150px; flex-shrink: 0; border-radius: 14px; background: {{g.art}}; border: 1px solid #3B2F7A; position: relative; display: flex; align-items: flex-end; padding: 8px; box-sizing: border-box; text-decoration: none; color: #FFFFFF; font-size: 14px; font-weight: 700; overflow: hidden">
+            <sc-if value="{{g.badge}}" hint-placeholder-val="{{true}}"><span style="position: absolute; top: 6px; left: 6px; height: 20px; padding: 0 7px; border-radius: 5px; background: {{g.badgeBg}}; color: #0B0820; font-weight: 700; font-size: 11px; letter-spacing: 1px; display: inline-flex; align-items: center; transform: skewX(-10deg)">{{g.badge}}</span></sc-if>
+            {{g.name}}
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":844,"height":390}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const jackpots = [
+      { name: 'GRAND', amt: '152,384.27', bg: 'linear-gradient(160deg,#FFC94A,#E11D2E 55%,#7A0A14)' },
+      { name: 'MAJOR', amt: '12,481.90', bg: 'linear-gradient(160deg,#F0ABFC,#C026D3 50%,#6D28D9)' },
+      { name: 'MINOR', amt: '1,204.55', bg: 'linear-gradient(160deg,#67E8F9,#2563EB 50%,#1E3A8A)' },
+      { name: 'MINI', amt: '118.30', bg: 'linear-gradient(160deg,#6EE7B7,#0D9488 50%,#065F46)' }
+    ];
+    const badgeBg = { NEW: '#22D3EE', HOT: 'linear-gradient(90deg,#FF7A1A,#FFB066)', JACKPOT: 'linear-gradient(90deg,#FFE27A,#F5B301)' };
+    const games = [
+      ['Reef Riches', 'radial-gradient(circle at 50% 70%, #0E7490, #082F49)', 'NEW'], ['Ember Drake', 'radial-gradient(circle at 50% 40%, #B91C1C, #3B0A0A)', 'HOT'],
+      ['Nugget Rush', 'radial-gradient(circle at 50% 60%, #B45309, #3B2008)', ''], ['Sugar Nova', 'radial-gradient(circle at 50% 40%, #DB2777, #4A0A2E)', 'NEW'], ['Scarab Sun', 'radial-gradient(circle at 50% 50%, #CA8A04, #3B2A05)', 'JACKPOT']
+    ].map(([name, art, badge]) => ({ name, art, badge, badgeBg: badgeBg[badge] || 'transparent' }));
+    const navD = ['M3 11L12 3l9 8M6 9v12h12V9', 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z', 'M3 9h18v4H3zM5 13v8h14v-8M12 9v12', 'M4 12a8 8 0 1 0 2.3-5.7M3 3v5h5M12 7v5l4 2', 'M12 3l4 4-4 4-4-4zM4 21l3-7h10l3 7z'];
+    const nav = ['Home', 'Games', 'Rewards', 'History', 'Profile'].map((label, i) => ({ label, d: navD[i], color: i === 0 ? '#22D3EE' : '#B9B3D9', bg: i === 0 ? 'rgba(34,211,238,.14)' : 'transparent' }));
+    return { jackpots, games, nav };
+  }
+}
+</script>
+</body>
+</html>

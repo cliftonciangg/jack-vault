@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Agent records</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 24px; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 15px">Jack Vault</span><span style="color: #C7D2E3">Back Office</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #1A78B4; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">DISTRIBUTOR</span>
+    <span style="color: #8A9AB5">/</span><span style="font-weight: 600; font-size: 15px">Agent Records</span>
+    <span style="flex: 1"></span><span style="color: #C7D2E3">Welcome, <strong style="color: #FFFFFF; font-weight: 600">north-dist</strong></span>
+    <a href="Login.dc.html" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #5B6B85; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500">Log out</a>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 24px; gap: 10px">
+    <span style="color: #4B5563">Balance:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">4,820.00</span><span style="flex: 1"></span><span style="color: #4B5563; font-size: 13px">Times in EST</span>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <nav style="width: 240px; flex-shrink: 0; background: #E9EDF2; border-right: 1px solid #E5E7EB; padding: 12px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{menu}}" as="m" hint-placeholder-count="6"><a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}</a></sc-for>
+      <span style="flex: 1"></span><a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none">Log out</a>
+    </nav>
+    <main style="flex: 1; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+        <span style="font-size: 16px; font-weight: 600; color: #1A78B4; margin-right: 8px">Agent Records</span>
+        <input placeholder="Agent username or ID (empty = all)" style="height: 34px; width: 240px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px">
+        <input value="2026-10-13 00:00:00" style="height: 34px; width: 160px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 8px; font-size: 13px; font-variant-numeric: tabular-nums"><span style="color: #9CA3AF">~</span><input value="2026-10-20 23:59:59" style="height: 34px; width: 160px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 8px; font-size: 13px; font-variant-numeric: tabular-nums">
+        <button style="height: 34px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 14px">Search</button>
+        <button style="height: 34px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 10px; color: #111827">Export CSV</button>
+        <span style="width: 1px; height: 20px; background: #E5E7EB"></span>
+        <sc-for list="{{shortcuts}}" as="s" hint-placeholder-count="5"><button style="height: 28px; border-radius: 6px; border: 0; background: {{s.bg}}; color: #FFFFFF; font-weight: {{s.w}}; font-size: 13px; padding: 0 10px">{{s.label}}</button></sc-for>
+      </div>
+      <!-- summary -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden">
+        <div style="display: flex; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid #E5E7EB"><span style="font-size: 14px; font-weight: 600; color: #1A78B4">Agent summary · This Week</span><span style="font-size: 12px; color: #B45309">needs backend: period totals</span></div>
+        <div style="display: grid; grid-template-columns: 1.2fr repeat(8, minmax(0, 1fr)); height: 32px; align-items: center; padding: 0 16px; gap: 8px; background: #1A78B4; color: #FFFFFF; font-size: 12px; font-weight: 600"><span>Agent</span><span style="text-align: right">Received from me</span><span style="text-align: right">Returned to me</span><span style="text-align: right">Loaded to players</span><span style="text-align: right">Redeemed</span><span style="text-align: right">Agent net ▾</span><span style="text-align: right">Players' bet</span><span style="text-align: right">Players' win</span><span style="text-align: right">Active players</span></div>
+        <sc-for list="{{summary}}" as="s" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: 1.2fr repeat(8, minmax(0, 1fr)); height: 32px; align-items: center; padding: 0 16px; gap: 8px; border-top: 1px solid #E5E7EB; background: {{s.bg}}; font-variant-numeric: tabular-nums; font-size: 13px; font-weight: {{s.w}}; border-left: 3px solid {{s.edge}}; box-sizing: border-box">
+            <span>{{s.name}}</span><span style="text-align: right; color: #15803D">{{s.recv}}</span><span style="text-align: right; color: #DC2626">{{s.ret}}</span><span style="text-align: right; color: #15803D">{{s.loaded}}</span><span style="text-align: right; color: #DC2626">{{s.redeemed}}</span><span style="text-align: right">{{s.net}}</span><span style="text-align: right">{{s.bet}}</span><span style="text-align: right">{{s.win}}</span><span style="text-align: right">{{s.active}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 320px; gap: 12px; flex: 1; min-height: 0">
+        <!-- detail -->
+        <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden">
+          <div style="display: flex; align-items: center; gap: 0; border-bottom: 1px solid #E5E7EB; padding: 0 16px">
+            <span style="font-size: 14px; font-weight: 600; color: #1A78B4; padding: 10px 0; margin-right: 20px">agent04 · ledger this week</span>
+            <button style="height: 40px; border: 0; border-bottom: 2px solid #1A78B4; background: transparent; font-weight: 600; color: #166FA3; padding: 0 12px">Coins with me</button>
+            <button style="height: 40px; border: 0; border-bottom: 2px solid transparent; background: transparent; font-weight: 500; color: #4B5563; padding: 0 12px">Coins with players</button>
+          </div>
+          <div style="display: grid; grid-template-columns: 1.3fr 80px 1fr 1fr 1fr 1.2fr 0.9fr; height: 32px; align-items: center; padding: 0 16px; gap: 8px; background: #F3F4F6; font-size: 12px; font-weight: 600; color: #4B5563"><span>Time</span><span>Type</span><span>From</span><span>To</span><span style="text-align: right">Amount</span><span style="text-align: right">Agent balance after</span><span>By</span></div>
+          <sc-for list="{{detail}}" as="d" hint-placeholder-count="6">
+            <div style="display: grid; grid-template-columns: 1.3fr 80px 1fr 1fr 1fr 1.2fr 0.9fr; height: 32px; align-items: center; padding: 0 16px; gap: 8px; border-top: 1px solid #F3F4F6; font-variant-numeric: tabular-nums; font-size: 13px">
+              <span style="color: #4B5563">{{d.time}}</span><span><span style="height: 20px; padding: 0 6px; border-radius: 4px; background: {{d.pillBg}}; color: {{d.pillInk}}; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center">{{d.type}}</span></span><span>{{d.from}}</span><span>{{d.to}}</span><span style="text-align: right; font-weight: 600; color: {{d.amtColor}}">{{d.amt}}</span><span style="text-align: right">{{d.after}}</span><span style="color: #4B5563">{{d.by}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <!-- small chart -->
+        <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+          <span style="font-size: 14px; font-weight: 600; color: #1A78B4">agent04 · loaded vs redeemed, daily</span>
+          <div style="display: flex; gap: 12px; font-size: 11px; color: #4B5563"><span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; background: #15803D; border-radius: 2px"></span>Loaded</span><span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; background: #DC2626; border-radius: 2px"></span>Redeemed</span></div>
+          <div style="flex: 1; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; align-items: end; border-bottom: 1px solid #E5E7EB; min-height: 0">
+            <sc-for list="{{days}}" as="d" hint-placeholder-count="7"><div style="display: flex; align-items: flex-end; gap: 2px; height: 100%"><div style="flex: 1; height: {{d.l}}; background: #15803D; border-radius: 2px 2px 0 0"></div><div style="flex: 1; height: {{d.r}}; background: #DC2626; border-radius: 2px 2px 0 0"></div></div></sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; font-size: 11px; color: #4B5563; text-align: center"><sc-for list="{{days}}" as="d" hint-placeholder-count="7"><span>{{d.label}}</span></sc-for></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = { dash: 'M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z', agent: 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5 21a7 7 0 0 1 14 0M12 14v4M10 18h4', coins: 'M8 8a6 3 0 1 0 12 0 6 3 0 0 0-12 0zM8 8v4c0 1.7 2.7 3 6 3s6-1.3 6-3V8M4 13a6 3 0 0 0 6 3M4 13v4c0 1.7 2.7 3 6 3', percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', records: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4' };
+    const menu = [['Dashboard', 'dash', 'DistDash.dc.html'], ['Agent Management', 'agent', 'Agents.dc.html'], ['Coin Management', 'coins', 'Coins.dc.html'], ['Win Ratio', 'percent', 'WinRatio.dc.html'], ['Agent Records', 'records', 'AgentRecords.dc.html'], ['Settings', 'settings', 'Settings.dc.html']].map(([label, ic, href]) => { const on = label === 'Agent Records'; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const shortcuts = ['Today', 'Yesterday', 'This Week', 'Last Week', 'This Month'].map((label, i) => ({ label, bg: i === 2 ? '#166FA3' : '#1A78B4', w: i === 2 ? 600 : 500 }));
+    const summary = [
+      ['agent04', '6,000.00', '0.00', '9,840.00', '3,120.00', '+6,720.00', '48,210.00', '45,318.00', '57', true], ['agent01', '4,000.00', '0.00', '8,110.00', '2,960.00', '+5,150.00', '39,805.00', '37,614.70', '44'], ['agent02', '1,500.00', '0.00', '5,420.00', '1,870.00', '+3,550.00', '27,130.00', '25,980.00', '49'],
+      ['agent09', '3,000.00', '0.00', '4,100.00', '1,220.00', '+2,880.00', '20,400.00', '19,150.00', '33'], ['agent06', '0.00', '1,200.00', '2,300.00', '2,900.00', '−600.00', '31,600.00', '31,040.00', '61'], ['Totals · 12 agents', '14,300.00', '2,450.00', '36,270.00', '14,180.00', '+22,090.00', '208,440.00', '196,768.00', '402', false, true]
+    ].map(([name, recv, ret, loaded, redeemed, net, bet, win, active, sel, tot], i) => ({ name, recv, ret, loaded, redeemed, net, bet, win, active, w: tot ? 700 : 400, bg: tot ? '#F3F4F6' : (sel ? '#E3F0FA' : (i % 2 ? '#F9FAFB' : '#FFFFFF')), edge: sel ? '#1A78B4' : 'transparent' }));
+    const T = { LOAD: ['#E0F2FE', '#0369A1'], REDEEM: ['#FEF3C7', '#B45309'] };
+    const detail = [['2026-10-20 15:52', 'LOAD', 'north-dist', 'agent04', '+2,000.00', '2,820.00', 'north-dist'], ['2026-10-18 11:30', 'LOAD', 'north-dist', 'agent04', '+1,500.00', '3,640.00', 'north-dist'], ['2026-10-16 09:12', 'LOAD', 'north-dist', 'agent04', '+1,000.00', '4,210.00', 'north-dist'], ['2026-10-14 17:45', 'LOAD', 'north-dist', 'agent04', '+1,500.00', '5,075.00', 'north-dist'], ['2026-10-13 10:00', 'REDEEM', 'agent04', 'north-dist', '−0.00', '4,900.00', 'north-dist'], ['2026-10-13 09:58', 'LOAD', 'north-dist', 'agent04', '+0.00', '4,900.00', 'north-dist']].map(([time, type, from, to, amt, after, by]) => ({ time, type, from, to, amt, after, by, pillBg: T[type][0], pillInk: T[type][1], amtColor: amt.startsWith('+') ? '#15803D' : '#DC2626' }));
+    const days = [['13', 40, 20], ['14', 70, 30], ['15', 55, 45], ['16', 80, 25], ['17', 90, 60], ['18', 95, 50], ['19', 60, 35]].map(([label, l, r]) => ({ label, l: l + '%', r: r + '%' }));
+    return { menu, shortcuts, summary, detail, days };
+  }
+}
+</script>
+</body>
+</html>

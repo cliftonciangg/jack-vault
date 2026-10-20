@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault lobby states</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 860px; height: 1100px; box-sizing: border-box; padding: 40px 48px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">P2 · LOBBY STATES</div>
+    <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900">Tiles, empty tab, refresh</h1>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">GAME TILE · 110 px, 3 per row in portrait</div>
+    <div style="display: grid; grid-template-columns: repeat(4, 110px); gap: 40px">
+      <!-- default -->
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="position: relative; width: 110px; height: 110px; border-radius: 14px; background: radial-gradient(circle at 50% 70%, #0E7490, #082F49); border: 1px solid #3B2F7A"><span style="position: absolute; top: 6px; left: 6px; height: 20px; padding: 0 7px; border-radius: 5px; background: #22D3EE; color: #0B0820; font-weight: 700; font-size: 11px; letter-spacing: 1px; display: inline-flex; align-items: center; transform: skewX(-10deg)">NEW</span></div>
+        <span style="font-size: 14px; font-weight: 700; text-align: center">Reef Riches</span>
+        <span style="font-size: 13px; color: #8A83AD; text-align: center">Default</span>
+      </div>
+      <!-- pressed -->
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="position: relative; width: 110px; height: 110px; border-radius: 14px; background: radial-gradient(circle at 50% 70%, #0E7490, #082F49); border: 2px solid #22D3EE; transform: scale(.95); box-shadow: 0 0 20px rgba(34,211,238,.5)"></div>
+        <span style="font-size: 14px; font-weight: 700; text-align: center">Reef Riches</span>
+        <span style="font-size: 13px; color: #8A83AD; text-align: center">Pressed · 0.95 + cyan ring</span>
+      </div>
+      <!-- skeleton -->
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="width: 110px; height: 110px; border-radius: 14px; background: linear-gradient(100deg, #151030 30%, #241C4F 50%, #151030 70%); border: 1px solid #2E2560"></div>
+        <span style="display: block; width: 70px; height: 12px; border-radius: 6px; background: #241C4F; margin: 3px auto"></span>
+        <span style="font-size: 13px; color: #8A83AD; text-align: center">Loading · shimmer 1.2 s</span>
+      </div>
+      <!-- maintenance -->
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="position: relative; width: 110px; height: 110px; border-radius: 14px; background: radial-gradient(circle at 50% 40%, #B91C1C, #3B0A0A); border: 1px solid #3B2F7A; overflow: hidden">
+          <div style="position: absolute; inset: 0; background: rgba(11,8,32,.72); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#B9B3D9" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+            <span style="font-size: 11px; letter-spacing: 1px; font-weight: 700; color: #B9B3D9">MAINTENANCE</span>
+          </div>
+        </div>
+        <span style="font-size: 14px; font-weight: 700; text-align: center; color: #8A83AD">Ember Drake</span>
+        <span style="font-size: 13px; color: #8A83AD; text-align: center">Under maintenance</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 390px 1fr; gap: 40px; align-items: start">
+    <!-- Empty favorites -->
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">EMPTY FAVORITES TAB</div>
+      <div style="width: 390px; height: 420px; border-radius: 24px; border: 1px solid #2E2560; background: #0F0B28; display: flex; flex-direction: column; gap: 14px; padding: 16px; box-sizing: border-box">
+        <div style="display: flex; gap: 8px">
+          <span style="height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 15px; display: inline-flex; align-items: center">All</span>
+          <span style="height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 15px; display: inline-flex; align-items: center">Slots</span>
+          <span style="height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid #8B5CF6; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; box-shadow: 0 0 14px rgba(139,92,246,.6)">Favorites</span>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center; padding: 0 24px">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true"><path d="M12 21L3 12V6l4-3 5 4 5-4 4 3v6z"></path></svg>
+          <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 18px">No favorites yet</div>
+          <div style="font-size: 16px; color: #B9B3D9; line-height: 1.35">Tap the heart on any game tile and it will land here for quick access.</div>
+          <button style="height: 48px; padding: 0 24px; border-radius: 24px; border: 2px solid #22D3EE; background: transparent; color: #22D3EE; font-weight: 700; font-size: 16px; letter-spacing: 1px; margin-top: 6px">BROWSE ALL GAMES</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pull to refresh -->
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">PULL-TO-REFRESH · 3 frames</div>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{pull}}" as="p" hint-placeholder-count="3">
+          <div style="display: flex; gap: 14px; align-items: center">
+            <div style="width: 200px; height: 88px; border-radius: 14px; border: 1px solid #2E2560; background: #0F0B28; overflow: hidden; position: relative">
+              <div style="position: absolute; left: 0; right: 0; top: 0; height: {{p.pullH}}; display: flex; align-items: center; justify-content: center; gap: 8px">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{p.color}}" stroke-width="2" stroke-linecap="square" aria-hidden="true" style="transform: rotate({{p.rot}})"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 3.5v4.5h-4.5"></path></svg>
+                <span style="font-size: 14px; font-weight: 700; color: {{p.color}}">{{p.label}}</span>
+              </div>
+              <div style="position: absolute; left: 10px; right: 10px; top: {{p.pullH}}; height: 60px; border-radius: 10px; background: #151030; border: 1px solid #2E2560"></div>
+            </div>
+            <span style="font-size: 15px; color: #B9B3D9; line-height: 1.35">{{p.note}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":860,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pull = [
+      { pullH: '28px', rot: '0deg', color: '#8A83AD', label: 'Pull to refresh', note: 'Drag down. The arrow icon fades in as the grid moves.' },
+      { pullH: '56px', rot: '180deg', color: '#22D3EE', label: 'Release to refresh', note: 'At 56 px the icon flips and turns cyan. Light haptic.' },
+      { pullH: '56px', rot: '90deg', color: '#F5B301', label: 'Refreshing…', note: 'Icon spins in gold. Jackpot counters re-sync. Max 2 s, then a toast on failure.' }
+    ];
+    return { pull };
+  }
+}
+</script>
+</body>
+</html>

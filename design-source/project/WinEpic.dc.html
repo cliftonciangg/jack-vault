@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crown of the Cosmos epic win overlay</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.gold{background:linear-gradient(180deg,#FFF3E0 0%,#FFE27A 30%,#F5B301 65%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(245,179,1,.9))}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <dc-import name="Reels" mode="idle" hint-size="390px,844px"></dc-import>
+  <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 45%, rgba(124,58,237,.55) 0%, rgba(6,4,15,.9) 65%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 59px 24px 34px; box-sizing: border-box">
+    <!-- burst rays -->
+    <svg width="390" height="844" viewBox="0 0 390 844" style="position: absolute; inset: 0" aria-hidden="true">
+      <g transform="translate(195 380)" opacity=".5">
+        <sc-for list="{{rays}}" as="r" hint-placeholder-count="16">
+          <path d="M0 0 L-30 -700 L30 -700 Z" fill="{{r.c}}" transform="rotate({{r.a}})"></path>
+        </sc-for>
+      </g>
+      <!-- fireworks -->
+      <sc-for list="{{fw}}" as="f" hint-placeholder-count="4">
+        <g transform="translate({{f.x}} {{f.y}})" stroke="{{f.c}}" stroke-width="2" opacity=".9" fill="none">
+          <path d="M0 0L0 -30M0 0L21 -21M0 0L30 0M0 0L21 21M0 0L0 30M0 0L-21 21M0 0L-30 0M0 0L-21 -21"></path>
+          <circle r="34" stroke-dasharray="3 9"></circle>
+        </g>
+      </sc-for>
+      <!-- screen-shake marks -->
+      <g stroke="#FFFFFF" stroke-width="2" opacity=".5"><path d="M8 300v60M14 300v60M376 300v60M382 300v60"></path></g>
+    </svg>
+    <sc-for list="{{coins}}" as="c" hint-placeholder-count="36">
+      <span style="position: absolute; left: {{c.x}}; top: {{c.y}}; width: {{c.s}}; height: {{c.s}}; border-radius: 50%; background: linear-gradient(160deg,#FFE27A,#F5B301 55%,#B87400); box-shadow: 0 0 8px rgba(245,179,1,.6); transform: rotate({{c.r}}) scaleX(.6)"></span>
+    </sc-for>
+    <svg width="84" height="54" viewBox="0 0 64 40" aria-hidden="true" style="position: relative; filter: drop-shadow(0 0 14px rgba(245,179,1,.9))">
+      <defs><linearGradient id="ecg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE27A"></stop><stop offset=".6" stop-color="#F5B301"></stop><stop offset="1" stop-color="#B87400"></stop></linearGradient></defs>
+      <path d="M4 34 L8 8 L20 22 L32 2 L44 22 L56 8 L60 34 Z" fill="url(#ecg)"></path>
+      <circle cx="32" cy="24" r="4" fill="#8B5CF6"></circle><circle cx="18" cy="28" r="2.5" fill="#22D3EE"></circle><circle cx="46" cy="28" r="2.5" fill="#22D3EE"></circle>
+    </svg>
+    <div style="position: relative; width: 360px; padding: 20px 0; border-radius: 26px; background: linear-gradient(180deg,#3B2A05,#1A1203); border: 4px solid #FFE27A; box-shadow: 0 0 0 4px #F5B301, 0 0 0 7px #8B5CF6, 0 0 80px rgba(245,179,1,.8); display: flex; flex-direction: column; align-items: center">
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px; letter-spacing: 8px; color: #FFF3E0; line-height: 1">EPIC</span>
+      <span class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 72px; letter-spacing: 2px; line-height: 1">WIN</span>
+    </div>
+    <div class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 58px; line-height: 1; font-variant-numeric: tabular-nums; position: relative">{{amount}}</div>
+    <div style="font-size: 16px; letter-spacing: 1.5px; font-weight: 700; color: #FFE27A; position: relative">{{mult}} × BET</div>
+    <div style="position: absolute; bottom: 60px; font-size: 13px; letter-spacing: 2px; font-weight: 700; color: #B9B3D9">TAP TO SKIP</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rays = Array.from({ length: 16 }, (_, i) => ({ a: i * 22.5, c: i % 2 ? '#F5B301' : '#8B5CF6' }));
+    const fw = [{ x: 60, y: 160, c: '#22D3EE' }, { x: 330, y: 140, c: '#F0ABFC' }, { x: 40, y: 700, c: '#FFE27A' }, { x: 340, y: 720, c: '#FF7A1A' }];
+    const coins = Array.from({ length: 36 }, (_, i) => ({ x: (6 + (i * 67) % 370) + 'px', y: (70 + ((i * 131) % 700)) + 'px', s: (8 + (i % 6) * 4) + 'px', r: ((i * 137.5) % 360) + 'deg' }));
+    return { rays, fw, coins, amount: '93.75', mult: '75' };
+  }
+}
+</script>
+</body>
+</html>

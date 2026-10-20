@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>An agent's players, read only for the distributor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 24px; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 15px">Jack Vault</span><span style="color: #C7D2E3">Back Office</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #1A78B4; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">DISTRIBUTOR</span>
+    <span style="color: #8A9AB5">/</span><span style="font-weight: 600; font-size: 15px">Agent Management</span><span style="color: #8A9AB5">/</span><span style="color: #C7D2E3">agent04 · players</span>
+    <span style="flex: 1"></span><span style="color: #C7D2E3">Welcome, <strong style="color: #FFFFFF; font-weight: 600">north-dist</strong></span>
+    <a href="Login.dc.html" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #5B6B85; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500">Log out</a>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 24px; gap: 10px">
+    <span style="color: #4B5563">Balance:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">4,820.00</span><span style="flex: 1"></span><span style="color: #4B5563; font-size: 13px">Times in EST</span>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <nav style="width: 240px; flex-shrink: 0; background: #E9EDF2; border-right: 1px solid #E5E7EB; padding: 12px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{menu}}" as="m" hint-placeholder-count="6"><a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}</a></sc-for>
+      <span style="flex: 1"></span><a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none">Log out</a>
+    </nav>
+    <main style="flex: 1; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+      <a href="Agents.dc.html" style="font-size: 14px; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A78B4" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>Back to my agents</a>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 20px; display: flex; align-items: center; gap: 28px">
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4B5563">Agent</span><span style="font-size: 18px; font-weight: 600">agent04 <span style="font-size: 13px; color: #6B7280; font-weight: 400">#204</span></span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4B5563">Agent balance</span><span style="font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums">820.00 <span style="height: 18px; padding: 0 6px; border-radius: 9px; background: #FEF3C7; color: #B45309; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; vertical-align: middle">Low</span></span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4B5563">Players</span><span style="font-size: 18px; font-weight: 600">61</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4B5563">Players' total balance</span><span style="font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums">14,208.10</span></div>
+        <span style="flex: 1"></span>
+        <div style="display: flex; align-items: center; gap: 8px; color: #4B5563; font-size: 13px; background: #F3F4F6; border-radius: 6px; padding: 8px 12px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>Read only · Players are managed by their agent.</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden">
+        <div style="display: grid; grid-template-columns: 80px 2fr 1fr 120px 1.2fr 1.2fr; background: #1A78B4; color: #FFFFFF; font-size: 13px; font-weight: 600; height: 36px; align-items: center; padding: 0 16px; gap: 10px"><span>ID</span><span>Username</span><span style="text-align: right">Balance ▾</span><span>Status</span><span>Created</span><span>Last login</span></div>
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+          <div style="display: grid; grid-template-columns: 80px 2fr 1fr 120px 1.2fr 1.2fr; height: 36px; align-items: center; padding: 0 16px; gap: 10px; background: {{r.bg}}; border-top: 1px solid #E5E7EB; font-variant-numeric: tabular-nums">
+            <span style="color: #4B5563">{{r.id}}</span><span style="font-weight: 500">{{r.user}}</span><span style="text-align: right">{{r.bal}}</span>
+            <span><span style="height: 22px; padding: 0 8px; border-radius: 11px; background: {{r.pillBg}}; color: {{r.pillInk}}; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center">{{r.status}}</span></span>
+            <span style="color: #4B5563">{{r.created}}</span><span style="color: #4B5563">{{r.login}}</span>
+          </div>
+        </sc-for>
+        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-top: 1px solid #E5E7EB; font-size: 13px; color: #4B5563"><span>Showing 1–12 of 61</span><div style="display: flex; gap: 8px"><button style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; font-size: 13px; padding: 0 10px; color: #111827">Prev</button><button style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; font-size: 13px; padding: 0 10px; color: #111827">Next</button></div></div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = { dash: 'M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z', agent: 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5 21a7 7 0 0 1 14 0M12 14v4M10 18h4', coins: 'M8 8a6 3 0 1 0 12 0 6 3 0 0 0-12 0zM8 8v4c0 1.7 2.7 3 6 3s6-1.3 6-3V8M4 13a6 3 0 0 0 6 3M4 13v4c0 1.7 2.7 3 6 3', percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', records: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4' };
+    const menu = [['Dashboard', 'dash', 'DistDash.dc.html'], ['Agent Management', 'agent', 'Agents.dc.html'], ['Coin Management', 'coins', 'Coins.dc.html'], ['Win Ratio', 'percent', 'WinRatio.dc.html'], ['Agent Records', 'records', 'AgentRecords.dc.html'], ['Settings', 'settings', 'Settings.dc.html']].map(([label, ic, href]) => { const on = label === 'Agent Management'; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const P = { Active: ['#DCFCE7', '#15803D'], Disabled: ['#E5E7EB', '#4B5563'], Locked: ['#FEF3C7', '#B45309'] };
+    const rows = [
+      ['4101', 'rohan.v', '3,210.00', 'Active', '2026-08-25', 'Today 15:40'], ['4102', 'meena_s', '2,480.50', 'Active', '2026-08-26', 'Today 14:12'], ['4103', 'tashi99', '1,975.00', 'Active', '2026-09-02', 'Today 11:03'], ['4104', 'binod.k', '1,420.60', 'Active', '2026-09-05', 'Yesterday'],
+      ['4105', 'prakash_r', '1,105.00', 'Locked', '2026-09-08', 'Today 09:44'], ['4106', 'sunita.m', '980.00', 'Active', '2026-09-12', 'Today 13:27'], ['4107', 'gopal77', '760.00', 'Active', '2026-09-15', '2026-10-18'], ['4108', 'laxmi_d', '640.00', 'Active', '2026-09-19', 'Today 10:58'],
+      ['4109', 'hari.b', '512.00', 'Active', '2026-09-22', 'Today 08:15'], ['4110', 'asha_p', '430.00', 'Disabled', '2026-09-30', '2026-10-09'], ['4111', 'nabin.t', '395.00', 'Active', '2026-10-03', 'Today 15:01'], ['4112', 'rita_g', '300.00', 'Active', '2026-10-10', 'Yesterday']
+    ].map(([id, user, bal, status, created, login], i) => ({ id, user, bal, status, created, login, bg: i % 2 ? '#F9FAFB' : '#FFFFFF', pillBg: P[status][0], pillInk: P[status][1] }));
+    return { menu, rows };
+  }
+}
+</script>
+</body>
+</html>

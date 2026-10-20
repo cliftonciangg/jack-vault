@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shared dialogs, toasts, empty and loading states</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1000px; box-sizing: border-box; padding: 32px 40px; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; gap: 16px">
+  <div style="display: flex; flex-direction: column; gap: 2px">
+    <div style="font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #4B5563">PROMPT 15 · SHARED</div>
+    <h1 style="margin: 0; font-size: 20px; font-weight: 600">Dialogs, toasts, empty tables, loading</h1>
+  </div>
+
+  <!-- dialogs -->
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{dialogs}}" as="d" hint-placeholder-count="7">
+      <div style="background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 8px; display: flex; flex-direction: column">
+        <div style="padding: 10px 16px; font-size: 14px; font-weight: 600; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; gap: 8px"><span style="width: 20px; height: 20px; border-radius: 10px; background: {{d.iconBg}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="{{d.icon}}"></path></svg></span>{{d.title}}</div>
+        <div style="padding: 12px 16px; color: #4B5563; font-size: 13px; line-height: 1.5; min-height: 60px">{{d.body}}<sc-if value="{{d.code}}" hint-placeholder-val="{{false}}"><div style="margin-top: 6px; font-family: ui-monospace, monospace; font-size: 12px; color: #111827; background: #F3F4F6; border-radius: 4px; padding: 4px 8px; display: inline-block">{{d.code}}</div></sc-if></div>
+        <div style="padding: 10px 16px; border-top: 1px solid #E5E7EB; display: flex; justify-content: flex-end; gap: 8px">
+          <sc-if value="{{d.secondary}}" hint-placeholder-val="{{true}}"><button style="height: 32px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 12px; font-size: 13px; color: #111827">{{d.secondary}}</button></sc-if>
+          <button style="height: 32px; border-radius: 6px; border: 0; background: {{d.primaryBg}}; color: #FFFFFF; font-weight: 600; padding: 0 12px; font-size: 13px">{{d.primary}}</button>
+        </div>
+      </div>
+    </sc-for>
+    <!-- username taken (inline) -->
+    <div style="background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 8px; display: flex; flex-direction: column">
+      <div style="padding: 10px 16px; font-size: 14px; font-weight: 600; border-bottom: 1px solid #E5E7EB">6 · Username taken (inline, in Create)</div>
+      <div style="padding: 12px 16px; display: flex; flex-direction: column; gap: 4px">
+        <label style="font-size: 13px; font-weight: 500; color: #4B5563">Username</label>
+        <input value="player123" style="height: 36px; border: 1px solid #DC2626; border-radius: 6px; padding: 0 10px; font-size: 14px">
+        <span style="font-size: 12px; color: #DC2626; font-weight: 500">That username is taken. Try player123b or player_123.</span>
+      </div>
+      <div style="padding: 10px 16px; border-top: 1px solid #E5E7EB; display: flex; justify-content: flex-end; gap: 8px"><button style="height: 32px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 12px; font-size: 13px; color: #111827">Cancel</button><button disabled style="height: 32px; border-radius: 6px; border: 0; background: #E5E7EB; color: #9CA3AF; font-weight: 600; padding: 0 12px; font-size: 13px">Create</button></div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 12px; flex: 1; min-height: 0">
+    <!-- toasts -->
+    <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 14px; font-weight: 600; color: #1A78B4; padding-bottom: 6px; border-bottom: 1px solid #E5E7EB">8 · Success toasts · top right, 3 s</span>
+      <sc-for list="{{toasts}}" as="t" hint-placeholder-count="4">
+        <div style="height: 42px; border-radius: 6px; background: #FFFFFF; border: 1px solid #15803D; border-left: 4px solid #15803D; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 13px; font-weight: 500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2.5" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>{{t}}<button aria-label="Dismiss" style="margin-left: auto; width: 24px; height: 24px; border: 0; background: transparent; color: #6B7280; font-size: 16px; padding: 0">×</button></div>
+      </sc-for>
+      <div style="font-size: 12px; color: #6B7280; margin-top: auto">Stack newest on top, at most 3. Amounts and usernames are bold in the real toast.</div>
+    </div>
+    <!-- empty tables -->
+    <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 14px; font-weight: 600; color: #1A78B4; padding-bottom: 6px; border-bottom: 1px solid #E5E7EB">9 · Empty tables</span>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1">
+        <sc-for list="{{empties}}" as="e" hint-placeholder-count="4">
+          <div style="border: 1px solid #E5E7EB; border-radius: 6px; display: flex; flex-direction: column; overflow: hidden">
+            <div style="height: 28px; background: #1A78B4"></div>
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 18px 12px; text-align: center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{e.icon}}"></path></svg>
+              <span style="font-weight: 600; font-size: 14px">{{e.title}}</span>
+              <span style="font-size: 12px; color: #6B7280">{{e.sub}}</span>
+              <sc-if value="{{e.cta}}" hint-placeholder-val="{{false}}"><button style="height: 32px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; font-size: 13px; padding: 0 12px; margin-top: 2px">{{e.cta}}</button></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <!-- loading skeletons -->
+    <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 14px; font-weight: 600; color: #1A78B4; padding-bottom: 6px; border-bottom: 1px solid #E5E7EB">10 · Loading skeletons · 1.2 s shimmer</span>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+        <div style="border: 1px solid #E5E7EB; border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px"><span style="width: 60%; height: 10px; border-radius: 5px; background: #E5E7EB"></span><span style="width: 80%; height: 22px; border-radius: 5px; background: linear-gradient(90deg,#E5E7EB 30%,#F3F4F6 50%,#E5E7EB 70%)"></span></div>
+        <div style="border: 1px solid #E5E7EB; border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px"><span style="width: 50%; height: 10px; border-radius: 5px; background: #E5E7EB"></span><span style="width: 70%; height: 22px; border-radius: 5px; background: linear-gradient(90deg,#E5E7EB 30%,#F3F4F6 50%,#E5E7EB 70%)"></span></div>
+      </div>
+      <div style="border: 1px solid #E5E7EB; border-radius: 6px; overflow: hidden; display: flex; flex-direction: column">
+        <div style="height: 30px; background: #1A78B4"></div>
+        <sc-for list="{{skel}}" as="s" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: 50px 1.5fr 1fr 1fr 1.6fr; gap: 10px; align-items: center; height: 34px; padding: 0 12px; border-top: 1px solid #E5E7EB; background: {{s.bg}}">
+            <span style="height: 10px; border-radius: 5px; background: #E5E7EB; width: 70%"></span><span style="height: 10px; border-radius: 5px; background: linear-gradient(90deg,#E5E7EB 30%,#F3F4F6 50%,#E5E7EB 70%); width: {{s.w1}}"></span><span style="height: 10px; border-radius: 5px; background: #E5E7EB; width: 60%; margin-left: auto"></span><span style="height: 18px; border-radius: 9px; background: #E5E7EB; width: 60px"></span><span style="display: flex; gap: 6px"><span style="height: 22px; width: 44px; border-radius: 6px; background: #E5E7EB"></span><span style="height: 22px; width: 56px; border-radius: 6px; background: #E5E7EB"></span></span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size: 12px; color: #6B7280">Show skeletons after 300 ms of waiting, never for a cached page.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const warn = { iconBg: '#B45309', icon: 'M12 8v5M12 16h.01' }, err = { iconBg: '#DC2626', icon: 'M6 6l12 12M18 6L6 18' }, info = { iconBg: '#1A78B4', icon: 'M12 11v6M12 7h.01' }, ok = { iconBg: '#15803D', icon: 'M5 12l5 5L20 7' };
+    const dialogs = [
+      { ...warn, title: '1 · Not enough coins', body: 'You only have 1,250.00. Lower the amount or ask your distributor for more.', secondary: 'Cancel', primary: 'Lower amount', primaryBg: '#1A78B4', code: '' },
+      { ...warn, title: '2 · Account disabled', body: 'player123 is disabled. You can still redeem their coins.', secondary: 'Close', primary: 'Redeem', primaryBg: '#DC2626', code: '' },
+      { ...info, title: '3 · Session expired', body: 'You were logged out. Please log in again.', secondary: '', primary: 'Log in', primaryBg: '#1A78B4', code: '' },
+      { ...info, title: '4 · Password was reset', body: 'Your password was changed. Please log in with the new one.', secondary: '', primary: 'Log in', primaryBg: '#1A78B4', code: '' },
+      { ...ok, title: '5 · Duplicate request', body: 'This transfer already went through. Nothing moved twice.', secondary: '', primary: 'OK', primaryBg: '#1A78B4', code: 'rq_8a21f · LE-20261020-01527' },
+      { ...err, title: '7 · Something went wrong', body: 'The request did not complete. Try again; if it keeps failing, quote the code to support.', secondary: 'Close', primary: 'Retry', primaryBg: '#1A78B4', code: 'E-5021' },
+      { ...warn, title: 'Confirm · leave with unsaved changes', body: 'Your edits to Settings have not been saved.', secondary: 'Stay', primary: 'Leave', primaryBg: '#DC2626', code: '' }
+    ];
+    const toasts = ['Loaded 50.00 to player123', 'Redeemed 20.00 from player123', 'Password reset for bing_rao', 'Agent agent13 created'];
+    const empties = [
+      { icon: 'M9 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M19 8v6M16 11h6', title: 'No players yet', sub: 'Create the first player and give them their login.', cta: 'Create Player' },
+      { icon: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', title: 'No transactions in this period', sub: 'Try a wider date range or another player.', cta: '' },
+      { icon: 'M6 9h12a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4c-2 0-3-2-4-2h-4c-1 0-2 2-4 2a4 4 0 0 1-4-4v-2a4 4 0 0 1 4-4z', title: 'No rounds found', sub: 'This player has not played in the period.', cta: '' },
+      { icon: 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5 21a7 7 0 0 1 14 0M19 8v6M16 11h6', title: 'No agents yet', sub: 'Create an agent and load their first coins.', cta: 'Create Agent' }
+    ];
+    const skel = [60, 75, 55, 80, 65, 70].map((w, i) => ({ w1: w + '%', bg: i % 2 ? '#F9FAFB' : '#FFFFFF' }));
+    return { dialogs, toasts, empties, skel };
+  }
+}
+</script>
+</body>
+</html>

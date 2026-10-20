@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault design tokens</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1560px; box-sizing: border-box; padding: 56px 64px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 24px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">09 · HANDOFF</div>
+      <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900">Design tokens</h1>
+    </div>
+    <div style="font-size: 17px; color: #B9B3D9; max-width: 460px; text-align: right">Copy these into CSS variables for the lobby and into a constants module for PixiJS. Use the names exactly as written.</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start">
+    <sc-for list="{{cols}}" as="col" hint-placeholder-count="2">
+      <div style="display: flex; flex-direction: column; gap: 18px">
+        <sc-for list="{{col.groups}}" as="g" hint-placeholder-count="3">
+          <div style="background: #151030; border: 1px solid #2E2560; border-radius: 16px; overflow: hidden">
+            <div style="padding: 10px 16px; background: #1F1844; font-size: 14px; letter-spacing: 2px; font-weight: 700; color: #C4B5FD">{{g.title}}</div>
+            <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="6">
+              <div style="display: grid; grid-template-columns: 22px 150px 150px minmax(0, 1fr); gap: 10px; align-items: center; padding: 7px 16px; border-top: 1px solid #241C4F">
+                <span style="width: 18px; height: 18px; border-radius: 5px; background: {{r.chip}}; border: 1px solid #3B2F7A"></span>
+                <span style="font-size: 15px; font-weight: 700; color: #22D3EE">{{r.n}}</span>
+                <span style="font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums">{{r.v}}</span>
+                <span style="font-size: 14px; color: #B9B3D9">{{r.u}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = (n, v, u, chip) => ({ n, v, u, chip: chip || 'transparent' });
+    const color = [
+      t('bg/base', '#0B0820', 'Page and game background', '#0B0820'),
+      t('bg/raised', '#151030', 'Cards, panels', '#151030'),
+      t('bg/overlay', '#1F1844', 'Modals, sheets, toasts', '#1F1844'),
+      t('line/neon', '#2E2560', 'Hairlines, dividers', '#2E2560'),
+      t('line/strong', '#3B2F7A', 'Control borders', '#3B2F7A'),
+      t('neon/violet', '#8B5CF6', 'Glow, focus, borders only', '#8B5CF6'),
+      t('neon/violet-600', '#7C3AED', 'Primary button fill', '#7C3AED'),
+      t('neon/violet-glow', '#A78BFA', 'Violet text on dark', '#A78BFA'),
+      t('neon/cyan', '#22D3EE', 'Active state, secondary', '#22D3EE'),
+      t('burn/500', '#FF7A1A', 'SPIN fill, turbo', '#FF7A1A'),
+      t('burn/100', '#FFF3E0', 'Contrail tip, hot white', '#FFF3E0'),
+      t('gold/100', '#FFE27A', 'Gold highlight, bet value', '#FFE27A'),
+      t('gold/500', '#F5B301', 'Wins, currency, SPIN ring', '#F5B301'),
+      t('gold/800', '#B87400', 'Gold shade, pressed', '#B87400'),
+      t('jp/grand', '#FFC94A → #E11D2E → #7A0A14', 'GRAND plaque', 'linear-gradient(160deg,#FFC94A,#E11D2E,#7A0A14)'),
+      t('jp/major', '#F0ABFC → #C026D3 → #6D28D9', 'MAJOR plaque', 'linear-gradient(160deg,#F0ABFC,#C026D3,#6D28D9)'),
+      t('jp/minor', '#67E8F9 → #2563EB → #1E3A8A', 'MINOR plaque', 'linear-gradient(160deg,#67E8F9,#2563EB,#1E3A8A)'),
+      t('jp/mini', '#6EE7B7 → #0D9488 → #065F46', 'MINI plaque', 'linear-gradient(160deg,#6EE7B7,#0D9488,#065F46)'),
+      t('status/success', '#22C55E', 'Confirmations', '#22C55E'),
+      t('status/warning', '#F59E0B', 'Low balance warnings', '#F59E0B'),
+      t('status/error', '#EF4444', 'Errors, STOP', '#EF4444'),
+      t('status/disabled', '#6B6690', 'Disabled icons, text', '#6B6690'),
+      t('text/primary', '#FFFFFF', 'Headings, values', '#FFFFFF'),
+      t('text/secondary', '#B9B3D9', 'Labels, body', '#B9B3D9'),
+      t('text/muted', '#8A83AD', 'Captions, hints', '#8A83AD')
+    ];
+    const type = [
+      t('font/display', 'Orbitron 500–900', 'Logos, numbers, banners'),
+      t('font/ui', 'Rajdhani 500–700', 'Labels, menus, body'),
+      t('font/game', 'Cinzel 700–900', 'Crown of the Cosmos titles'),
+      t('type/jackpot-xl', '40 / 44 · 900', 'Jackpot amounts'),
+      t('type/h1', '28 / 32 · 900', 'Win banners, titles'),
+      t('type/h2', '22 / 28 · 700', 'Section titles'),
+      t('type/value', '18 / 22 · 700', 'Value-box numbers (min 16)'),
+      t('type/body', '16 / 22 · 600', 'Body copy (min 14)'),
+      t('type/label', '14 / 16 · 700 caps', 'Value labels, tracking 1.5')
+    ];
+    const space = [
+      t('space/1 … 7', '4 · 8 · 12 · 16 · 24 · 32 · 48', '8 px grid'),
+      t('radius/sm · md · lg', '6 · 10 · 14', 'Badges, chips, icon buttons'),
+      t('radius/xl · panel · pill', '22 · 20 · 999', 'Modals, panels, pills'),
+      t('size/tap-min', '48', 'Minimum tap target'),
+      t('size/gap-min', '8', 'Gap between targets'),
+      t('size/spin', '112 (min 88)', 'SPIN diameter'),
+      t('size/symbol', '64 · 70 · 78', 'Symbol size, small / base / large phone')
+    ];
+    const fx = [
+      t('glow/violet', '0 0 20px rgba(139,92,246,.55)', 'Primary buttons, active tab'),
+      t('glow/gold', '0 0 20px rgba(245,179,1,.5)', 'Wins, COLLECT'),
+      t('glow/burn', '0 0 36px rgba(255,122,26,.65)', 'SPIN idle'),
+      t('glow/cyan', '0 0 18px rgba(34,211,238,.35)', 'Active toggles'),
+      t('shadow/modal', '0 0 40px rgba(139,92,246,.35)', 'Dialogs'),
+      t('glass/panel', '#151030 @ 78% · blur 16', 'Control bar, sheets')
+    ];
+    const motion = [
+      t('dur/press', '80 / 140 ms', 'Button down / up'),
+      t('dur/modal', '160 + 240 ms', 'Backdrop + panel'),
+      t('dur/pulse', '1600 ms loop', 'SPIN idle glow'),
+      t('dur/ticker', '220 ms, 30 ms stagger', 'Jackpot digits'),
+      t('dur/countup', '600 – 3000 ms', 'Win counter'),
+      t('dur/coins', '900 ms', 'Coin burst'),
+      t('ease/spring', 'back-out 1.4 – 1.6', 'Press release, pop-in'),
+      t('turbo/factor', '0.5', 'Multiplies reel and UI durations')
+    ];
+    const cols = [
+      { groups: [{ title: 'COLOR', rows: color }] },
+      { groups: [{ title: 'TYPE', rows: type }, { title: 'SPACE, RADIUS & SIZE', rows: space }, { title: 'GLOW & SURFACE', rows: fx }, { title: 'MOTION', rows: motion }] }
+    ];
+    return { cols };
+  }
+}
+</script>
+</body>
+</html>

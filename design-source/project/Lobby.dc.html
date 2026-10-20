@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault lobby</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;family=Cinzel:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 1100px; box-sizing: border-box; position: relative; overflow: hidden; background: radial-gradient(ellipse 100% 40% at 50% 0%, #1E1450 0%, #0B0820 60%); color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column">
+  <svg width="390" height="1100" viewBox="0 0 390 1100" style="position: absolute; inset: 0" aria-hidden="true">
+    <path d="M-20 180 L420 120" stroke="#22D3EE" stroke-width="1" opacity=".25"></path>
+    <path d="M-20 200 L420 150" stroke="#8B5CF6" stroke-width="2" opacity=".2"></path>
+    <path d="M-20 820 L420 760" stroke="#FF7A1A" stroke-width="1.5" opacity=".2"></path>
+    <g fill="#FFFFFF" opacity=".5"><circle cx="40" cy="90" r="1"></circle><circle cx="300" cy="70" r="1.5"></circle><circle cx="200" cy="130" r="1"></circle><circle cx="350" cy="900" r="1"></circle><circle cx="60" cy="1000" r="1.5"></circle></g>
+  </svg>
+
+  <!-- TOP BAR (below 59 px inset) -->
+  <div style="position: relative; padding: 63px 16px 0; display: flex; align-items: center; gap: 8px">
+    <div style="display: flex; align-items: baseline; gap: 4px; transform: skewX(-12deg); flex-shrink: 0">
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 13px">JACK</span>
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 15px; color: #F5B301">VAULT</span>
+    </div>
+    <div style="flex: 1"></div>
+    <div style="display: flex; align-items: center; height: 40px; border-radius: 20px; background: rgba(21,16,48,.85); border: 1px solid #F5B301; padding: 0 4px 0 10px; gap: 6px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F5B301" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 3l7 3.5v11L12 21l-7-3.5v-11zM9.5 8.5h5l-3.5 7"></path></svg>
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 16px; color: #FFE27A">1,250.00</span>
+      <button aria-label="Add coins" style="width: 32px; height: 32px; border-radius: 16px; border: 0; background: linear-gradient(180deg,#FFE27A,#F5B301 60%,#D99A00); color: #0B0820; font-size: 22px; font-weight: 700; padding: 0; line-height: 1">+</button>
+    </div>
+    <button aria-label="Messages" style="width: 44px; height: 44px; border-radius: 14px; border: 1px solid #3B2F7A; background: rgba(21,16,48,.85); display: flex; align-items: center; justify-content: center; padding: 0; position: relative">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 5h18v12H9l-6 4z"></path></svg>
+      <span style="position: absolute; top: 6px; right: 6px; width: 10px; height: 10px; border-radius: 5px; background: #FF7A1A"></span>
+    </button>
+    <button aria-label="Profile" style="width: 44px; height: 44px; border-radius: 14px; border: 1px solid #8B5CF6; background: linear-gradient(160deg,#7C3AED,#22D3EE); display: flex; align-items: center; justify-content: center; padding: 0; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; color: #0B0820">LA</button>
+  </div>
+
+  <!-- JACKPOT BAR -->
+  <div style="position: relative; margin: 14px 16px 0; border-radius: 18px; border: 1px solid #F5B301; background: rgba(21,16,48,.9); box-shadow: 0 0 28px rgba(255,122,26,.35), inset 0 0 24px rgba(245,179,1,.12); padding: 10px; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 6px">
+    <sc-for list="{{jackpots}}" as="j" hint-placeholder-count="4">
+      <div style="border-radius: 12px; background: {{j.bg}}; padding: 6px 4px; display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 58px; justify-content: center">
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: {{j.nameSize}}; letter-spacing: 1px">{{j.name}}</span>
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: {{j.amtSize}}; color: #FFE27A; white-space: nowrap">{{j.amt}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- PROMO CAROUSEL -->
+  <div style="position: relative; margin: 14px 16px 0; height: 170px; border-radius: 18px; overflow: hidden; background: radial-gradient(ellipse 80% 100% at 80% 50%, #3B2F7A 0%, #130E36 70%); border: 1px solid #3B2F7A; display: flex; align-items: center; justify-content: space-between; padding: 16px 18px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 13px; letter-spacing: 2px; font-weight: 700; color: #22D3EE">FEATURED</span>
+      <div style="font-family: 'Cinzel', serif; font-weight: 900; font-size: 22px; line-height: 1.05; color: #FFE27A">CROWN OF<br>THE COSMOS</div>
+      <button style="height: 44px; padding: 0 20px; border-radius: 22px; border: 0; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 16px; letter-spacing: 1px; box-shadow: 0 0 18px rgba(139,92,246,.6); align-self: flex-start">PLAY NOW</button>
+    </div>
+    <div style="width: 120px; height: 120px; border-radius: 16px; border: 1px dashed #8B5CF6; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; color: #C4B5FD; font-weight: 700; padding: 8px; box-sizing: border-box">[KEY ART: crown + planets]</div>
+    <div style="position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px">
+      <span style="width: 18px; height: 6px; border-radius: 3px; background: #22D3EE"></span><span style="width: 6px; height: 6px; border-radius: 3px; background: #4B4766"></span>
+    </div>
+  </div>
+
+  <!-- CATEGORY TABS -->
+  <div style="position: relative; margin: 14px 0 0 16px; display: flex; gap: 8px; align-items: center; overflow: hidden">
+    <button style="height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid #8B5CF6; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 15px; box-shadow: 0 0 14px rgba(139,92,246,.6); flex-shrink: 0">All</button>
+    <button style="height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 15px; flex-shrink: 0">Slots</button>
+    <button style="height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 15px; flex-shrink: 0">Fish</button>
+    <button style="height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 15px; flex-shrink: 0">Arcade</button>
+    <button style="height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 15px; flex-shrink: 0">Favorites</button>
+    <button aria-label="Search" style="width: 40px; height: 40px; border-radius: 20px; border: 1px solid #3B2F7A; background: #151030; display: flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M10 3l7 7-7 7-7-7zM15 15l6 6"></path></svg></button>
+  </div>
+
+  <!-- GAME GRID -->
+  <div style="position: relative; margin: 12px 16px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; flex: 1; align-content: start">
+    <sc-for list="{{games}}" as="g" hint-placeholder-count="12">
+      <a href="#" style="display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: #FFFFFF">
+        <div style="position: relative; aspect-ratio: 1; border-radius: 14px; background: {{g.art}}; border: 1px solid #3B2F7A; overflow: hidden; display: flex; align-items: flex-end; padding: 6px; box-sizing: border-box">
+          <sc-if value="{{g.badge}}" hint-placeholder-val="{{true}}">
+            <span style="position: absolute; top: 6px; left: 6px; height: 20px; padding: 0 7px; border-radius: 5px; background: {{g.badgeBg}}; color: #0B0820; font-weight: 700; font-size: 11px; letter-spacing: 1px; display: inline-flex; align-items: center; transform: skewX(-10deg)">{{g.badge}}</span>
+          </sc-if>
+          <button aria-label="Favorite" style="position: absolute; top: 4px; right: 4px; width: 32px; height: 32px; border-radius: 16px; border: 0; background: rgba(11,8,32,.6); display: flex; align-items: center; justify-content: center; padding: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="{{g.heartFill}}" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="miter" aria-hidden="true"><path d="M12 21L3 12V6l4-3 5 4 5-4 4 3v6z"></path></svg></button>
+          <span style="font-size: 10px; color: rgba(255,255,255,.55); font-weight: 700">[ART]</span>
+        </div>
+        <span style="font-size: 14px; font-weight: 700; line-height: 1.1; text-align: center">{{g.name}}</span>
+      </a>
+    </sc-for>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav style="position: relative; margin: 10px 8px 0; height: 64px; border-radius: 20px; background: rgba(21,16,48,.95); border: 1px solid #2E2560; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center">
+    <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+      <a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: {{n.color}}; font-size: 12px; font-weight: 700; min-height: 48px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{n.color}}" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="{{n.d}}"></path></svg>{{n.label}}
+      </a>
+    </sc-for>
+  </nav>
+  <div style="height: 34px; flex-shrink: 0"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const jackpots = [
+      { name: 'GRAND', amt: '152,384.27', bg: 'linear-gradient(160deg,#FFC94A,#E11D2E 55%,#7A0A14)', nameSize: '13px', amtSize: '15px' },
+      { name: 'MAJOR', amt: '12,481.90', bg: 'linear-gradient(160deg,#F0ABFC,#C026D3 50%,#6D28D9)', nameSize: '11px', amtSize: '12px' },
+      { name: 'MINOR', amt: '1,204.55', bg: 'linear-gradient(160deg,#67E8F9,#2563EB 50%,#1E3A8A)', nameSize: '11px', amtSize: '12px' },
+      { name: 'MINI', amt: '118.30', bg: 'linear-gradient(160deg,#6EE7B7,#0D9488 50%,#065F46)', nameSize: '11px', amtSize: '12px' }
+    ];
+    const arts = {
+      cosmos: 'radial-gradient(circle at 50% 30%, #5B3FBF, #130E36)', ocean: 'radial-gradient(circle at 50% 70%, #0E7490, #082F49)', dragon: 'radial-gradient(circle at 50% 40%, #B91C1C, #3B0A0A)',
+      gold: 'radial-gradient(circle at 50% 60%, #B45309, #3B2008)', candy: 'radial-gradient(circle at 50% 40%, #DB2777, #4A0A2E)', west: 'radial-gradient(circle at 50% 70%, #92400E, #2A1505)',
+      ice: 'radial-gradient(circle at 50% 30%, #38BDF8, #0C2A4A)', jungle: 'radial-gradient(circle at 50% 60%, #15803D, #052E16)', neon: 'radial-gradient(circle at 50% 50%, #7C3AED, #1E0A3F)',
+      pirate: 'radial-gradient(circle at 50% 70%, #1E3A8A, #0B1230)', egypt: 'radial-gradient(circle at 50% 50%, #CA8A04, #3B2A05)', volcano: 'radial-gradient(circle at 50% 80%, #EA580C, #3B0F05)'
+    };
+    const badgeBg = { NEW: '#22D3EE', HOT: 'linear-gradient(90deg,#FF7A1A,#FFB066)', JACKPOT: 'linear-gradient(90deg,#FFE27A,#F5B301)' };
+    const list = [
+      ['Crown of the Cosmos', 'cosmos', 'JACKPOT', true], ['Reef Riches', 'ocean', 'NEW', false], ['Ember Drake', 'dragon', 'HOT', false],
+      ['Nugget Rush', 'gold', '', false], ['Sugar Nova', 'candy', 'NEW', true], ['Dusty Trail', 'west', '', false],
+      ['Frostbite Falls', 'ice', '', false], ['Temple Vines', 'jungle', 'HOT', false], ['Voltage City', 'neon', '', false],
+      ['Black Sail', 'pirate', '', false], ['Scarab Sun', 'egypt', 'JACKPOT', false], ['Magma Core', 'volcano', 'NEW', false]
+    ];
+    const games = list.map(([name, art, badge, fav]) => ({ name, art: arts[art], badge, badgeBg: badgeBg[badge] || 'transparent', heartFill: fav ? '#FF7A1A' : 'none' }));
+    const navD = ['M3 11L12 3l9 8M6 9v12h12V9', 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z', 'M3 9h18v4H3zM5 13v8h14v-8M12 9v12', 'M4 12a8 8 0 1 0 2.3-5.7M3 3v5h5M12 7v5l4 2', 'M12 3l4 4-4 4-4-4zM4 21l3-7h10l3 7z'];
+    const nav = ['Home', 'Games', 'Rewards', 'History', 'Profile'].map((label, i) => ({ label, d: navD[i], color: i === 0 ? '#22D3EE' : '#B9B3D9' }));
+    return { jackpots, games, nav };
+  }
+}
+</script>
+</body>
+</html>

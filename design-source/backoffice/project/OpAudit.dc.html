@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Operator audit checks</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 24px; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 15px">Jack Vault</span><span style="color: #C7D2E3">Back Office</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #E5E7EB; color: #1B2B44; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">OPERATOR</span>
+    <span style="color: #8A9AB5">/</span><span style="font-weight: 600; font-size: 15px">Audit</span>
+    <span style="flex: 1"></span><span style="color: #C7D2E3">Welcome, <strong style="color: #FFFFFF; font-weight: 600">op.admin</strong></span>
+    <a href="Login.dc.html" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #5B6B85; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500">Log out</a>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 24px; gap: 10px">
+    <span style="color: #4B5563">Points in circulation:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">1,245,000.00</span>
+    <span style="height: 22px; padding: 0 8px; border-radius: 11px; background: #FEE2E2; color: #DC2626; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-left: 8px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="3" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"></path></svg>Mismatch</span>
+    <span style="flex: 1"></span><span style="color: #4B5563; font-size: 13px">Times in EST</span>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <nav style="width: 240px; flex-shrink: 0; background: #E9EDF2; border-right: 1px solid #E5E7EB; padding: 12px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{menu}}" as="m" hint-placeholder-count="5"><a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}</a></sc-for>
+      <span style="flex: 1"></span><a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none">Log out</a>
+    </nav>
+    <main style="flex: 1; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 20px; display: flex; align-items: center; gap: 12px">
+        <span style="font-size: 16px; font-weight: 600; color: #1A78B4">Audit</span>
+        <span style="color: #4B5563">Five checks that must all pass. Last run 2026-10-20 15:55:02 EST, took 3.2 s.</span>
+        <span style="flex: 1"></span>
+        <button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 14px; display: flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"></path></svg>Run checks now</button>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden">
+        <sc-for list="{{checks}}" as="c" hint-placeholder-count="5">
+          <div style="display: flex; flex-direction: column; border-top: 1px solid #E5E7EB">
+            <div style="display: grid; grid-template-columns: 40px 2fr 3fr 1.2fr; align-items: center; gap: 12px; padding: 12px 20px; min-height: 52px; background: {{c.bg}}">
+              <span style="width: 26px; height: 26px; border-radius: 13px; background: {{c.iconBg}}; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg></span>
+              <span style="font-weight: 600">{{c.title}}</span>
+              <span style="font-size: 13px; color: #4B5563; line-height: 1.4">{{c.desc}}</span>
+              <span style="font-size: 12px; color: #6B7280; text-align: right; font-variant-numeric: tabular-nums">{{c.when}}</span>
+            </div>
+            <sc-if value="{{c.failed}}" hint-placeholder-val="{{false}}">
+              <div style="padding: 0 20px 14px 72px; display: flex; flex-direction: column; gap: 8px; background: #FEF2F2">
+                <span style="font-size: 13px; font-weight: 600; color: #B91C1C">2 accounts differ</span>
+                <div style="border: 1px solid #FCA5A5; border-radius: 6px; overflow: hidden; background: #FFFFFF">
+                  <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; height: 28px; align-items: center; padding: 0 12px; gap: 8px; background: #F3F4F6; font-size: 11px; font-weight: 600; color: #4B5563"><span>Account</span><span style="text-align: right">Stored balance</span><span style="text-align: right">From ledger</span><span style="text-align: right">Difference</span><span>Last entry</span></div>
+                  <sc-for list="{{c.diffs}}" as="d" hint-placeholder-count="2"><div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; height: 30px; align-items: center; padding: 0 12px; gap: 8px; border-top: 1px solid #E5E7EB; font-size: 13px; font-variant-numeric: tabular-nums"><span style="font-weight: 500">{{d.acct}}</span><span style="text-align: right">{{d.stored}}</span><span style="text-align: right">{{d.ledger}}</span><span style="text-align: right; color: #DC2626; font-weight: 600">{{d.diff}}</span><span style="color: #4B5563; font-family: ui-monospace, monospace; font-size: 12px">{{d.last}}</span></div></sc-for>
+                </div>
+                <span style="font-size: 12px; color: #4B5563">A difference usually means a transfer was written to one side and the connection dropped before the other. Open the ledger entry and compare.</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 20px; display: flex; align-items: center; gap: 20px; font-size: 13px; color: #4B5563">
+        <span><strong style="color: #111827">Current math profile</strong> rtp95</span>
+        <span style="font-family: ui-monospace, monospace; color: #111827">3f9a1c7e2b904d6a</span>
+        <button style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; font-size: 12px; padding: 0 10px; color: #111827; display: flex; align-items: center; gap: 6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2" aria-hidden="true"><path d="M9 9h11v11H9zM5 15H4V4h11v1"></path></svg>Copy</button>
+        <span style="margin-left: auto">Backend: <span style="font-family: ui-monospace, monospace">GET /api/admin/audit</span> exists; this page needs an operator-auth version.</span>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = { users: 'M9 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M16 5a3 3 0 0 1 0 6M22 20a6 6 0 0 0-5-6', transfer: 'M4 8h13l-3-3M20 16H7l3 3', shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4', percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4' };
+    const menu = [['Distributors', 'users', 'OpDistributors.dc.html'], ['Points Ledger', 'transfer', 'OpLedger.dc.html'], ['Audit', 'shield', 'OpAudit.dc.html'], ['Win Ratio & Games', 'percent', 'OpWinRatio.dc.html'], ['Settings', 'settings', 'Settings.dc.html']].map(([label, ic, href]) => { const on = label === 'Audit'; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const ok = { iconBg: '#15803D', icon: 'M5 12l5 5L20 7', bg: '#FFFFFF', failed: false, diffs: [] };
+    const checks = [
+      { ...ok, title: 'Every player balance equals its transactions', desc: 'Sum of each player’s loads, redeems, bets and wins matches the stored balance. 2,118 players checked.', when: '15:55:02' },
+      { title: 'Every distributor and agent balance equals its ledger flows', desc: 'Issued + redeemed in, minus taken back + loaded out, matches each staff balance.', when: '15:55:03', iconBg: '#DC2626', icon: 'M5 5l14 14M19 5L5 19', bg: '#FEF2F2', failed: true, diffs: [{ acct: 'agent06 (AGENT)', stored: '4,900.00', ledger: '4,880.00', diff: '+20.00', last: 'LE-…01521' }, { acct: 'metro-dist (DIST)', stored: '6,000.00', ledger: '6,020.00', diff: '−20.00', last: 'LE-…01502' }] },
+      { ...ok, title: 'Points conserved', desc: 'Issued 1,310,000.00 − taken back 65,000.00 = 1,245,000.00 held by distributors, agents and players together.', when: '15:55:03' },
+      { ...ok, title: 'Every jackpot pool equals its seed plus contributions minus payouts', desc: 'GRAND, MAJOR, MINOR and MINI rebuilt from 1.5% of every bet and every jackpot hit.', when: '15:55:04' },
+      { ...ok, title: 'Current math profile and its fingerprint', desc: 'Loaded profile rtp95 hashes to the fingerprint recorded on rounds since 2026-10-01.', when: '15:55:04' }
+    ];
+    return { menu, checks };
+  }
+}
+</script>
+</body>
+</html>

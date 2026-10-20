@@ -1,0 +1,23 @@
+{
+  "name": "jack-vault-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Jack Vault mobile web client: lobby and Crown of the Cosmos reels game (PixiJS v8 + TypeScript).",
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "build:demo": "vite build --mode demo && node scripts/inline.mjs dist-demo/index.html dist-demo/jack-vault-demo.html",
+    "preview": "vite preview --host",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "pixi.js": "8.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^5.7.2",
+    "vite": "^6.4.1"
+  }
+}

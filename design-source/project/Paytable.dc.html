@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Paytable sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0B0820; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <div style="position: absolute; left: 0; right: 0; top: 0; height: 90px; background: radial-gradient(ellipse 120% 100% at 50% 0%, #2A1F6B, #0B0820); opacity: .5"></div>
+  <div style="position: absolute; left: 0; right: 0; top: 70px; bottom: 0; border-radius: 28px 28px 0 0; background: #151030; border-top: 1px solid #8B5CF6; display: flex; flex-direction: column; padding: 10px 16px 34px; box-sizing: border-box">
+    <div style="width: 44px; height: 5px; border-radius: 3px; background: #4B4766; margin: 0 auto 12px"></div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px">
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px">Paytable</span>
+      <span style="font-size: 13px; color: #B9B3D9; font-weight: 700">BET <strong style="color: #FFE27A; font-family: 'Orbitron', sans-serif">1.25</strong> · values update with bet</span>
+    </div>
+    <!-- page tabs -->
+    <div style="display: flex; gap: 6px; margin-bottom: 12px">
+      <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #8B5CF6; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 14px">Symbols</button>
+      <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #3B2F7A; background: #1F1844; color: #B9B3D9; font-weight: 700; font-size: 14px">Specials</button>
+      <button style="height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid #3B2F7A; background: #1F1844; color: #B9B3D9; font-weight: 700; font-size: 14px">Jackpots</button>
+    </div>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; align-content: start; overflow: hidden">
+      <sc-for list="{{symbols}}" as="s" hint-placeholder-count="9">
+        <div style="background: #1F1844; border: 1px solid #2E2560; border-radius: 12px; padding: 8px; display: flex; flex-direction: column; align-items: center; gap: 4px">
+          <div style="width: 56px; height: 56px; border-radius: 9px; background: {{s.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: center">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="{{s.fill}}" stroke="{{s.ink}}" stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true"><path d="{{s.d}}"></path></svg>
+          </div>
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 1px; font-size: 13px; font-variant-numeric: tabular-nums">
+            <div style="display: flex; justify-content: space-between"><span style="color: #8A83AD">5×</span><span style="color: #FFE27A; font-weight: 700; font-family: 'Orbitron', sans-serif; font-size: 12px">{{s.p5}}</span></div>
+            <div style="display: flex; justify-content: space-between"><span style="color: #8A83AD">4×</span><span style="font-weight: 700; font-family: 'Orbitron', sans-serif; font-size: 12px">{{s.p4}}</span></div>
+            <div style="display: flex; justify-content: space-between"><span style="color: #8A83AD">3×</span><span style="font-weight: 700; font-family: 'Orbitron', sans-serif; font-size: 12px">{{s.p3}}</span></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <!-- specials preview strip -->
+    <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+      <div style="border-radius: 10px; background: radial-gradient(circle at 50% 30%, #7C3AED, #2E1065); padding: 8px; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 12px; color: #FFE27A">WILD</span><span style="font-size: 12px; line-height: 1.25; color: #FFFFFF">Substitutes for all except SCATTER and BONUS</span></div>
+      <div style="border-radius: 10px; background: radial-gradient(circle at 50% 30%, #0E7490, #0A2A33); padding: 8px; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 12px; color: #A5F3FC">SCATTER</span><span style="font-size: 12px; line-height: 1.25">3+ anywhere = 10 Free Spins ×2</span></div>
+      <div style="border-radius: 10px; background: radial-gradient(circle at 50% 30%, #3B2A05, #1A1203); padding: 8px; display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 12px; color: #FFE27A">BONUS</span><span style="font-size: 12px; line-height: 1.25">3 on reels 1, 3, 5 = Super Wheel</span></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px">
+      <div style="display: flex; gap: 6px"><span style="width: 18px; height: 6px; border-radius: 3px; background: #22D3EE"></span><span style="width: 6px; height: 6px; border-radius: 3px; background: #4B4766"></span><span style="width: 6px; height: 6px; border-radius: 3px; background: #4B4766"></span></div>
+      <span style="font-size: 13px; color: #8A83AD; font-weight: 700">Swipe for pages · swipe down to close</span>
+      <button aria-label="Close" style="width: 48px; height: 48px; border-radius: 24px; border: 2px solid #22D3EE; background: rgba(34,211,238,.12); display: flex; align-items: center; justify-content: center; padding: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"></path></svg></button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const bet = 1.25;
+    const f = (m) => (m * bet).toFixed(2);
+    const symbols = [
+      ['M3 18L4 7l5 5 3-8 3 8 5-5 1 11z', '#F5B301', '#FFE27A', 'radial-gradient(circle at 50% 30%, #3B2A05, #1A1203)', 40, 12, 4],
+      ['M12 3l7 6-7 12-7-12z M5 9h14', '#8B5CF6', '#C4B5FD', 'radial-gradient(circle at 50% 30%, #2E1F6B, #130E36)', 24, 8, 3],
+      ['M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M2 14c6 3 14 3 20 0', '#0D9488', '#F5B301', 'radial-gradient(circle at 50% 30%, #064E3B, #06241C)', 16, 6, 2],
+      ['M15 9a4 4 0 1 1 0 .1z M15 9L3 21 M12 7L2 15 M17 12L9 22', '#FF7A1A', '#FFB066', 'radial-gradient(circle at 50% 30%, #5A2606, #2A1003)', 12, 4, 1.6],
+      ['M5 20L12 4l7 16M8 14h8', 'none', '#F87171', '#2A0F14', 6, 2, 0.8],
+      ['M6 4v16M18 4l-9 8 9 8', 'none', '#22D3EE', '#0A2A33', 5, 1.6, 0.6],
+      ['M12 4a7 8 0 1 0 0 16 7 8 0 0 0 0-16zM14 16l5 5', 'none', '#A78BFA', '#1E1450', 4, 1.2, 0.4],
+      ['M15 4v11a4 4 0 0 1-8 0', 'none', '#4ADE80', '#0A2A1A', 3, 1, 0.4],
+      ['M5 6v12M9 6h6M12 6v12M18 6a3 6 0 1 0 0 12 3 6 0 0 0 0-12z', 'none', '#FBBF24', '#2A2005', 2.4, 0.8, 0.3]
+    ].map(([d, fill, ink, bg, m5, m4, m3]) => ({ d, fill, ink, bg, p5: f(m5), p4: f(m4), p3: f(m3) }));
+    return { symbols };
+  }
+}
+</script>
+</body>
+</html>

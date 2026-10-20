@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crown of the Cosmos reels, idle</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;family=Cinzel:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+button{font:inherit;cursor:pointer}
+.gold{background:linear-gradient(180deg,#FFE27A 0%,#F5B301 55%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: {{rootBg}}; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; padding: 59px 0 34px">
+  <sc-if value="{{isFS}}" hint-placeholder-val="{{false}}">
+    <svg width="390" height="844" viewBox="0 0 390 844" style="position: absolute; inset: 0" aria-hidden="true">
+      <g fill="#A5F3FC"><path d="M60 140l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"></path><path d="M330 240l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"></path><path d="M40 420l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"></path><path d="M350 520l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"></path><path d="M300 90l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"></path></g>
+    </svg>
+  </sc-if>
+  <!-- parallax art layers -->
+  <svg width="390" height="844" viewBox="0 0 390 844" style="position: absolute; inset: 0" aria-hidden="true">
+    <g fill="#FFFFFF" opacity=".7"><circle cx="30" cy="100" r="1.5"></circle><circle cx="140" cy="70" r="1"></circle><circle cx="340" cy="110" r="1.5"></circle><circle cx="370" cy="400" r="1"></circle><circle cx="20" cy="450" r="1"></circle><circle cx="200" cy="640" r="1"></circle><circle cx="90" cy="700" r="1.5"></circle></g>
+    <circle cx="350" cy="190" r="34" fill="#5B3FBF" opacity=".4"></circle>
+    <ellipse cx="350" cy="190" rx="56" ry="10" fill="none" stroke="#22D3EE" stroke-width="1.5" opacity=".45" transform="rotate(-18 350 190)"></ellipse>
+    <circle cx="36" cy="560" r="20" fill="#0D9488" opacity=".35"></circle>
+  </svg>
+
+  <!-- HEADER: logo + jackpots -->
+  <div style="position: relative; padding: 4px 8px 0; display: flex; align-items: center; gap: 8px">
+    <div style="display: flex; flex-direction: column; align-items: center; line-height: 1; width: 110px; flex-shrink: 0">
+      <span class="gold" style="font-family: 'Cinzel', serif; font-weight: 900; font-size: 19px; letter-spacing: 1px">CROWN</span>
+      <span style="font-family: 'Cinzel', serif; font-weight: 700; font-size: 8px; letter-spacing: 4px; color: #C4B5FD">OF THE</span>
+      <span class="gold" style="font-family: 'Cinzel', serif; font-weight: 900; font-size: 19px; letter-spacing: 1px">COSMOS</span>
+    </div>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px">
+      <sc-for list="{{jackpots}}" as="j" hint-placeholder-count="4">
+        <div style="height: 26px; border-radius: 7px; background: {{j.bg}}; display: flex; align-items: center; justify-content: space-between; padding: 0 7px">
+          <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 9px">{{j.name}}</span>
+          <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 10px; color: #FFE27A">{{j.amt}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- Bonus teaser ribbon -->
+  <div style="position: relative; margin: 8px auto 0; height: 24px; padding: 0 14px; border-radius: 12px; background: rgba(21,16,48,.8); border: 1px solid #F5B301; display: flex; align-items: center; gap: 8px">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F5B301" stroke-width="2.4" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"></path></svg>
+    <span style="font-size: 13px; letter-spacing: 1.5px; font-weight: 700; color: #FFE27A">3 BONUS = SUPER WHEEL</span>
+  </div>
+
+  <!-- REEL FRAME -->
+  <div style="position: relative; margin: 8px 8px 0; border-radius: 16px; padding: 8px 14px; background: linear-gradient(180deg,#3B2A05,#1A1203); border: 2px solid #F5B301; box-shadow: {{frameGlow}}">
+    <sc-if value="{{showRetrigger}}" hint-placeholder-val="{{false}}">
+      <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) skewX(-8deg); z-index: 5; padding: 10px 26px; border-radius: 12px; background: linear-gradient(90deg,#0E7490,#22D3EE); border: 2px solid #A5F3FC; box-shadow: 0 0 40px rgba(34,211,238,.9); font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px; color: #0B0820; white-space: nowrap; letter-spacing: 1px">+5 FREE SPINS</div>
+    </sc-if>
+    <!-- payline markers -->
+    <div style="position: absolute; left: 2px; top: 10px; bottom: 10px; display: flex; flex-direction: column; justify-content: space-between">
+      <sc-for list="{{linesL}}" as="l" hint-placeholder-count="13"><span style="width: 9px; height: 9px; border-radius: 2px; background: {{l.c}}; color: #0B0820; font-size: 7px; font-weight: 700; display: flex; align-items: center; justify-content: center; line-height: 1">{{l.n}}</span></sc-for>
+    </div>
+    <div style="position: absolute; right: 2px; top: 10px; bottom: 10px; display: flex; flex-direction: column; justify-content: space-between">
+      <sc-for list="{{linesR}}" as="l" hint-placeholder-count="12"><span style="width: 9px; height: 9px; border-radius: 2px; background: {{l.c}}; color: #0B0820; font-size: 7px; font-weight: 700; display: flex; align-items: center; justify-content: center; line-height: 1">{{l.n}}</span></sc-for>
+    </div>
+    <!-- grid -->
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; background: #0B0820; border-radius: 10px; padding: 4px; position: relative">
+      <sc-for list="{{cols}}" as="col" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; gap: 4px; border-radius: 7px; background: {{col.bg}}; padding: 2px; position: relative; box-shadow: {{col.ring}}">
+          <sc-for list="{{col.cells}}" as="c" hint-placeholder-count="4">
+            <div style="height: 62px; border-radius: 7px; background: {{c.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; opacity: {{c.op}}; filter: {{c.blur}}; box-shadow: {{c.glow}}; transform: scale({{c.scale}}); position: relative; z-index: {{c.z}}">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="{{c.fill}}" stroke="{{c.ink}}" stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true"><path d="{{c.d}}"></path></svg>
+              <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 8px; letter-spacing: .5px; color: {{c.ink}}">{{c.label}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+      <svg viewBox="0 0 500 400" preserveAspectRatio="none" style="position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); pointer-events: none; z-index: 2" aria-hidden="true">
+        <sc-for list="{{winLines}}" as="w" hint-placeholder-count="0">
+          <polyline points="{{w.pts}}" fill="none" stroke="{{w.c}}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" opacity=".9" vector-effect="non-scaling-stroke"></polyline>
+        </sc-for>
+      </svg>
+    </div>
+    <sc-if value="{{winTag}}" hint-placeholder-val="{{false}}">
+      <div style="position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); height: 28px; padding: 0 14px; border-radius: 14px; background: {{winTagBg}}; color: #0B0820; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 12px; letter-spacing: 1px; display: flex; align-items: center; white-space: nowrap; box-shadow: 0 0 16px rgba(245,179,1,.7); z-index: 3">{{winTag}}</div>
+    </sc-if>
+  </div>
+
+  <!-- MESSAGE LINE -->
+  <div style="position: relative; height: 28px; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 2px; color: {{msgColor}}">{{msg}}</div>
+
+  <!-- CONTROL BAR -->
+  <div style="position: relative; margin: 0 8px; flex: 1; border-radius: 22px; background: rgba(21,16,48,.85); border: 1px solid #3B2F7A; box-shadow: inset 0 0 24px rgba(139,92,246,.15); padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: grid; grid-template-columns: 1.2fr 1fr 0.6fr 1fr; gap: 6px">
+      <div style="height: 50px; border-radius: 11px; background: rgba(11,8,32,.8); border: 1px solid #3B2F7A; display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">BALANCE</span><span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 16px">1,250.00</span></div>
+      <div style="height: 50px; border-radius: 11px; background: rgba(11,8,32,.8); border: 1px solid {{box2Border}}; display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">{{box2Label}}</span><span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 16px; color: {{box2Color}}">{{box2Value}}</span></div>
+      <div style="height: 50px; border-radius: 11px; background: rgba(11,8,32,.5); border: 1px solid {{box3Border}}; display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">{{box3Label}}</span><span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 16px; color: {{box3Color}}">{{box3Value}}</span></div>
+      <div style="height: 50px; border-radius: 11px; background: rgba(11,8,32,.8); border: 1px solid {{winBorder}}; display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">WIN</span><span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 16px; color: #F5B301">{{win}}</span></div>
+    </div>
+    <div style="flex: 1; display: flex; align-items: center; justify-content: space-between">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <button aria-label="Menu" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #3B2F7A; background: #1F1844; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h18M3 12h13M3 18h18"></path></svg></button>
+        <button aria-label="Turbo" aria-pressed="{{turboOn}}" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid {{turboBorder}}; background: {{turboBg}}; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: {{turboGlow}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="{{turboFill}}" stroke="{{turboInk}}" stroke-width="2" stroke-linejoin="miter" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 10-13h-7z"></path></svg></button>
+      </div>
+      <button aria-label="Decrease bet" style="width: 52px; height: 52px; border-radius: 26px; border: 0; background: #2E1F6B; color: #FFFFFF; font-size: 28px; font-weight: 700; padding: 0">−</button>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative">
+        <sc-if value="{{isStop}}" hint-placeholder-val="{{false}}">
+          <button aria-label="Stop" style="width: 104px; height: 104px; border-radius: 52px; border: 4px solid #FFF3E0; background: radial-gradient(circle at 40% 30%, #F87171 0%, #DC2626 60%, #7F1D1D 100%); box-shadow: 0 0 30px rgba(239,68,68,.55); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; gap: 2px">
+            <div style="width: 26px; height: 26px; border-radius: 5px; background: #FFFFFF"></div>
+            <sc-if value="{{autoLeft}}" hint-placeholder-val="{{false}}"><span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 12px; color: #FFFFFF">AUTO {{autoLeft}}</span></sc-if>
+          </button>
+        </sc-if>
+        <sc-if value="{{isFS}}" hint-placeholder-val="{{false}}">
+          <div style="width: 104px; height: 104px; border-radius: 52px; border: 4px solid #22D3EE; background: radial-gradient(circle at 40% 30%, #1E3A8A 0%, #130E36 70%); box-shadow: 0 0 30px rgba(34,211,238,.6); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; position: relative">
+            <svg width="112" height="112" viewBox="0 0 112 112" style="position: absolute; inset: -8px" aria-hidden="true"><circle cx="56" cy="56" r="52" fill="none" stroke="#22D3EE" stroke-width="3" stroke-dasharray="327" stroke-dashoffset="{{fsDash}}" stroke-linecap="round" transform="rotate(-90 56 56)" opacity=".9"></circle></svg>
+            <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 11px; letter-spacing: 1px; color: #A5F3FC">AUTO</span>
+            <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 30px; color: #FFFFFF; line-height: 1">{{fsLeft}}</span>
+            <span style="font-size: 10px; letter-spacing: 1px; font-weight: 700; color: #A5F3FC">SPINS LEFT</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{isSpin}}" hint-placeholder-val="{{true}}">
+          <button aria-label="Spin, hold for autoplay" style="width: 104px; height: 104px; border-radius: 52px; border: 4px solid #F5B301; background: radial-gradient(circle at 40% 30%, #FFD3A3 0%, #FF7A1A 55%, #C2410C 100%); box-shadow: 0 0 0 6px rgba(255,122,26,.18), 0 0 36px rgba(255,122,26,.65); display: flex; align-items: center; justify-content: center; padding: 0">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#0B0820" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 3.5v4.5h-4.5"></path></svg>
+          </button>
+        </sc-if>
+        <span style="font-size: 11px; letter-spacing: 1.5px; font-weight: 700; color: {{capColor}}">{{spinCaption}}</span>
+      </div>
+      <button aria-label="Increase bet" style="width: 52px; height: 52px; border-radius: 26px; border: 0; background: #7C3AED; color: #FFFFFF; font-size: 28px; font-weight: 700; padding: 0; box-shadow: 0 0 14px rgba(139,92,246,.6)">+</button>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <button aria-label="Info" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #3B2F7A; background: #1F1844; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 2l10 10-10 10L2 12zM12 11v6M12 7v1"></path></svg></button>
+        <button aria-label="Autoplay" aria-pressed="{{autoOn}}" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid {{autoBorder}}; background: {{autoBg}}; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: {{autoGlow}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{autoInk}}" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M18 3v4h-4M20 12a8 8 0 0 1-14 5.3M6 21v-4h4M10 9l5 3-5 3z"></path></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- thumb-zone overlay (mode: thumb) -->
+  <sc-if value="{{showThumb}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; pointer-events: none">
+      <div style="position: absolute; left: 0; right: 0; top: 0; height: 300px; background: rgba(239,68,68,.16); display: flex; align-items: flex-end; justify-content: flex-end; padding: 6px 10px; font-size: 13px; font-weight: 700; color: #FECACA; letter-spacing: 1px">HARD</div>
+      <div style="position: absolute; left: 0; right: 0; top: 300px; height: 230px; background: rgba(245,158,11,.16); display: flex; align-items: flex-end; justify-content: flex-end; padding: 6px 10px; font-size: 13px; font-weight: 700; color: #FDE68A; letter-spacing: 1px">STRETCH</div>
+      <div style="position: absolute; left: 0; right: 0; top: 530px; bottom: 0; background: rgba(34,211,238,.18); display: flex; align-items: flex-start; justify-content: flex-end; padding: 6px 10px; font-size: 13px; font-weight: 700; color: #A5F3FC; letter-spacing: 1px">EASY · all controls</div>
+      <svg width="390" height="844" viewBox="0 0 390 844" style="position: absolute; inset: 0" aria-hidden="true"><path d="M390 844 C 300 820, 140 700, 60 560" fill="none" stroke="#22D3EE" stroke-width="2" stroke-dasharray="6 6" opacity=".8"></path></svg>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","default":"idle","options":["idle","spinning","anticipation","autoplay","thumb","linewin","multiwin","scatterwin","freespins","retrigger"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mode = this.props.mode ?? 'idle';
+    const S = {
+      CROWN: { d: 'M3 18L4 7l5 5 3-8 3 8 5-5 1 11z', fill: '#F5B301', ink: '#FFE27A', bg: 'radial-gradient(circle at 50% 30%, #3B2A05, #1A1203)', label: 'CROWN' },
+      GEM: { d: 'M12 3l7 6-7 12-7-12z M5 9h14', fill: '#8B5CF6', ink: '#C4B5FD', bg: 'radial-gradient(circle at 50% 30%, #2E1F6B, #130E36)', label: 'GEM' },
+      PLANET: { d: 'M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M2 14c6 3 14 3 20 0', fill: '#0D9488', ink: '#F5B301', bg: 'radial-gradient(circle at 50% 30%, #064E3B, #06241C)', label: 'PLANET' },
+      COMET: { d: 'M15 9a4 4 0 1 1 0 .1z M15 9L3 21 M12 7L2 15 M17 12L9 22', fill: '#FF7A1A', ink: '#FFB066', bg: 'radial-gradient(circle at 50% 30%, #5A2606, #2A1003)', label: 'COMET' },
+      A: { d: 'M5 20L12 4l7 16M8 14h8', fill: 'none', ink: '#F87171', bg: '#2A0F14', label: 'A' },
+      K: { d: 'M6 4v16M18 4l-9 8 9 8', fill: 'none', ink: '#22D3EE', bg: '#0A2A33', label: 'K' },
+      Q: { d: 'M12 4a7 8 0 1 0 0 16 7 8 0 0 0 0-16zM14 16l5 5', fill: 'none', ink: '#A78BFA', bg: '#1E1450', label: 'Q' },
+      J: { d: 'M15 4v11a4 4 0 0 1-8 0', fill: 'none', ink: '#4ADE80', bg: '#0A2A1A', label: 'J' },
+      T: { d: 'M5 6v12M9 6h6M12 6v12M18 6a3 6 0 1 0 0 12 3 6 0 0 0 0-12z', fill: 'none', ink: '#FBBF24', bg: '#2A2005', label: '10' },
+      WILD: { d: 'M12 2l2.5 7h7l-5.6 4.2 2.1 7L12 16l-6 4.2 2.1-7L2.5 9h7z', fill: '#FFE27A', ink: '#FFFFFF', bg: 'radial-gradient(circle at 50% 30%, #7C3AED, #2E1065)', label: 'WILD' },
+      SCAT: { d: 'M12 12a5 5 0 1 0 .1 0z M12 2a10 10 0 0 1 10 10 M12 22A10 10 0 0 1 2 12', fill: '#22D3EE', ink: '#A5F3FC', bg: 'radial-gradient(circle at 50% 30%, #0E7490, #0A2A33)', label: 'FREE SPINS' },
+      BONUS: { d: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 3v18M3 12h18M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z', fill: '#B87400', ink: '#FFE27A', bg: 'radial-gradient(circle at 50% 30%, #3B2A05, #1A1203)', label: 'BONUS' }
+    };
+    const grids = {
+      idle: [['A','CROWN','K','GEM'],['PLANET','Q','WILD','T'],['J','COMET','A','BONUS'],['GEM','K','PLANET','Q'],['T','SCAT','J','CROWN']],
+      antic: [['A','SCAT','K','GEM'],['PLANET','Q','WILD','T'],['J','COMET','A','SCAT'],['GEM','K','PLANET','Q'],['T','A','J','CROWN']],
+      linewin: [['A','CROWN','K','GEM'],['PLANET','Q','WILD','T'],['J','COMET','CROWN','BONUS'],['GEM','K','PLANET','Q'],['T','SCAT','J','CROWN']],
+      freespins: [['A','CROWN','K','GEM'],['PLANET','Q','WILD','T'],['J','COMET','CROWN','BONUS'],['GEM','K','PLANET','Q'],['T','SCAT','J','CROWN']],
+      retrigger: [['A','SCAT','K','GEM'],['PLANET','Q','WILD','T'],['J','COMET','A','SCAT'],['GEM','K','PLANET','Q'],['T','SCAT','J','CROWN']],
+      multiwin: [['GEM','CROWN','K','A'],['GEM','Q','WILD','A'],['GEM','COMET','CROWN','A'],['PLANET','K','PLANET','Q'],['T','SCAT','J','CROWN']],
+      scatterwin: [['A','SCAT','K','GEM'],['PLANET','Q','WILD','T'],['J','COMET','A','SCAT'],['GEM','K','PLANET','Q'],['T','SCAT','J','CROWN']]
+    };
+    const spinning = mode === 'spinning';
+    const antic = mode === 'anticipation';
+    const auto = mode === 'autoplay';
+    const grid = grids[mode] || grids.idle;
+    // win cells per mode: [col,row]; lines as row index per column
+    const LINES = { 1: [0,0,0,0,0], 7: [1,2,2,2,1], 12: [3,3,3,3,3] };
+    const lineColor = { 1: '#F5B301', 7: '#FBBF24', 12: '#4ADE80' };
+    const winCellsByMode = {
+      linewin: [[0,1],[1,2],[2,2]],
+      freespins: [[0,1],[1,2],[2,2]],
+      multiwin: [[0,0],[1,0],[2,0],[0,1],[1,2],[2,2],[0,3],[1,3],[2,3]],
+      scatterwin: [[0,1],[2,3],[4,1]],
+      retrigger: [[0,1],[2,3],[4,1]]
+    };
+    const winCells = winCellsByMode[mode] || [];
+    const winMode = winCells.length > 0;
+    const isWin = (ci, ri) => winCells.some(([c, r]) => c === ci && r === ri);
+    const cols = grid.map((names, ci) => {
+      const colSpinning = spinning || (antic && ci >= 3);
+      return {
+        bg: colSpinning ? 'linear-gradient(180deg,#1F1844,#0B0820)' : '#151030',
+        ring: (antic && ci >= 3) ? '0 0 0 2px #22D3EE, 0 0 18px rgba(34,211,238,.8)' : 'none',
+        cells: names.map((n, ri) => {
+          const s = S[n];
+          const hot = antic && n === 'SCAT';
+          const won = isWin(ci, ri);
+          const scat = mode === 'scatterwin' && won;
+          return { ...s,
+            op: colSpinning ? .45 : (winMode && !won ? .35 : 1),
+            blur: colSpinning ? 'blur(2.5px)' : 'none',
+            glow: hot ? '0 0 0 2px #22D3EE, 0 0 16px rgba(34,211,238,.9)' : (scat ? '0 0 0 3px #22D3EE, 0 0 22px rgba(34,211,238,1)' : (won ? '0 0 0 2px #FFE27A, 0 0 16px rgba(245,179,1,.9)' : 'none')),
+            scale: won ? 1.08 : 1, z: won ? 1 : 0 };
+        })
+      };
+    });
+    const linePts = (rows) => rows.map((r, c) => `${c * 100 + 50},${r * 100 + 50}`).join(' ');
+    const winLines = (mode === 'linewin' || mode === 'freespins') ? [{ pts: linePts(LINES[7]), c: lineColor[7] }]
+      : mode === 'multiwin' ? [1, 7, 12].map(k => ({ pts: linePts(LINES[k]), c: lineColor[k] })) : [];
+    const winTags = { linewin: ['LINE 7 · ×3 · 12.50', 'linear-gradient(90deg,#FFE27A,#F5B301)'], freespins: ['LINE 7 · ×3 · 12.50 ×2', 'linear-gradient(90deg,#FFE27A,#F5B301)'], multiwin: ['3 LINES · 37.50', 'linear-gradient(90deg,#FFE27A,#F5B301)'], scatterwin: ['3 SCATTERS!', 'linear-gradient(90deg,#A5F3FC,#22D3EE)'] };
+    const winTag = winTags[mode] ? winTags[mode][0] : '';
+    const winTagBg = winTags[mode] ? winTags[mode][1] : 'transparent';
+    const winAmt = { linewin: '12.50', multiwin: '37.50', scatterwin: '2.50' }[mode] || '0.00';
+    const lineColors = ['#F5B301','#22D3EE','#A78BFA','#4ADE80','#FF7A1A','#F87171','#FBBF24','#F0ABFC','#67E8F9','#6EE7B7'];
+    const lines = Array.from({ length: 25 }, (_, i) => ({ n: i + 1, c: lineColors[i % lineColors.length] }));
+    const jackpots = [
+      { name: 'GRAND', amt: '152,384.27', bg: 'linear-gradient(160deg,#FFC94A,#E11D2E 55%,#7A0A14)' },
+      { name: 'MAJOR', amt: '12,481.90', bg: 'linear-gradient(160deg,#F0ABFC,#C026D3 50%,#6D28D9)' },
+      { name: 'MINOR', amt: '1,204.55', bg: 'linear-gradient(160deg,#67E8F9,#2563EB 50%,#1E3A8A)' },
+      { name: 'MINI', amt: '118.30', bg: 'linear-gradient(160deg,#6EE7B7,#0D9488 50%,#065F46)' }
+    ];
+    const msgs = { idle: ['GOOD LUCK!', '#B9B3D9'], spinning: ['SPINNING…', '#B9B3D9'], anticipation: ['ONE MORE SCATTER!', '#22D3EE'], autoplay: ['AUTOPLAY · TURBO ON', '#FFB066'], thumb: ['PLACE YOUR BET', '#B9B3D9'], linewin: ['LINE 7 PAYS 12.50', '#FFE27A'], multiwin: ['LINES 1, 7, 12 PAY 37.50', '#FFE27A'], scatterwin: ['3 SCATTERS! FREE SPINS', '#22D3EE'], freespins: ['FREE SPIN 4 · LINE 7 PAYS 12.50', '#A5F3FC'], retrigger: ['RETRIGGER! +5 SPINS', '#22D3EE'] };
+    const isStop = spinning || antic || auto;
+    const turbo = auto;
+    const isFS = mode === 'freespins' || mode === 'retrigger';
+    const fsLeft = mode === 'retrigger' ? 11 : 6;
+    return {
+      cols, jackpots, linesL: lines.slice(0, 13), linesR: lines.slice(13),
+      winLines, winTag, winTagBg,
+      msg: msgs[mode][0], msgColor: msgs[mode][1],
+      win: isFS ? '12.50' : winAmt, winBorder: (winMode || isFS) ? '#F5B301' : '#3B2F7A',
+      rootBg: isFS ? 'radial-gradient(ellipse 120% 50% at 50% 20%, #1E3A8A 0%, #1E1450 45%, #06040F 100%)' : 'radial-gradient(ellipse 120% 50% at 50% 20%, #2A1F6B 0%, #130E36 50%, #06040F 100%)',
+      frameGlow: isFS ? '0 0 0 2px #22D3EE, 0 0 34px rgba(34,211,238,.7), inset 0 0 18px rgba(245,179,1,.25)' : '0 0 0 1px #8B5CF6, 0 0 22px rgba(139,92,246,.45), inset 0 0 18px rgba(245,179,1,.25)',
+      isFS, fsLeft, fsDash: Math.round(327 * (1 - fsLeft / (mode === 'retrigger' ? 15 : 10))), showRetrigger: mode === 'retrigger',
+      box2Label: isFS ? 'FREE SPINS' : 'TOTAL BET', box2Value: isFS ? (mode === 'retrigger' ? '4 / 15' : '4 / 10') : '1.25', box2Color: isFS ? '#A5F3FC' : '#FFE27A', box2Border: isFS ? '#22D3EE' : '#3B2F7A',
+      box3Label: isFS ? 'TOTAL WIN' : 'LINES', box3Value: isFS ? '86.25' : '25', box3Color: isFS ? '#F5B301' : '#B9B3D9', box3Border: isFS ? '#F5B301' : '#2E2560',
+      isStop, isSpin: !isStop && !isFS, autoLeft: auto ? 18 : 0,
+      spinCaption: isFS ? 'ALL WINS ×2' : (isStop ? (auto ? 'TAP TO STOP AUTO' : 'TAP TO STOP') : 'HOLD FOR AUTO'),
+      capColor: isFS ? '#A5F3FC' : (isStop ? '#F87171' : '#FFB066'),
+      turboOn: turbo, turboBorder: turbo ? '#FF7A1A' : '#3B2F7A', turboBg: turbo ? 'rgba(255,122,26,.18)' : '#1F1844', turboGlow: turbo ? '0 0 16px rgba(255,122,26,.6)' : 'none', turboFill: turbo ? '#FF7A1A' : 'none', turboInk: turbo ? '#FFB066' : '#FFFFFF',
+      autoOn: auto, autoBorder: auto ? '#22D3EE' : '#3B2F7A', autoBg: auto ? 'rgba(34,211,238,.14)' : '#1F1844', autoGlow: auto ? '0 0 16px rgba(34,211,238,.5)' : 'none', autoInk: auto ? '#22D3EE' : '#FFFFFF',
+      showThumb: mode === 'thumb'
+    };
+  }
+}
+</script>
+</body>
+</html>

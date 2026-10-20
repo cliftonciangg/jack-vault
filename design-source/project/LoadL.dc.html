@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crown of the Cosmos loading screen, landscape</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;family=Cinzel:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#B9B3D9}a:hover{color:#FFFFFF}
+.gold{background:linear-gradient(180deg,#FFE27A 0%,#F5B301 55%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(245,179,1,.55))}
+</style>
+</helmet>
+<div style="width: 844px; height: 390px; box-sizing: border-box; position: relative; overflow: hidden; background: radial-gradient(ellipse 60% 120% at 30% 50%, #2A1F6B 0%, #130E36 45%, #06040F 100%); color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: space-between; padding: 24px 75px 21px">
+  <svg width="844" height="390" viewBox="0 0 844 390" style="position: absolute; inset: 0" aria-hidden="true">
+    <g fill="#FFFFFF" opacity=".8"><circle cx="80" cy="60" r="1.5"></circle><circle cx="220" cy="40" r="1"></circle><circle cx="700" cy="70" r="1.5"></circle><circle cx="600" cy="150" r="1"></circle><circle cx="120" cy="300" r="1"></circle><circle cx="760" cy="330" r="2"></circle><circle cx="420" cy="340" r="1"></circle><circle cx="500" cy="60" r="1.5"></circle></g>
+    <circle cx="720" cy="110" r="46" fill="#5B3FBF" opacity=".55"></circle>
+    <ellipse cx="720" cy="110" rx="78" ry="14" fill="none" stroke="#22D3EE" stroke-width="2" opacity=".6" transform="rotate(-18 720 110)"></ellipse>
+  </svg>
+  <div style="position: absolute; inset: 0; background: rgba(6,4,15,.35)"></div>
+
+  <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 300px">
+    <svg width="72" height="45" viewBox="0 0 64 40" aria-hidden="true" style="filter: drop-shadow(0 0 12px rgba(245,179,1,.7))">
+      <defs><linearGradient id="cg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE27A"></stop><stop offset=".6" stop-color="#F5B301"></stop><stop offset="1" stop-color="#B87400"></stop></linearGradient></defs>
+      <path d="M4 34 L8 8 L20 22 L32 2 L44 22 L56 8 L60 34 Z" fill="url(#cg3)"></path>
+      <circle cx="32" cy="24" r="4" fill="#8B5CF6"></circle>
+    </svg>
+    <div class="gold" style="font-family: 'Cinzel', serif; font-weight: 900; font-size: 44px; letter-spacing: 3px; line-height: 1">CROWN</div>
+    <div style="font-family: 'Cinzel', serif; font-weight: 700; font-size: 14px; letter-spacing: 8px; color: #C4B5FD">OF THE</div>
+    <div class="gold" style="font-family: 'Cinzel', serif; font-weight: 900; font-size: 44px; letter-spacing: 3px; line-height: 1">COSMOS</div>
+  </div>
+
+  <div style="position: relative; width: 340px; display: flex; flex-direction: column; gap: 28px; align-items: center">
+    <div style="width: 100%; display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; justify-content: space-between; font-size: 14px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9"><span>LOADING</span><span style="font-family: 'Orbitron', sans-serif; color: #FFE27A">62%</span></div>
+      <div style="height: 8px; border-radius: 4px; background: rgba(255,255,255,.1); border: 1px solid #3B2F7A; overflow: hidden">
+        <div style="height: 100%; width: 62%; background: linear-gradient(90deg,#B87400,#F5B301,#FFE27A); box-shadow: 0 0 12px rgba(245,179,1,.7)"></div>
+      </div>
+      <div style="font-size: 16px; color: #B9B3D9; text-align: center">Land 3 Scatters to unlock Free Spins</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px">
+      <div style="display: flex; align-items: baseline; gap: 6px; transform: skewX(-12deg)">
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 14px; color: #FFFFFF">JACK</span>
+        <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; color: #F5B301">VAULT</span>
+      </div>
+      <span style="font-size: 14px; color: #8A83AD">v1.0.0</span>
+      <a href="#" style="font-size: 14px; text-decoration: underline">Play responsibly</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":844,"height":390}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

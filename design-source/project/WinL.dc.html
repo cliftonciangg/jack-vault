@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crown of the Cosmos big win overlay, landscape</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.gold{background:linear-gradient(180deg,#FFE27A 0%,#F5B301 55%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(245,179,1,.7))}
+</style>
+</helmet>
+<div style="width: 844px; height: 390px; position: relative; overflow: hidden; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <dc-import name="ReelsL" hint-size="844px,390px"></dc-import>
+  <div style="position: absolute; inset: 0; background: rgba(6,4,15,.72); display: flex; align-items: center; justify-content: center; gap: 40px; padding: 24px 75px 21px; box-sizing: border-box">
+    <sc-for list="{{coins}}" as="c" hint-placeholder-count="16">
+      <span style="position: absolute; left: {{c.x}}; top: {{c.y}}; width: {{c.s}}; height: {{c.s}}; border-radius: 50%; background: linear-gradient(160deg,#FFE27A,#F5B301 55%,#B87400); box-shadow: 0 0 8px rgba(245,179,1,.6); transform: rotate({{c.r}}) scaleX(.6)"></span>
+    </sc-for>
+    <div style="position: relative; width: 300px; padding: 14px 0; border-radius: 18px; background: linear-gradient(180deg,#3B2A05,#1A1203); border: 3px solid #F5B301; box-shadow: 0 0 40px rgba(245,179,1,.5), inset 0 0 20px rgba(245,179,1,.25); display: flex; align-items: center; justify-content: center">
+      <span class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 46px; letter-spacing: 2px; line-height: 1">BIG WIN</span>
+    </div>
+    <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px">
+      <div class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 52px; line-height: 1; font-variant-numeric: tabular-nums">18.75</div>
+      <div style="font-size: 15px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">15 × BET</div>
+    </div>
+    <div style="position: absolute; bottom: 34px; left: 0; right: 0; text-align: center; font-size: 13px; letter-spacing: 2px; font-weight: 700; color: #8A83AD">TAP TO SKIP</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":844,"height":390}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const coins = Array.from({ length: 16 }, (_, i) => ({ x: (80 + (i * 97) % 700) + 'px', y: (30 + ((i * 71) % 320)) + 'px', s: (10 + (i % 4) * 4) + 'px', r: ((i * 137.5) % 360) + 'deg' }));
+    return { coins };
+  }
+}
+</script>
+</body>
+</html>

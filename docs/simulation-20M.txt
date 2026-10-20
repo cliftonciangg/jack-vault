@@ -1,0 +1,48 @@
+Jack Vault  profile=rtp94  bet=5000c  spins=20,000,000  rng=crypto  75.8s
+
+RTP excl. progressive   measured 92.422% ± 0.134% (95% CI)   exact 92.368%   z=0.78  PASS
+  base game             measured 74.830%   exact 74.867%
+  free spins            measured 12.116%   exact 12.061%
+  wheel credits         measured 5.475%   exact 5.440%
+Progressive jackpots    contributions 1.500% + seed funding 0.137%  (paid this run: 1.616%)
+TOTAL RTP (exact)       94.005%    measured game + jackpot share: 94.058%
+
+Hit frequency           46.27%
+Free spins              1 in 213 (exact 1 in 228 by scatter, plus wheel)
+Super Wheel             1 in 277 (exact 1 in 278)
+Volatility (SD / spin)  3.06x bet     max win seen 344.7x bet
+Jackpot hits            GRAND 58 (exp 69.3), MAJOR 309 (exp 277.2), MINOR 1047 (exp 1039.5), MINI 2807 (exp 2772.0)
+Win distribution        0x: 53.73%  <1x: 22.37%  1-2x: 11.64%  2-5x: 9.37%  5-15x: 2.21%  15-30x: 0.47%  30-50x: 0.15%  50-100x: 0.06%  100x+: 0.01%
+
+Jack Vault  profile=rtp95  bet=5000c  spins=20,000,000  rng=crypto  84.4s
+
+RTP excl. progressive   measured 93.378% ± 0.137% (95% CI)   exact 93.366%   z=0.18  PASS
+  base game             measured 75.292%   exact 75.327%
+  free spins            measured 12.331%   exact 12.289%
+  wheel credits         measured 5.755%   exact 5.750%
+Progressive jackpots    contributions 1.500% + seed funding 0.145%  (paid this run: 1.637%)
+TOTAL RTP (exact)       95.010%    measured game + jackpot share: 95.023%
+
+Hit frequency           46.24%
+Free spins              1 in 209 (exact 1 in 225 by scatter, plus wheel)
+Super Wheel             1 in 263 (exact 1 in 263)
+Volatility (SD / spin)  3.12x bet     max win seen 300.0x bet
+Jackpot hits            GRAND 75 (exp 73.2), MAJOR 271 (exp 293.0), MINOR 1157 (exp 1098.7), MINI 2956 (exp 2929.8)
+Win distribution        0x: 53.76%  <1x: 22.86%  1-2x: 11.29%  2-5x: 8.96%  5-15x: 2.40%  15-30x: 0.51%  30-50x: 0.15%  50-100x: 0.06%  100x+: 0.01%
+
+Jack Vault  profile=rtp96  bet=5000c  spins=20,000,000  rng=crypto  84.9s
+
+RTP excl. progressive   measured 94.437% ± 0.139% (95% CI)   exact 94.343%   z=1.32  PASS
+  base game             measured 76.154%   exact 76.114%
+  free spins            measured 12.588%   exact 12.557%
+  wheel credits         measured 5.695%   exact 5.672%
+Progressive jackpots    contributions 1.500% + seed funding 0.143%  (paid this run: 1.627%)
+TOTAL RTP (exact)       95.986%    measured game + jackpot share: 96.080%
+
+Hit frequency           44.25%
+Free spins              1 in 204 (exact 1 in 219 by scatter, plus wheel)
+Super Wheel             1 in 266 (exact 1 in 266)
+Volatility (SD / spin)  3.17x bet     max win seen 456.4x bet
+Jackpot hits            GRAND 65 (exp 72.3), MAJOR 289 (exp 289.0), MINOR 1074 (exp 1083.8), MINI 2911 (exp 2890.3)
+Win distribution        0x: 55.75%  <1x: 20.53%  1-2x: 11.43%  2-5x: 8.99%  5-15x: 2.55%  15-30x: 0.53%  30-50x: 0.15%  50-100x: 0.06%  100x+: 0.01%
+

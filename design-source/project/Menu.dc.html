@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>In-game menu sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <dc-import name="Reels" mode="idle" hint-size="390px,844px"></dc-import>
+  <div style="position: absolute; inset: 0; background: rgba(6,4,15,.6)"></div>
+  <!-- sheet -->
+  <div style="position: absolute; left: 0; right: 0; top: 120px; bottom: 0; border-radius: 28px 28px 0 0; background: #151030; border-top: 1px solid #8B5CF6; box-shadow: 0 -10px 40px rgba(139,92,246,.35); display: flex; flex-direction: column; padding: 10px 16px 34px">
+    <div style="width: 44px; height: 5px; border-radius: 3px; background: #4B4766; margin: 0 auto 14px"></div>
+    <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; letter-spacing: 1px; margin-bottom: 14px">Menu</div>
+    <nav style="display: flex; flex-direction: column; gap: 8px">
+      <sc-for list="{{items}}" as="it" hint-placeholder-count="6">
+        <a href="{{it.href}}" style="display: flex; align-items: center; gap: 14px; height: 60px; padding: 0 16px; border-radius: 14px; background: {{it.bg}}; border: 1px solid {{it.border}}; text-decoration: none; color: #FFFFFF">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{it.ink}}" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="{{it.d}}"></path></svg>
+          <span style="font-size: 18px; font-weight: 700; flex: 1">{{it.label}}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A83AD" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+        </a>
+      </sc-for>
+    </nav>
+    <div style="flex: 1"></div>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end">
+      <div style="font-size: 13px; color: #8A83AD; line-height: 1.4">Crown of the Cosmos v1.0.0<br>RTP 94.00% · <a href="#">Play responsibly</a></div>
+      <button aria-label="Close menu" style="width: 56px; height: 56px; border-radius: 28px; border: 2px solid #22D3EE; background: rgba(34,211,238,.12); display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"></path></svg></button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const items = [
+      ['Paytable', 'Paytable.dc.html', 'M4 4h16v16H4zM4 10h16M10 4v16', '#FFE27A'],
+      ['Game Rules', 'Rules.dc.html', 'M6 3h9l5 5v13H6zM15 3v5h5M9 13h6M9 17h6', '#FFFFFF'],
+      ['Settings', 'Settings.dc.html', 'M12 2l8.5 5v10L12 22l-8.5-5V7zM12 9l3 3-3 3-3-3z', '#FFFFFF'],
+      ['Autoplay', 'Autoplay.dc.html', 'M4 12a8 8 0 0 1 14-5.3M18 3v4h-4M20 12a8 8 0 0 1-14 5.3M6 21v-4h4M10 9l5 3-5 3z', '#22D3EE'],
+      ['History', 'History.dc.html', 'M4 12a8 8 0 1 0 2.3-5.7M3 3v5h5M12 7v5l4 2', '#FFFFFF'],
+      ['Back to Lobby', 'Lobby.dc.html', 'M3 11L12 3l9 8M6 9v12h12V9M10 21v-6h4v6', '#FFB066']
+    ].map(([label, href, d, ink], i) => ({ label, href, d, ink, bg: i === 5 ? 'rgba(255,122,26,.08)' : '#1F1844', border: i === 5 ? '#5A2606' : '#2E2560' }));
+    return { items };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Back office design tokens</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1100px; height: 1300px; box-sizing: border-box; padding: 40px 48px; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; gap: 16px">
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div style="font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #4B5563">PROMPT 0 · HANDOFF</div>
+    <h1 style="margin: 0; font-size: 20px; font-weight: 600">Design tokens</h1>
+    <div style="color: #4B5563">Copy into CSS variables in <span style="font-family: ui-monospace, monospace; font-size: 13px">office/index.html</span>. Names are stable; values may change in one place.</div>
+  </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start">
+    <sc-for list="{{cols}}" as="col" hint-placeholder-count="2">
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <sc-for list="{{col}}" as="g" hint-placeholder-count="3">
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden">
+            <div style="height: 36px; display: flex; align-items: center; padding: 0 14px; background: #1A78B4; color: #FFFFFF; font-size: 13px; font-weight: 600">{{g.title}}</div>
+            <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="6">
+              <div style="display: grid; grid-template-columns: 16px 170px 150px 1fr; gap: 10px; align-items: center; min-height: 32px; padding: 4px 14px; border-top: 1px solid #E5E7EB; background: {{r.bg}}">
+                <span style="width: 14px; height: 14px; border-radius: 3px; background: {{r.chip}}; border: 1px solid #D1D5DB"></span>
+                <span style="font-size: 13px; font-weight: 600; font-family: ui-monospace, monospace">{{r.n}}</span>
+                <span style="font-size: 13px; font-variant-numeric: tabular-nums">{{r.v}}</span>
+                <span style="font-size: 13px; color: #4B5563">{{r.u}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1100,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    let i = 0;
+    const t = (n, v, u, chip) => ({ n, v, u, chip: chip || 'transparent', bg: (i++ % 2) ? '#F9FAFB' : '#FFFFFF' });
+    const color = [
+      t('--navy', '#1B2B44', 'Top bar, drawer header', '#1B2B44'), t('--bg', '#F3F4F6', 'Page background', '#F3F4F6'), t('--panel', '#FFFFFF', 'Panels, cards, dialogs', '#FFFFFF'),
+      t('--line', '#E5E7EB', 'Panel borders, dividers, row lines', '#E5E7EB'), t('--line-input', '#D1D5DB', 'Inputs, neutral buttons', '#D1D5DB'), t('--blue', '#1A78B4', 'Primary buttons, table header, panel titles', '#1A78B4'),
+      t('--blue-dark', '#166FA3', 'Pressed, selected shortcut', '#166FA3'), t('--blue-light', '#1E88C8', 'Focus ring, borders', '#1E88C8'), t('--blue-tint', '#E3F0FA', 'Selected nav and row', '#E3F0FA'),
+      t('--green', '#15803D', 'Money in, Load, Issue, Active', '#15803D'), t('--green-tint', '#DCFCE7', 'Active pill, success toast tint', '#DCFCE7'), t('--red', '#DC2626', 'Money out, Redeem, Take back, Danger', '#DC2626'),
+      t('--red-tint', '#FEF2F2', 'Error banner, danger hover', '#FEF2F2'), t('--amber', '#B45309', 'Locked, Low balance text', '#B45309'), t('--amber-tint', '#FEF3C7', 'Locked pill, warning banner', '#FEF3C7'),
+      t('--balance', '#FFF8E6', 'Balance strip', '#FFF8E6'), t('--text', '#111827', 'Primary text', '#111827'), t('--text-2', '#4B5563', 'Secondary text, labels', '#4B5563'),
+      t('--text-3', '#6B7280', 'Hints (min 4.5:1 on white)', '#6B7280'), t('--text-decor', '#9CA3AF', 'Placeholders and icons only', '#9CA3AF')
+    ];
+    const type = [
+      t('--font', 'Inter, system-ui', 'Everything'), t('--t-title', '20 / 28 · 600', 'Page title'), t('--t-panel', '16 / 24 · 600 blue', 'Panel title'), t('--t-body', '14 / 20 · 400', 'Body, table cells'),
+      t('--t-label', '13 / 18 · 500', 'Form labels, table header'), t('--t-small', '12 / 16 · 500', 'Pills, hints'), t('--t-stat', '28 / 32 · 600', 'Stat card numbers'), t('--nums', 'tabular-nums', 'All numbers, money right-aligned, 2 dp')
+    ];
+    const size = [
+      t('--space', '4 · 8 · 12 · 16 · 24 · 32', '8 px grid'), t('--radius', '6', 'Buttons, inputs, pills'), t('--radius-panel', '8', 'Panels, dialogs'),
+      t('--h-topbar', '56', 'Top bar'), t('--h-strip', '36', 'Balance strip'), t('--w-sidebar', '240', 'Sidebar'), t('--h-row', '36', 'Table rows, inputs, buttons'),
+      t('--h-row-btn', '28', 'Buttons inside tables'), t('--w-dialog', '480', 'Modal width'), t('--pad-panel', '20 24', 'Panel padding'), t('--gap-panel', '16', 'Between panels'), t('--tap-min', '44', 'Phone tap targets')
+    ];
+    const motion = [
+      t('--dur-fast', '120 ms', 'Hover, pressed'), t('--dur-dialog', '160 ms', 'Dialog fade and scale .98 → 1'), t('--dur-toast', '3000 ms', 'Toast visible, then 200 ms fade'), t('--dur-skeleton', '1200 ms', 'Skeleton shimmer loop')
+    ];
+    return { cols: [[{ title: 'COLOR', rows: color }], [{ title: 'TYPE', rows: type }, { title: 'SIZE & SPACE', rows: size }, { title: 'MOTION', rows: motion }]] };
+  }
+}
+</script>
+</body>
+</html>

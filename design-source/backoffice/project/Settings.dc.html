@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 24px; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 15px">Jack Vault</span><span style="color: #C7D2E3">Back Office</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #0F766E; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">AGENT</span>
+    <span style="color: #8A9AB5">/</span><span style="font-weight: 600; font-size: 15px">Settings</span>
+    <span style="flex: 1"></span><span style="color: #C7D2E3">Welcome, <strong style="color: #FFFFFF; font-weight: 600">agent01</strong></span>
+    <a href="Login.dc.html" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #5B6B85; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500">Log out</a>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 24px; gap: 10px">
+    <span style="color: #4B5563">Balance:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">12,450.00</span><span style="flex: 1"></span><span style="color: #4B5563; font-size: 13px">Times in EST</span>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <nav style="width: 240px; flex-shrink: 0; background: #E9EDF2; border-right: 1px solid #E5E7EB; padding: 12px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{menu}}" as="m" hint-placeholder-count="5"><a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}</a></sc-for>
+      <span style="flex: 1"></span><a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none">Log out</a>
+    </nav>
+    <main style="flex: 1; min-width: 0; padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-content: start; overflow: hidden">
+      <!-- ACCOUNT -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; grid-row: span 2">
+        <span style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">Account</span>
+        <div style="display: grid; grid-template-columns: 120px 1fr; gap: 8px 12px; font-size: 14px">
+          <span style="color: #4B5563">Account</span><span style="font-weight: 500">agent01</span>
+          <span style="color: #4B5563">Role</span><span><span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #0F766E; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">AGENT</span></span>
+          <span style="color: #4B5563">Created</span><span>2026-08-14</span>
+          <span style="color: #4B5563">Parent</span><span>Distributor: north-dist</span>
+        </div>
+        <div style="height: 1px; background: #E5E7EB"></div>
+        <span style="font-weight: 600">Change password <span style="font-size: 12px; color: #B45309; font-weight: 500">(needs backend)</span></span>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Current password<input type="password" value="••••••••••" style="height: 36px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px"></label>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">New password<input type="password" value="••••••••" style="height: 36px; border: 1px solid #DC2626; border-radius: 6px; padding: 0 10px; font-size: 14px"><span style="font-size: 12px; color: #DC2626">At least 10 characters with an upper-case letter and a number</span></label>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Confirm new password<input type="password" style="height: 36px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px"></label>
+        <div style="display: flex; justify-content: flex-end"><button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 16px">Save</button></div>
+        <div style="height: 40px; border-radius: 6px; background: #FFFFFF; border: 1px solid #15803D; border-left: 4px solid #15803D; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 13px; font-weight: 500"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2.5" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>Password changed. Other sessions were logged out.<span style="margin-left: auto; font-size: 11px; color: #6B7280">toast after save</span></div>
+      </div>
+      <!-- PREFERENCES -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px">
+        <span style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">Preferences <span style="font-size: 12px; color: #B45309; font-weight: 500">(needs backend)</span></span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Time zone<select style="height: 36px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px; background: #FFFFFF; color: #111827"><option selected>EST (UTC−5)</option><option>CST (UTC−6)</option><option>PST (UTC−8)</option><option>UTC</option></select></label>
+          <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Language<select style="height: 36px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px; background: #FFFFFF; color: #111827"><option selected>English</option><option disabled>Español (soon)</option><option disabled>中文 (soon)</option></select></label>
+        </div>
+        <div style="font-size: 12px; color: #6B7280">All times on every page use this time zone.</div>
+        <div style="display: flex; justify-content: flex-end"><button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 16px">Save</button></div>
+      </div>
+      <!-- SECURITY -->
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px">
+        <span style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">Security <span style="font-size: 12px; color: #B45309; font-weight: 500">(needs backend)</span></span>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="1.75" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path></svg>
+          <div style="flex: 1; display: flex; flex-direction: column"><span style="font-weight: 500">Authenticator app (2FA)</span><span style="font-size: 13px; color: #DC2626; font-weight: 600">Off</span></div>
+          <button style="height: 32px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 12px">Set up</button>
+        </div>
+        <sc-for list="{{toggles}}" as="t" hint-placeholder-count="2">
+          <div style="display: flex; align-items: center; gap: 12px; padding-top: 8px; border-top: 1px solid #F3F4F6">
+            <span style="flex: 1; color: {{t.ink}}">{{t.label}}</span>
+            <sc-if value="{{t.amount}}" hint-placeholder-val="{{false}}"><input value="{{t.amount}}" disabled style="height: 32px; width: 90px; border: 1px solid #E5E7EB; border-radius: 6px; padding: 0 8px; text-align: right; font-variant-numeric: tabular-nums; background: #F9FAFB; color: #6B7280"></sc-if>
+            <button aria-pressed="false" aria-label="{{t.label}}" disabled style="width: 40px; height: 22px; border-radius: 11px; border: 1px solid #D1D5DB; background: #E5E7EB; position: relative; padding: 0"><span style="position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 9px; background: #FFFFFF; border: 1px solid #D1D5DB; box-sizing: border-box"></span></button>
+          </div>
+        </sc-for>
+        <div style="font-size: 12px; color: #6B7280">Toggles unlock once 2FA is on.</div>
+        <div style="border: 1px solid #E5E7EB; border-radius: 6px; overflow: hidden">
+          <div style="display: grid; grid-template-columns: 1.6fr 1fr 1fr; height: 28px; align-items: center; padding: 0 10px; gap: 8px; background: #F3F4F6; font-size: 11px; font-weight: 600; color: #4B5563"><span>Device / browser</span><span>IP</span><span>Last active</span></div>
+          <div style="display: grid; grid-template-columns: 1.6fr 1fr 1fr; height: 30px; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #E5E7EB; font-size: 13px"><span>Windows · Chrome <span style="color: #15803D; font-size: 11px; font-weight: 600">this session</span></span><span style="font-variant-numeric: tabular-nums">103.10.28.4</span><span>Now</span></div>
+          <div style="display: grid; grid-template-columns: 1.6fr 1fr 1fr; height: 30px; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #E5E7EB; font-size: 13px"><span>Android · Chrome</span><span style="font-variant-numeric: tabular-nums">27.34.65.112</span><span>Today 08:12</span></div>
+        </div>
+        <div style="display: flex; justify-content: flex-end"><button style="height: 32px; border-radius: 6px; border: 1px solid #DC2626; background: #FFFFFF; color: #DC2626; font-weight: 500; padding: 0 12px">Log out all other sessions</button></div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = { dash: 'M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z', users: 'M9 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M16 5a3 3 0 0 1 0 6M22 20a6 6 0 0 0-5-6', records: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', game: 'M6 9h12a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4c-2 0-3-2-4-2h-4c-1 0-2 2-4 2a4 4 0 0 1-4-4v-2a4 4 0 0 1 4-4zM7 12v4M5 14h4M16 13h.01M18 15h.01', settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4' };
+    const menu = [['Dashboard', 'dash', 'AgentDash.dc.html'], ['User Management', 'users', 'Users.dc.html'], ['Transaction Records', 'records', 'Transactions.dc.html'], ['Game Records', 'game', 'GameRecords.dc.html'], ['Settings', 'settings', 'Settings.dc.html']].map(([label, ic, href]) => { const on = label === 'Settings'; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const toggles = [{ label: 'Ask for a code when I log in', amount: '', ink: '#6B7280' }, { label: 'Ask for a code before Load / Redeem over', amount: '500.00', ink: '#6B7280' }];
+    return { menu, toggles };
+  }
+}
+</script>
+</body>
+</html>

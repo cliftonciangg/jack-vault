@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Back office style guide: logo, color, type, buttons, forms</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1300px; box-sizing: border-box; padding: 40px 48px; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; gap: 20px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #4B5563">PROMPT 0 · STYLE GUIDE</div>
+      <h1 style="margin: 0; font-size: 20px; font-weight: 600">Jack Vault Back Office</h1>
+    </div>
+    <div style="font-size: 14px; color: #4B5563; max-width: 520px; text-align: right">Plain admin tool. Light page, white panels, one blue, dense tables. The brief's blue (#1E88C8) and green (#16A34A) fail AA with white text, so fills and text use #1A78B4 and #15803D; the brief's hues stay for borders and highlights.</div>
+  </div>
+
+  <!-- 1 LOGO -->
+  <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+    <div style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">1 · Logo and role tag</div>
+    <div style="display: flex; gap: 16px; align-items: stretch">
+      <sc-for list="{{roles}}" as="r" hint-placeholder-count="3">
+        <div style="flex: 1; height: 56px; background: #1B2B44; border-radius: 6px; display: flex; align-items: center; gap: 10px; padding: 0 16px; color: #FFFFFF">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+          <span style="font-weight: 700; font-size: 15px">Jack Vault</span>
+          <span style="font-weight: 400; font-size: 14px; color: #C7D2E3">Back Office</span>
+          <span style="margin-left: 6px; height: 20px; padding: 0 8px; border-radius: 4px; background: {{r.bg}}; color: {{r.ink}}; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">{{r.name}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="font-size: 13px; color: #4B5563">Flat white wordmark on navy. The arrow glyph stands for a transfer. Role tag colors: operator slate, distributor blue, agent teal.</div>
+  </div>
+
+  <!-- 2 COLOR -->
+  <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+    <div style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">2 · Color</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px">
+      <sc-for list="{{colors}}" as="c" hint-placeholder-count="18">
+        <div style="border: 1px solid #E5E7EB; border-radius: 6px; overflow: hidden">
+          <div style="height: 44px; background: {{c.hex}}; display: flex; align-items: center; justify-content: center; color: {{c.ink}}; font-size: 12px; font-weight: 600">{{c.sample}}</div>
+          <div style="padding: 6px 8px; display: flex; flex-direction: column; gap: 1px">
+            <span style="font-size: 12px; font-weight: 600">{{c.token}}</span>
+            <span style="font-size: 12px; color: #4B5563; font-variant-numeric: tabular-nums">{{c.hex}} · {{c.note}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+    <!-- 3 TYPE -->
+    <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">3 · Typography · Inter</div>
+      <div style="font-size: 20px; font-weight: 600">Page title 20 / 600</div>
+      <div style="font-size: 16px; font-weight: 600; color: #1A78B4">Panel title 16 / 600 blue</div>
+      <div style="font-size: 14px">Body and table text 14 / 400. Every number uses tabular figures so columns line up.</div>
+      <div style="font-size: 13px; color: #4B5563">Label 13 / 500 secondary</div>
+      <div style="display: flex; justify-content: space-between; border-top: 1px solid #E5E7EB; padding-top: 8px; font-variant-numeric: tabular-nums">
+        <span style="color: #4B5563">Money, right-aligned, 2 decimals</span>
+        <span style="display: flex; flex-direction: column; align-items: flex-end"><span>12,450.00</span><span style="color: #15803D">+1,250.00</span><span style="color: #DC2626">−325.50</span></span>
+      </div>
+    </div>
+
+    <!-- 4 BUTTONS -->
+    <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">4 · Buttons</div>
+      <div style="display: grid; grid-template-columns: 90px repeat(5, minmax(0, 1fr)); gap: 8px; align-items: center; font-size: 12px; color: #4B5563">
+        <span></span><span>Default</span><span>Hover</span><span>Pressed</span><span>Disabled</span><span>Loading</span>
+        <sc-for list="{{btns}}" as="b" hint-placeholder-count="5">
+          <span style="font-size: 13px; font-weight: 500; color: #111827">{{b.name}}</span>
+          <button style="height: 36px; border-radius: 6px; border: 1px solid {{b.border}}; background: {{b.bg}}; color: {{b.ink}}; font-weight: 600; font-size: 14px; padding: 0 10px">{{b.label}}</button>
+          <button style="height: 36px; border-radius: 6px; border: 1px solid {{b.hover}}; background: {{b.hover}}; color: {{b.ink}}; font-weight: 600; font-size: 14px; padding: 0 10px">{{b.label}}</button>
+          <button style="height: 36px; border-radius: 6px; border: 1px solid {{b.press}}; background: {{b.press}}; color: {{b.ink}}; font-weight: 600; font-size: 14px; padding: 0 10px">{{b.label}}</button>
+          <button disabled style="height: 36px; border-radius: 6px; border: 1px solid #E5E7EB; background: #F3F4F6; color: #9CA3AF; font-weight: 600; font-size: 14px; padding: 0 10px">{{b.label}}</button>
+          <button disabled style="height: 36px; border-radius: 6px; border: 1px solid {{b.border}}; background: {{b.bg}}; color: {{b.ink}}; font-weight: 600; font-size: 14px; padding: 0 10px; display: flex; align-items: center; justify-content: center; gap: 6px; opacity: .85"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"></path></svg>…</button>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; border-top: 1px solid #E5E7EB; padding-top: 10px; flex-wrap: wrap">
+        <span style="font-size: 13px; color: #4B5563; width: 90px">Row 28 px</span>
+        <button style="height: 28px; border-radius: 6px; border: 1px solid #15803D; background: #15803D; color: #FFFFFF; font-weight: 600; font-size: 13px; padding: 0 10px">Load</button>
+        <button style="height: 28px; border-radius: 6px; border: 1px solid #DC2626; background: #FFFFFF; color: #DC2626; font-weight: 600; font-size: 13px; padding: 0 10px">Redeem</button>
+        <button style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #111827; font-weight: 500; font-size: 13px; padding: 0 10px">Reset Password</button>
+        <button style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #DC2626; font-weight: 500; font-size: 13px; padding: 0 10px">Disable</button>
+        <a href="#" style="font-size: 13px; font-weight: 500">Link button</a>
+      </div>
+      <div style="display: flex; gap: 6px; align-items: center">
+        <span style="font-size: 13px; color: #4B5563; width: 90px">Date shortcuts</span>
+        <button style="height: 28px; border-radius: 6px; border: 0; background: #166FA3; color: #FFFFFF; font-weight: 600; font-size: 13px; padding: 0 10px">Today</button>
+        <button style="height: 28px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 500; font-size: 13px; padding: 0 10px">Yesterday</button>
+        <button style="height: 28px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 500; font-size: 13px; padding: 0 10px">This Week</button>
+        <button style="height: 28px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 500; font-size: 13px; padding: 0 10px">Last Week</button>
+        <button style="height: 28px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 500; font-size: 13px; padding: 0 10px">This Month</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 FORMS -->
+  <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px">
+    <div style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">5 · Form controls</div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 20px; align-items: start">
+      <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Username<input value="player123" style="height: 36px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px; color: #111827"></label>
+      <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Password<span style="position: relative; display: flex"><input type="password" value="secretpass" style="height: 36px; width: 100%; box-sizing: border-box; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 36px 0 10px; font-size: 14px"><button aria-label="Show password" style="position: absolute; right: 2px; top: 2px; width: 32px; height: 32px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></span></label>
+      <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Amount<span style="display: flex; border: 1px solid #D1D5DB; border-radius: 6px; overflow: hidden; height: 36px"><input value="50.00" style="flex: 1; border: 0; padding: 0 10px; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums; min-width: 0"><span style="display: flex; align-items: center; padding: 0 10px; background: #F3F4F6; color: #4B5563; font-size: 13px; border-left: 1px solid #D1D5DB">coins</span></span></label>
+      <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Type<select style="height: 36px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px; background: #FFFFFF; color: #111827"><option>All</option><option>Load</option><option>Redeem</option></select></label>
+      <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563; grid-column: span 2">Period<span style="display: flex; align-items: center; gap: 8px"><input value="2026-10-20 00:00:00" style="height: 36px; flex: 1; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px; font-variant-numeric: tabular-nums; min-width: 0"><span style="color: #9CA3AF">~</span><input value="2026-10-20 23:59:59" style="height: 36px; flex: 1; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px; font-variant-numeric: tabular-nums; min-width: 0"></span></label>
+      <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Search<span style="display: flex; gap: 6px"><input placeholder="Username or ID" style="height: 36px; flex: 1; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px; min-width: 0"><button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; font-size: 14px; padding: 0 14px">Search</button></span></label>
+      <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Amount with error<input value="20,000.00" style="height: 36px; border: 1px solid #DC2626; border-radius: 6px; padding: 0 10px; font-size: 14px; text-align: right; font-variant-numeric: tabular-nums"><span style="font-size: 12px; color: #DC2626; font-weight: 500">You only have 12,450.00</span></label>
+      <div style="display: flex; gap: 20px; align-items: center; grid-column: span 2; padding-top: 4px">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><input type="radio" checked name="r"> Distributor / Agent</label>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><input type="radio" name="r"> Operator</label>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><button aria-pressed="true" aria-label="Show disabled players" style="width: 40px; height: 22px; border-radius: 11px; border: 0; background: #1A78B4; position: relative; padding: 0"><span style="position: absolute; top: 2px; left: 20px; width: 18px; height: 18px; border-radius: 9px; background: #FFFFFF"></span></button> Show disabled players</label>
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><button aria-pressed="false" aria-label="Turbo" style="width: 40px; height: 22px; border-radius: 11px; border: 1px solid #D1D5DB; background: #E5E7EB; position: relative; padding: 0"><span style="position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 9px; background: #FFFFFF; border: 1px solid #D1D5DB; box-sizing: border-box"></span></button> Off</label>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const roles = [{ name: 'OPERATOR', bg: '#E5E7EB', ink: '#1B2B44' }, { name: 'DISTRIBUTOR', bg: '#1A78B4', ink: '#FFFFFF' }, { name: 'AGENT', bg: '#0F766E', ink: '#FFFFFF' }];
+    const c = (token, hex, note, ink, sample) => ({ token, hex, note, ink: ink || '#FFFFFF', sample: sample || 'Aa' });
+    const colors = [
+      c('navy/topbar', '#1B2B44', 'top bar, 14.2:1'), c('bg/page', '#F3F4F6', 'page', '#111827'), c('bg/panel', '#FFFFFF', 'panels', '#111827'), c('line', '#E5E7EB', 'borders', '#111827'), c('line/input', '#D1D5DB', 'inputs', '#111827'), c('bg/balance', '#FFF8E6', 'balance strip', '#1A78B4', '12,450.00'),
+      c('blue/600', '#1A78B4', 'buttons, header, titles 4.8:1'), c('blue/700', '#166FA3', 'pressed, selected'), c('blue/500', '#1E88C8', 'borders, focus, hover tint'), c('blue/50', '#E3F0FA', 'selected row, nav', '#166FA3'), c('green/700', '#15803D', 'money in, Load 5.0:1', '#FFFFFF', '+50.00'), c('red/600', '#DC2626', 'money out, Redeem, danger 4.8:1', '#FFFFFF', '−50.00'),
+      c('status/active', '#DCFCE7', 'Active pill', '#15803D', 'Active'), c('status/disabled', '#E5E7EB', 'Disabled pill', '#4B5563', 'Disabled'), c('status/locked', '#FEF3C7', 'Locked pill', '#B45309', 'Locked'), c('text/primary', '#111827', '16.9:1'), c('text/secondary', '#4B5563', '7.6:1'), c('text/muted', '#6B7280', 'hints 4.8:1 (#9CA3AF decor only)')
+    ];
+    const btns = [
+      { name: 'Primary', label: 'Search', bg: '#1A78B4', border: '#1A78B4', hover: '#1769A0', press: '#166FA3', ink: '#FFFFFF' },
+      { name: 'Load', label: 'Load', bg: '#15803D', border: '#15803D', hover: '#136F35', press: '#14532D', ink: '#FFFFFF' },
+      { name: 'Redeem', label: 'Redeem', bg: '#DC2626', border: '#DC2626', hover: '#C92020', press: '#B91C1C', ink: '#FFFFFF' },
+      { name: 'Neutral', label: 'Cancel', bg: '#FFFFFF', border: '#D1D5DB', hover: '#F9FAFB', press: '#F3F4F6', ink: '#111827' },
+      { name: 'Danger', label: 'Disable', bg: '#FFFFFF', border: '#DC2626', hover: '#FEF2F2', press: '#FEE2E2', ink: '#DC2626' }
+    ];
+    return { roles, colors, btns };
+  }
+}
+</script>
+</body>
+</html>

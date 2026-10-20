@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>User management on a phone with the actions menu open</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input{font:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden; position: relative; padding-top: 59px">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 12px; gap: 10px">
+    <button aria-label="Menu" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button>
+    <span style="font-weight: 600; font-size: 15px; flex: 1">User Management</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #0F766E; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">AGENT</span>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 16px; gap: 8px">
+    <span style="color: #4B5563">Balance:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">12,450.00</span><span style="flex: 1"></span><span style="color: #4B5563; font-size: 12px">EST</span>
+  </div>
+  <div style="flex: 1; padding: 12px 16px 34px; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+    <div style="display: flex; gap: 8px">
+      <input placeholder="Username or ID" style="height: 44px; flex: 1; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 12px; font-size: 15px; min-width: 0; background: #FFFFFF">
+      <button style="height: 44px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 14px">Search</button>
+    </div>
+    <button style="height: 44px; border-radius: 6px; border: 1px solid #1A78B4; background: #FFFFFF; color: #1A78B4; font-weight: 600; font-size: 15px">+ Create Player</button>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <div style="background: #FFFFFF; border: 1px solid {{r.border}}; border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <span style="font-weight: 600; font-size: 15px">{{r.user}}</span>
+          <span style="height: 20px; padding: 0 8px; border-radius: 10px; background: {{r.pillBg}}; color: {{r.pillInk}}; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center">{{r.status}}</span>
+          <span style="flex: 1"></span>
+          <span style="font-variant-numeric: tabular-nums; font-weight: 600">{{r.bal}}</span>
+          <button aria-label="More actions" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid {{r.border}}; background: {{r.moreBg}}; color: #4B5563; font-weight: 700; padding: 0">…</button>
+        </div>
+        <div style="display: flex; gap: 8px">
+          <button style="flex: 1; height: 44px; border-radius: 6px; border: 0; background: #15803D; color: #FFFFFF; font-weight: 600; font-size: 15px">Load</button>
+          <button style="flex: 1; height: 44px; border-radius: 6px; border: 1px solid #DC2626; background: #FFFFFF; color: #DC2626; font-weight: 600; font-size: 15px">Redeem</button>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <!-- action sheet -->
+  <div style="position: absolute; inset: 0; background: rgba(17,24,39,.45)"></div>
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #FFFFFF; border-radius: 12px 12px 0 0; padding: 8px 16px 34px; display: flex; flex-direction: column; gap: 2px">
+    <div style="width: 40px; height: 4px; border-radius: 2px; background: #D1D5DB; margin: 4px auto 8px"></div>
+    <div style="padding: 6px 4px 10px; display: flex; justify-content: space-between; align-items: baseline"><span style="font-weight: 600; font-size: 15px">lucky_amy</span><span style="font-size: 13px; color: #4B5563">#1042 · 1,204.55</span></div>
+    <sc-for list="{{actions}}" as="a" hint-placeholder-count="5">
+      <a href="{{a.href}}" style="height: 48px; display: flex; align-items: center; gap: 12px; padding: 0 8px; border-radius: 6px; color: {{a.ink}}; text-decoration: none; font-size: 15px; font-weight: 500; border-top: 1px solid #F3F4F6"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{a.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{a.d}}"></path></svg>{{a.label}}</a>
+    </sc-for>
+    <button style="height: 48px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; font-weight: 600; font-size: 15px; margin-top: 8px; color: #111827">Cancel</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = { Active: ['#DCFCE7', '#15803D'], Disabled: ['#E5E7EB', '#4B5563'], Locked: ['#FEF3C7', '#B45309'] };
+    const rows = [['player123', '75.00', 'Active'], ['lucky_amy', '1,204.55', 'Active', true], ['bing_rao', '0.00', 'Locked'], ['sita.k', '2,232.95', 'Active']].map(([user, bal, status, sel]) => ({ user, bal, status, pillBg: P[status][0], pillInk: P[status][1], border: sel ? '#1E88C8' : '#E5E7EB', moreBg: sel ? '#E3F0FA' : '#FFFFFF' }));
+    const actions = [
+      ['Reset Password', '#', 'M15 9a4 4 0 1 0-3.9 5L4 21v-3l1-1h2v-2h2l1.6-1.6A4 4 0 0 0 15 9z', '#111827'], ['Game Records', 'GameRecords.dc.html', 'M6 9h12a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4c-2 0-3-2-4-2h-4c-1 0-2 2-4 2a4 4 0 0 1-4-4v-2a4 4 0 0 1 4-4z', '#111827'],
+      ['Transactions', 'TransactionsPhone.dc.html', 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', '#111827'], ['Copy player ID', '#', 'M9 9h11v11H9zM5 15H4V4h11v1', '#111827'], ['Disable player', '#', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM5.6 5.6l12.8 12.8', '#DC2626']
+    ].map(([label, href, d, ink]) => ({ label, href, d, ink }));
+    return { rows, actions };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Insufficient balance dialog, landscape</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 844px; height: 390px; position: relative; overflow: hidden; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <dc-import name="ReelsL" hint-size="844px,390px"></dc-import>
+  <div style="position: absolute; inset: 0; background: rgba(6,4,15,.7); display: flex; align-items: center; justify-content: center; padding: 20px 75px 21px; box-sizing: border-box">
+    <div style="width: 520px; background: rgba(31,24,68,.96); border: 1px solid #F5B301; border-radius: 22px; box-shadow: 0 0 40px rgba(245,179,1,.35), inset 0 1px 0 rgba(255,255,255,.08); padding: 20px 22px 18px; display: flex; gap: 20px; align-items: center">
+      <div style="width: 56px; height: 56px; border-radius: 28px; background: rgba(245,179,1,.14); display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#F5B301" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 3l7 3.5v11L12 21l-7-3.5v-11zM9.5 8.5h5l-3.5 7"></path></svg>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+        <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px">Not enough coins</div>
+        <div style="font-size: 16px; color: #B9B3D9; line-height: 1.35">Your balance is lower than this bet. Lower the bet or add coins to keep playing.</div>
+        <div style="display: flex; gap: 10px; margin-top: 8px">
+          <button style="flex: 1; height: 50px; border-radius: 25px; border: 2px solid #22D3EE; background: transparent; color: #22D3EE; font-weight: 700; font-size: 16px; letter-spacing: 1px">LOWER BET</button>
+          <button style="flex: 1; height: 50px; border-radius: 25px; border: 0; background: linear-gradient(180deg,#FFE27A,#F5B301 60%,#D99A00); color: #0B0820; font-weight: 700; font-size: 16px; letter-spacing: 1px; box-shadow: 0 0 18px rgba(245,179,1,.5)">GET COINS</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":844,"height":390}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

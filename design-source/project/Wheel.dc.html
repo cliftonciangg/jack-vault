@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Super Wheel bonus</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;family=Cinzel:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+.gold{background:linear-gradient(180deg,#FFE27A 0%,#F5B301 55%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 12px rgba(245,179,1,.7))}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: radial-gradient(ellipse 120% 60% at 50% 40%, #3B2A05 0%, #130E36 45%, #06040F 100%); color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 59px 16px 34px; gap: 10px">
+  <!-- header -->
+  <div style="display: flex; flex-direction: column; align-items: center; line-height: 1; gap: 4px; margin-top: 6px">
+    <span style="font-family: 'Cinzel', serif; font-weight: 700; font-size: 13px; letter-spacing: 5px; color: #C4B5FD">CROWN OF THE COSMOS</span>
+    <span class="gold" style="font-family: 'Cinzel', serif; font-weight: 900; font-size: 36px; letter-spacing: 2px">SUPER WHEEL</span>
+  </div>
+  <div style="display: flex; gap: 8px">
+    <div style="height: 32px; padding: 0 12px; border-radius: 16px; background: rgba(21,16,48,.85); border: 1px solid #3B2F7A; display: flex; align-items: center; gap: 6px"><span style="font-size: 12px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">BET</span><span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px; color: #FFE27A">1.25</span></div>
+    <div style="height: 32px; padding: 0 12px; border-radius: 16px; background: rgba(21,16,48,.85); border: 1px solid #3B2F7A; display: flex; align-items: center; gap: 6px"><span style="font-size: 12px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">BALANCE</span><span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px">1,250.00</span></div>
+  </div>
+
+  <!-- wheel -->
+  <div style="position: relative; width: 358px; height: 358px; display: flex; align-items: center; justify-content: center; margin-top: 6px">
+    <svg width="358" height="358" viewBox="-180 -180 360 360" style="position: absolute; inset: 0; filter: {{wheelBlur}}" aria-hidden="true">
+      <defs>
+        <radialGradient id="rim" cx="50%" cy="50%" r="50%"><stop offset=".86" stop-color="#B87400"></stop><stop offset=".93" stop-color="#FFE27A"></stop><stop offset="1" stop-color="#B87400"></stop></radialGradient>
+      </defs>
+      <circle r="178" fill="url(#rim)"></circle>
+      <g transform="rotate({{rot}})">
+        <sc-for list="{{segs}}" as="s" hint-placeholder-count="12">
+          <path d="{{s.d}}" fill="{{s.fill}}" stroke="#0B0820" stroke-width="2" opacity="{{s.op}}"></path>
+          <text transform="{{s.tx}}" fill="{{s.ink}}" font-family="Orbitron, sans-serif" font-weight="900" font-size="{{s.fs}}" text-anchor="middle" dominant-baseline="middle">{{s.label}}</text>
+        </sc-for>
+      </g>
+      <!-- bulbs -->
+      <sc-for list="{{bulbs}}" as="b" hint-placeholder-count="24">
+        <circle cx="{{b.x}}" cy="{{b.y}}" r="5" fill="{{b.c}}" style="filter: drop-shadow(0 0 4px {{b.c}})"></circle>
+      </sc-for>
+      <!-- hub ring -->
+      <circle r="56" fill="#0B0820" stroke="#F5B301" stroke-width="4"></circle>
+      <!-- pointer -->
+      <path d="M-16 -186 L16 -186 L0 -150 Z" fill="#FFF3E0" stroke="#FF7A1A" stroke-width="3" style="filter: drop-shadow(0 0 8px rgba(255,122,26,.9))"></path>
+    </svg>
+    <sc-if value="{{isReady}}" hint-placeholder-val="{{true}}">
+      <button aria-label="Spin the wheel" style="position: relative; width: 100px; height: 100px; border-radius: 50px; border: 4px solid #F5B301; background: radial-gradient(circle at 40% 30%, #FFD3A3 0%, #FF7A1A 55%, #C2410C 100%); box-shadow: 0 0 36px rgba(255,122,26,.7); color: #0B0820; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: 1px; padding: 0">SPIN</button>
+    </sc-if>
+    <sc-if value="{{isSpinning}}" hint-placeholder-val="{{false}}">
+      <div style="position: relative; width: 100px; height: 100px; border-radius: 50px; border: 4px dashed #F5B301; background: radial-gradient(circle at 40% 30%, #3B2A05, #1A1203); display: flex; align-items: center; justify-content: center; color: #FFE27A; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 13px; letter-spacing: 1px; text-align: center; line-height: 1.2">GOOD<br>LUCK</div>
+    </sc-if>
+    <sc-if value="{{isResult}}" hint-placeholder-val="{{false}}">
+      <div style="position: relative; width: 100px; height: 100px; border-radius: 50px; border: 4px solid #FFE27A; background: radial-gradient(circle at 40% 30%, #3B2A05, #1A1203); box-shadow: 0 0 40px rgba(245,179,1,.9); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #FFE27A; font-family: 'Orbitron', sans-serif; font-weight: 900; line-height: 1.1"><span style="font-size: 24px">50×</span><span style="font-size: 10px; letter-spacing: 1px">BET</span></div>
+    </sc-if>
+  </div>
+
+  <!-- result banner / hint -->
+  <sc-if value="{{isResult}}" hint-placeholder-val="{{false}}">
+    <div style="width: 100%; padding: 12px 16px; border-radius: 16px; background: linear-gradient(180deg,#3B2A05,#1A1203); border: 2px solid #F5B301; box-shadow: 0 0 30px rgba(245,179,1,.5); display: flex; flex-direction: column; align-items: center; gap: 2px">
+      <span style="font-size: 13px; letter-spacing: 2px; font-weight: 700; color: #B9B3D9">YOU WON</span>
+      <span class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 34px; line-height: 1">50× BET = 62.50</span>
+    </div>
+    <button style="width: 100%; height: 56px; border-radius: 28px; border: 0; background: linear-gradient(180deg,#FFE27A,#F5B301 60%,#D99A00); color: #0B0820; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 2px; box-shadow: 0 0 28px rgba(245,179,1,.6); margin-top: auto">COLLECT</button>
+  </sc-if>
+  <sc-if value="{{isNotResult}}" hint-placeholder-val="{{true}}">
+    <div style="font-size: 14px; letter-spacing: 1.5px; font-weight: 700; color: {{hintColor}}">{{hint}}</div>
+    <!-- prize strip -->
+    <div style="width: 100%; margin-top: auto; border-radius: 14px; background: rgba(21,16,48,.85); border: 1px solid #3B2F7A; padding: 10px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+      <sc-for list="{{prizes}}" as="p" hint-placeholder-count="8">
+        <div style="height: 40px; border-radius: 8px; background: {{p.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1">
+          <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 11px; color: {{p.ink}}">{{p.name}}</span>
+          <span style="font-size: 11px; font-weight: 700; color: {{p.ink}}; opacity: .85">{{p.val}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"state":{"editor":"enum","default":"ready","options":["ready","spinning","result"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const state = this.props.state ?? 'ready';
+    const JP = { GRAND: ['#E11D2E', '#FFFFFF'], MAJOR: ['#C026D3', '#FFFFFF'], MINOR: ['#2563EB', '#FFFFFF'], MINI: ['#0D9488', '#FFFFFF'] };
+    const defs = [
+      ['10×', 1, '#F5B301', '#0B0820'], ['15×', 1, '#5B21B6', '#FFFFFF'], ['MINI', 1, ...JP.MINI], ['25×', 1, '#F5B301', '#0B0820'],
+      ['FREE SPINS', 1, '#0E7490', '#FFFFFF'], ['15×', 1, '#5B21B6', '#FFFFFF'], ['MINOR', 1, ...JP.MINOR], ['10×', 1, '#F5B301', '#0B0820'],
+      ['50×', 1, '#FF7A1A', '#0B0820'], ['MAJOR', 1, ...JP.MAJOR], ['25×', 1, '#5B21B6', '#FFFFFF'], ['GRAND', 0.5, ...JP.GRAND]
+    ];
+    const total = defs.reduce((a, d) => a + d[1], 0);
+    const R = 156, RI = 60;
+    let a0 = -90;
+    const toXY = (r, a) => [r * Math.cos(a * Math.PI / 180), r * Math.sin(a * Math.PI / 180)];
+    const winIdx = 8;
+    const segs = defs.map(([label, w, fill, ink], i) => {
+      const sweep = 360 * w / total; const a1 = a0 + sweep;
+      const [x0, y0] = toXY(R, a0), [x1, y1] = toXY(R, a1), [xi0, yi0] = toXY(RI, a0), [xi1, yi1] = toXY(RI, a1);
+      const mid = (a0 + a1) / 2; const [tx, ty] = toXY(112, mid);
+      const d = `M${xi0} ${yi0} L${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1} L${xi1} ${yi1} A${RI} ${RI} 0 0 0 ${xi0} ${yi0} Z`;
+      const isWin = state === 'result' && i === winIdx;
+      const seg = { d, fill, ink, label, fs: label.length > 5 ? 10 : 15, tx: `translate(${tx.toFixed(1)} ${ty.toFixed(1)}) rotate(${(mid + 90).toFixed(1)})`, op: state === 'result' && !isWin ? .45 : 1 };
+      a0 = a1; return seg;
+    });
+    // rotate so the winning segment's middle sits under the pointer at -90
+    const winMid = (() => { let a = -90; for (let i = 0; i < winIdx; i++) a += 360 * defs[i][1] / total; return a + 180 * defs[winIdx][1] / total; })();
+    const rot = state === 'result' ? (-90 - winMid) : (state === 'spinning' ? 22 : 0);
+    const bulbs = Array.from({ length: 24 }, (_, i) => { const [x, y] = toXY(168, i * 15); return { x: x.toFixed(1), y: y.toFixed(1), c: state === 'spinning' ? (i % 3 === 0 ? '#FFF3E0' : '#B87400') : (i % 2 ? '#FFE27A' : '#FF7A1A') }; });
+    const prizes = [
+      { name: '10×', val: '12.50', bg: '#3B2A05', ink: '#FFE27A' }, { name: '15×', val: '18.75', bg: '#3B2A05', ink: '#FFE27A' }, { name: '25×', val: '31.25', bg: '#3B2A05', ink: '#FFE27A' }, { name: '50×', val: '62.50', bg: '#5A2606', ink: '#FFB066' },
+      { name: 'FREE', val: '10 spins', bg: '#0A2A33', ink: '#A5F3FC' }, { name: 'MINI', val: '118.30', bg: 'linear-gradient(160deg,#0D9488,#065F46)', ink: '#FFFFFF' }, { name: 'MINOR', val: '1,204.55', bg: 'linear-gradient(160deg,#2563EB,#1E3A8A)', ink: '#FFFFFF' }, { name: 'MAJOR+', val: 'see jackpots', bg: 'linear-gradient(160deg,#C026D3,#7A0A14)', ink: '#FFFFFF' }
+    ];
+    const hints = { ready: ['TAP SPIN OR SWIPE THE WHEEL', '#B9B3D9'], spinning: ['SPINNING…', '#FFB066'], result: ['', '#B9B3D9'] };
+    return { segs, rot, bulbs, prizes, wheelBlur: state === 'spinning' ? 'blur(1.5px)' : 'none',
+      isReady: state === 'ready', isSpinning: state === 'spinning', isResult: state === 'result', isNotResult: state !== 'result',
+      hint: hints[state][0], hintColor: hints[state][1] };
+  }
+}
+</script>
+</body>
+</html>

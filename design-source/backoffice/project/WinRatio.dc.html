@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Win ratio for a distributor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden; position: relative">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 24px; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 15px">Jack Vault</span><span style="color: #C7D2E3">Back Office</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #1A78B4; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">DISTRIBUTOR</span>
+    <span style="color: #8A9AB5">/</span><span style="font-weight: 600; font-size: 15px">Win Ratio</span>
+    <span style="flex: 1"></span><span style="color: #C7D2E3">Welcome, <strong style="color: #FFFFFF; font-weight: 600">north-dist</strong></span>
+    <a href="Login.dc.html" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #5B6B85; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500">Log out</a>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 24px; gap: 10px">
+    <span style="color: #4B5563">Balance:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">4,820.00</span><span style="flex: 1"></span><span style="color: #4B5563; font-size: 13px">Times in EST</span>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <nav style="width: 240px; flex-shrink: 0; background: #E9EDF2; border-right: 1px solid #E5E7EB; padding: 12px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{menu}}" as="m" hint-placeholder-count="6"><a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}</a></sc-for>
+      <span style="flex: 1"></span><a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none">Log out</a>
+    </nav>
+    <main style="flex: 1; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 20px; display: flex; align-items: center; gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4B5563">Current setting <span style="color: #B45309">(needs backend)</span></span><span style="font-size: 22px; font-weight: 600">Your players play at <span style="color: #1A78B4">RTP 95.00%</span></span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px; padding-left: 24px; border-left: 1px solid #E5E7EB"><span style="font-size: 12px; color: #4B5563">Profile</span><span style="font-weight: 600; font-family: ui-monospace, monospace; font-size: 13px">rtp95 · 3f9a1c7e</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px; padding-left: 24px; border-left: 1px solid #E5E7EB"><span style="font-size: 12px; color: #4B5563">Since</span><span>2026-10-01 by operator</span></div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">Choose profile</span>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{profiles}}" as="p" hint-placeholder-count="3">
+            <div style="border: 2px solid {{p.border}}; border-radius: 8px; padding: 14px 16px; background: {{p.bg}}; display: flex; flex-direction: column; gap: 8px; opacity: {{p.op}}; position: relative">
+              <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 26px; font-weight: 600; color: {{p.ink}}">RTP {{p.rtp}}</span><sc-if value="{{p.locked}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" aria-hidden="true"><path d="M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4"></path></svg></sc-if><sc-if value="{{p.selected}}" hint-placeholder-val="{{false}}"><span style="height: 22px; padding: 0 8px; border-radius: 11px; background: #1A78B4; color: #FFFFFF; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center">Current</span></sc-if></div>
+              <div style="display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; font-size: 13px; font-variant-numeric: tabular-nums">
+                <span style="color: #4B5563">House edge</span><span style="text-align: right">{{p.edge}}</span>
+                <span style="color: #4B5563">Hit frequency</span><span style="text-align: right">{{p.hit}}</span>
+                <span style="color: #4B5563">Free spins</span><span style="text-align: right">{{p.fs}}</span>
+                <span style="color: #4B5563">Wheel</span><span style="text-align: right">{{p.wheel}}</span>
+              </div>
+              <span style="font-size: 13px; font-weight: 500; color: {{p.noteInk}}">{{p.note}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="font-size: 13px; color: #4B5563; line-height: 1.5">A change applies from each player's next round. Rounds already in progress finish on their old profile. Every round records the profile it was played on. The setting is per distributor; there is no per-player option.</div>
+        <div style="display: flex; justify-content: flex-end"><button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 16px">Save</button></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px; flex: 1; min-height: 0">
+        <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB"><span style="font-size: 16px; font-weight: 600; color: #1A78B4">Actual vs expected</span><div style="display: flex; gap: 6px"><sc-for list="{{periods}}" as="s" hint-placeholder-count="4"><button style="height: 26px; border-radius: 6px; border: 0; background: {{s.bg}}; color: #FFFFFF; font-weight: {{s.w}}; font-size: 12px; padding: 0 10px">{{s.label}}</button></sc-for></div></div>
+          <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; font-variant-numeric: tabular-nums">
+            <sc-for list="{{actual}}" as="a" hint-placeholder-count="5"><div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px 10px; display: flex; flex-direction: column"><span style="font-size: 11px; color: #4B5563">{{a.label}}</span><span style="font-weight: 600; font-size: 16px; color: {{a.color}}">{{a.value}}</span></div></sc-for>
+          </div>
+          <div style="font-size: 12px; color: #6B7280; line-height: 1.5">Actual RTP moves around a lot over short periods. It gets close to the expected figure only after many rounds.</div>
+        </div>
+        <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden">
+          <div style="padding: 10px 16px; border-bottom: 1px solid #E5E7EB; font-size: 16px; font-weight: 600; color: #1A78B4">Change history</div>
+          <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; height: 30px; align-items: center; padding: 0 16px; gap: 8px; background: #F3F4F6; font-size: 12px; font-weight: 600; color: #4B5563"><span>Time</span><span>From</span><span>To</span><span>Changed by</span></div>
+          <sc-for list="{{history}}" as="h" hint-placeholder-count="3"><div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; height: 32px; align-items: center; padding: 0 16px; gap: 8px; border-top: 1px solid #F3F4F6; font-size: 13px"><span style="color: #4B5563">{{h.time}}</span><span>{{h.from}}</span><span style="font-weight: 500">{{h.to}}</span><span style="color: #4B5563">{{h.by}}</span></div></sc-for>
+        </div>
+      </div>
+    </main>
+  </div>
+  <!-- confirm -->
+  <div style="position: absolute; inset: 0; background: rgba(17,24,39,.35); display: flex; align-items: center; justify-content: center">
+    <div style="width: 480px; background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 8px; display: flex; flex-direction: column">
+      <div style="padding: 14px 20px; font-size: 16px; font-weight: 600; border-bottom: 1px solid #E5E7EB">Change your players from RTP 95% to RTP 94%?</div>
+      <div style="padding: 16px 20px; color: #4B5563; line-height: 1.5">All 614 players under your 12 agents move to profile <span style="font-family: ui-monospace, monospace; font-size: 13px; color: #111827">rtp94 · 8b2d4f01</span> from their next round. This is logged with your name and the time.</div>
+      <div style="padding: 12px 20px; border-top: 1px solid #E5E7EB; display: flex; justify-content: flex-end; gap: 8px"><button style="height: 36px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 14px; color: #111827">Cancel</button><button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 14px">Change</button></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = { dash: 'M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z', agent: 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5 21a7 7 0 0 1 14 0M12 14v4M10 18h4', coins: 'M8 8a6 3 0 1 0 12 0 6 3 0 0 0-12 0zM8 8v4c0 1.7 2.7 3 6 3s6-1.3 6-3V8M4 13a6 3 0 0 0 6 3M4 13v4c0 1.7 2.7 3 6 3', percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', records: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4' };
+    const menu = [['Dashboard', 'dash', 'DistDash.dc.html'], ['Agent Management', 'agent', 'Agents.dc.html'], ['Coin Management', 'coins', 'Coins.dc.html'], ['Win Ratio', 'percent', 'WinRatio.dc.html'], ['Agent Records', 'records', 'AgentRecords.dc.html'], ['Settings', 'settings', 'Settings.dc.html']].map(([label, ic, href]) => { const on = label === 'Win Ratio'; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const profiles = [
+      { rtp: '94%', edge: '6.00%', hit: '28.4%', fs: '1 in 142', wheel: '1 in 310', note: 'Highest margin · picked, pending Save', border: '#1A78B4', bg: '#E3F0FA', ink: '#166FA3', op: 1, locked: false, selected: false, noteInk: '#166FA3' },
+      { rtp: '95%', edge: '5.00%', hit: '29.1%', fs: '1 in 135', wheel: '1 in 295', note: 'Standard', border: '#D1D5DB', bg: '#FFFFFF', ink: '#111827', op: 1, locked: false, selected: true, noteInk: '#4B5563' },
+      { rtp: '96%', edge: '4.00%', hit: '29.8%', fs: '1 in 128', wheel: '1 in 280', note: 'Most generous · Not enabled by operator', border: '#E5E7EB', bg: '#F9FAFB', ink: '#6B7280', op: .7, locked: true, selected: false, noteInk: '#6B7280' }
+    ];
+    const periods = ['Today', 'This Week', 'This Month', 'All time'].map((label, i) => ({ label, bg: i === 2 ? '#166FA3' : '#1A78B4', w: i === 2 ? 600 : 500 }));
+    const actual = [{ label: 'Total bet', value: '412,380.00', color: '#111827' }, { label: 'Total win', value: '389,296.70', color: '#15803D' }, { label: 'Actual RTP', value: '94.40%', color: '#111827' }, { label: 'Expected RTP', value: '95.00%', color: '#4B5563' }, { label: 'Rounds', value: '329,904', color: '#111827' }];
+    const history = [{ time: '2026-10-01 09:00', from: 'rtp94', to: 'rtp95', by: 'operator' }, { time: '2026-09-02 14:20', from: 'rtp95', to: 'rtp94', by: 'north-dist' }, { time: '2026-08-14 10:05', from: '—', to: 'rtp95', by: 'operator (default)' }];
+    return { menu, profiles, periods, actual, history };
+  }
+}
+</script>
+</body>
+</html>

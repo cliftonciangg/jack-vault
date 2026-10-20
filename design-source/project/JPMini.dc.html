@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jackpot win overlay</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+.gold{background:linear-gradient(180deg,#FFF3E0 0%,#FFE27A 30%,#F5B301 65%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(245,179,1,.8))}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <dc-import name="Reels" mode="idle" hint-size="390px,844px"></dc-import>
+  <div style="position: absolute; inset: 0; background: {{dim}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: {{gap}}; padding: 59px 24px 34px; box-sizing: border-box; border: {{frame}}; box-sizing: border-box">
+    <svg width="390" height="844" viewBox="0 0 390 844" style="position: absolute; inset: 0" aria-hidden="true">
+      <g transform="translate(195 380)" opacity=".45">
+        <sc-for list="{{rays}}" as="r" hint-placeholder-count="0"><path d="M0 0 L-28 -700 L28 -700 Z" fill="{{r.c}}" transform="rotate({{r.a}})"></path></sc-for>
+      </g>
+      <sc-for list="{{fw}}" as="f" hint-placeholder-count="0">
+        <g transform="translate({{f.x}} {{f.y}})" stroke="{{f.c}}" stroke-width="2" opacity=".9" fill="none"><path d="M0 0L0 -30M0 0L21 -21M0 0L30 0M0 0L21 21M0 0L0 30M0 0L-21 21M0 0L-30 0M0 0L-21 -21"></path><circle r="34" stroke-dasharray="3 9"></circle></g>
+      </sc-for>
+    </svg>
+    <sc-for list="{{coins}}" as="c" hint-placeholder-count="10">
+      <span style="position: absolute; left: {{c.x}}; top: {{c.y}}; width: {{c.s}}; height: {{c.s}}; border-radius: {{c.rad}}; background: {{c.bg}}; box-shadow: 0 0 8px rgba(245,179,1,.6); transform: rotate({{c.r}}) scaleX(.6)"></span>
+    </sc-for>
+
+    <!-- emblem -->
+    <svg width="{{emW}}" height="{{emH}}" viewBox="0 0 64 40" aria-hidden="true" style="position: relative; filter: drop-shadow(0 0 14px {{glow}})">
+      <path d="M4 34 L8 8 L20 22 L32 2 L44 22 L56 8 L60 34 Z" fill="{{emFill}}"></path>
+      <circle cx="32" cy="24" r="4" fill="#FFFFFF" opacity=".8"></circle>
+    </svg>
+    <!-- plaque -->
+    <div style="position: relative; width: {{plaqueW}}; padding: {{plaquePad}}; border-radius: 22px; background: {{plaqueBg}}; border: 3px solid #FFE27A; box-shadow: 0 0 0 3px {{accent}}, 0 0 60px {{glow}}; display: flex; flex-direction: column; align-items: center; gap: 2px">
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: {{nameSize}}; letter-spacing: 3px; color: #FFFFFF; line-height: 1; text-shadow: 0 2px 0 rgba(0,0,0,.4)">{{name}}</span>
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 6px; color: #FFFFFF; opacity: .9">JACKPOT</span>
+    </div>
+    <div class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: {{amtSize}}; line-height: 1; font-variant-numeric: tabular-nums; position: relative">{{amount}}</div>
+    <sc-if value="{{isGrand}}" hint-placeholder-val="{{false}}">
+      <div style="position: relative; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; letter-spacing: 3px; color: #FFE27A; text-shadow: 0 0 20px rgba(245,179,1,.9)">GRAND JACKPOT!</div>
+    </sc-if>
+    <button style="position: absolute; bottom: 60px; left: 24px; right: 24px; height: 56px; border-radius: 28px; border: 0; background: linear-gradient(180deg,#FFE27A,#F5B301 60%,#D99A00); color: #0B0820; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 2px; box-shadow: 0 0 28px rgba(245,179,1,.6)">COLLECT</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tier":{"editor":"enum","default":"mini","options":["mini","minor","major","grand"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tier = this.props.tier ?? 'mini';
+    const T = {
+      mini: { name: 'MINI', amount: '118.30', accent: '#0D9488', glow: 'rgba(13,148,136,.8)', plaqueBg: 'linear-gradient(160deg,#6EE7B7,#0D9488 50%,#065F46)', emFill: '#6EE7B7', coins: 10, rays: 0, fw: 0, plaqueW: '240px', plaquePad: '14px 0', nameSize: '36px', amtSize: '40px', dim: 'rgba(6,4,15,.7)', frame: '0', gap: '14px', emW: 56, emH: 35, confetti: false },
+      minor: { name: 'MINOR', amount: '1,204.55', accent: '#2563EB', glow: 'rgba(37,99,235,.85)', plaqueBg: 'linear-gradient(160deg,#67E8F9,#2563EB 50%,#1E3A8A)', emFill: '#67E8F9', coins: 24, rays: 0, fw: 0, plaqueW: '290px', plaquePad: '18px 0', nameSize: '42px', amtSize: '46px', dim: 'rgba(6,4,15,.78)', frame: '0', gap: '16px', emW: 64, emH: 40, confetti: false },
+      major: { name: 'MAJOR', amount: '12,481.90', accent: '#C026D3', glow: 'rgba(192,38,211,.9)', plaqueBg: 'linear-gradient(160deg,#F0ABFC,#C026D3 50%,#6D28D9)', emFill: '#F0ABFC', coins: 34, rays: 12, fw: 0, plaqueW: '330px', plaquePad: '22px 0', nameSize: '50px', amtSize: '50px', dim: 'radial-gradient(circle at 50% 45%, rgba(109,40,217,.5), rgba(6,4,15,.9) 70%)', frame: '0', gap: '18px', emW: 76, emH: 48, confetti: true },
+      grand: { name: 'GRAND', amount: '152,384.27', accent: '#E11D2E', glow: 'rgba(225,29,46,.9)', plaqueBg: 'linear-gradient(160deg,#FFC94A,#E11D2E 55%,#7A0A14)', emFill: '#FFE27A', coins: 48, rays: 16, fw: 4, plaqueW: '350px', plaquePad: '26px 0', nameSize: '58px', amtSize: '44px', dim: 'radial-gradient(circle at 50% 45%, rgba(225,29,46,.45), rgba(6,4,15,.92) 70%)', frame: '6px solid #F5B301', gap: '16px', emW: 96, emH: 60, confetti: true }
+    }[tier];
+    const palette = ['#F0ABFC', '#22D3EE', '#FFE27A', '#4ADE80', '#FF7A1A'];
+    const coins = Array.from({ length: T.coins }, (_, i) => {
+      const conf = T.confetti && i % 3 === 0;
+      return { x: (6 + (i * 67) % 370) + 'px', y: (70 + ((i * 131) % 700)) + 'px', s: (8 + (i % 5) * 4) + 'px', r: ((i * 137.5) % 360) + 'deg', rad: conf ? '2px' : '50%', bg: conf ? palette[i % palette.length] : 'linear-gradient(160deg,#FFE27A,#F5B301 55%,#B87400)' };
+    });
+    const rays = Array.from({ length: T.rays }, (_, i) => ({ a: i * (360 / Math.max(T.rays, 1)), c: i % 2 ? '#F5B301' : T.accent }));
+    const fw = Array.from({ length: T.fw }, (_, i) => ({ x: [60, 330, 40, 340][i], y: [160, 140, 700, 720][i], c: palette[i] }));
+    return { ...T, coins, rays, fw, isGrand: tier === 'grand' };
+  }
+}
+</script>
+</body>
+</html>

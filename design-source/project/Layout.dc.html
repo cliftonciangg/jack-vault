@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault layout, safe areas and thumb zones</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+.hatch{background:repeating-linear-gradient(135deg,rgba(239,68,68,.28) 0 6px,rgba(239,68,68,.08) 6px 12px)}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1240px; box-sizing: border-box; padding: 56px 64px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">08 · LAYOUT</div>
+      <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900">Phones, safe areas &amp; thumbs</h1>
+    </div>
+    <div style="font-size: 17px; color: #B9B3D9; max-width: 460px; text-align: right">Portrait 390 × 844 is the main target. Landscape 844 × 390 comes second. Check every screen at 360 × 780 and 430 × 932 too.</div>
+  </div>
+
+  <div style="display: flex; gap: 40px; align-items: flex-start">
+    <!-- Portrait -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">PORTRAIT 390 × 844 · 1:1</div>
+      <div style="width: 390px; height: 844px; border-radius: 48px; border: 2px solid #3B2F7A; position: relative; overflow: hidden; background: #110C2C">
+        <!-- thumb zones -->
+        <div style="position: absolute; left: 0; right: 0; top: 0; height: 300px; background: rgba(239,68,68,.10)"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 300px; height: 230px; background: rgba(245,158,11,.10)"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 530px; bottom: 0; background: rgba(34,211,238,.13)"></div>
+        <div style="position: absolute; right: 12px; top: 250px; font-size: 13px; font-weight: 700; color: #F87171; letter-spacing: 1px">HARD · display only</div>
+        <div style="position: absolute; right: 12px; top: 480px; font-size: 13px; font-weight: 700; color: #FBBF24; letter-spacing: 1px">STRETCH · occasional taps</div>
+        <div style="position: absolute; right: 12px; top: 540px; font-size: 13px; font-weight: 700; color: #22D3EE; letter-spacing: 1px">EASY · SPIN, BET, COLLECT</div>
+        <!-- safe areas -->
+        <div class="hatch" style="position: absolute; left: 0; right: 0; top: 0; height: 59px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; box-sizing: border-box">
+          <span style="font-size: 12px; font-weight: 700; color: #FECACA">TOP INSET 59 px · Dynamic Island</span>
+        </div>
+        <div style="position: absolute; left: 50%; top: 11px; width: 124px; height: 36px; margin-left: -62px; border-radius: 18px; background: #000000"></div>
+        <div class="hatch" style="position: absolute; left: 0; right: 0; bottom: 0; height: 34px; display: flex; align-items: center; justify-content: center">
+          <span style="font-size: 12px; font-weight: 700; color: #FECACA">BOTTOM INSET 34 px</span>
+        </div>
+        <div style="position: absolute; left: 50%; bottom: 8px; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: #FFFFFF"></div>
+        <!-- wireframe -->
+        <div style="position: absolute; left: 16px; right: 16px; top: 67px; height: 92px; border: 1px dashed #8B5CF6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #C4B5FD; font-weight: 700">Logo + jackpot strip</div>
+        <div style="position: absolute; left: 8px; right: 8px; top: 171px; height: 300px; border: 1px solid #F5B301; border-radius: 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding: 6px; box-sizing: border-box">
+          <sc-for list="{{cells}}" as="c" hint-placeholder-count="20"><div style="background: rgba(139,92,246,.18); border-radius: 6px"></div></sc-for>
+        </div>
+        <div style="position: absolute; left: 8px; right: 8px; top: 483px; text-align: center; font-size: 14px; color: #B9B3D9; font-weight: 700">Reels 374 px wide · 70 px symbols</div>
+        <div style="position: absolute; left: 8px; right: 8px; bottom: 42px; height: 236px; border-radius: 22px; background: rgba(21,16,48,.85); border: 1px solid #3B2F7A; display: flex; flex-direction: column; gap: 10px; padding: 12px; box-sizing: border-box">
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+            <div style="height: 52px; border: 1px dashed #8A83AD; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #B9B3D9; font-weight: 700">BALANCE</div>
+            <div style="height: 52px; border: 1px dashed #8A83AD; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #B9B3D9; font-weight: 700">BET</div>
+            <div style="height: 52px; border: 1px dashed #8A83AD; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #B9B3D9; font-weight: 700">WIN</div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex: 1">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #8A83AD; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #B9B3D9">menu</div>
+              <div style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #8A83AD; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #B9B3D9">turbo</div>
+            </div>
+            <div style="width: 52px; height: 52px; border-radius: 26px; border: 2px solid #22D3EE; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; color: #22D3EE">−</div>
+            <div style="width: 104px; height: 104px; border-radius: 52px; background: radial-gradient(circle at 40% 30%, #FFD3A3, #FF7A1A 55%, #C2410C); border: 4px solid #F5B301; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; color: #0B0820; box-shadow: 0 0 28px rgba(255,122,26,.55)">SPIN</div>
+            <div style="width: 52px; height: 52px; border-radius: 26px; border: 2px solid #22D3EE; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; color: #22D3EE">+</div>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #8A83AD; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #B9B3D9">info</div>
+              <div style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #8A83AD; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #B9B3D9">auto</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 24px">
+      <!-- Landscape -->
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">LANDSCAPE 844 × 390 · shown at 75%</div>
+        <div style="width: 633px; height: 293px; position: relative">
+          <div style="width: 844px; height: 390px; transform: scale(.75); transform-origin: 0 0; border-radius: 48px; border: 2px solid #3B2F7A; position: absolute; left: 0; top: 0; overflow: hidden; background: #110C2C">
+            <div class="hatch" style="position: absolute; left: 0; top: 0; bottom: 0; width: 59px; display: flex; align-items: center; justify-content: center"><span style="font-size: 13px; font-weight: 700; color: #FECACA; transform: rotate(-90deg); white-space: nowrap">LEFT 59 px</span></div>
+            <div class="hatch" style="position: absolute; right: 0; top: 0; bottom: 0; width: 59px; display: flex; align-items: center; justify-content: center"><span style="font-size: 13px; font-weight: 700; color: #FECACA; transform: rotate(90deg); white-space: nowrap">RIGHT 59 px</span></div>
+            <div class="hatch" style="position: absolute; left: 59px; right: 59px; bottom: 0; height: 21px"></div>
+            <div style="position: absolute; left: 75px; top: 12px; width: 120px; bottom: 33px; border: 1px dashed #8B5CF6; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 14px; color: #C4B5FD; font-weight: 700; padding: 8px; box-sizing: border-box">Logo + jackpots stacked</div>
+            <div style="position: absolute; left: 207px; top: 12px; width: 400px; height: 280px; border: 1px solid #F5B301; border-radius: 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding: 6px; box-sizing: border-box">
+              <sc-for list="{{cells}}" as="c" hint-placeholder-count="20"><div style="background: rgba(139,92,246,.18); border-radius: 6px"></div></sc-for>
+            </div>
+            <div style="position: absolute; left: 207px; top: 300px; width: 400px; height: 56px; border-radius: 14px; border: 1px dashed #8A83AD; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #B9B3D9; font-weight: 700">BALANCE · BET −/+ · WIN · menu · turbo</div>
+            <div style="position: absolute; right: 75px; top: 50%; margin-top: -60px; width: 104px; height: 104px; border-radius: 52px; background: radial-gradient(circle at 40% 30%, #FFD3A3, #FF7A1A 55%, #C2410C); border: 4px solid #F5B301; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; color: #0B0820">SPIN</div>
+            <div style="position: absolute; right: 70px; top: 40px; font-size: 13px; color: #22D3EE; font-weight: 700; width: 120px; text-align: center">Right thumb</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spec cards -->
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <sc-for list="{{specs}}" as="s" hint-placeholder-count="6">
+          <div style="background: #151030; border: 1px solid #2E2560; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+            <span style="font-size: 14px; letter-spacing: 1.5px; color: #22D3EE; font-weight: 700">{{s.k}}</span>
+            <span style="font-size: 16px; line-height: 1.35">{{s.v}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const cells = Array.from({ length: 20 }, (_, i) => ({ i }));
+    const specs = [
+      { k: 'TAP TARGETS', v: 'Minimum 48 × 48 px with 8 px between targets. SPIN at least 88 px across (112 px by default).' },
+      { k: 'SPACING', v: '8 px grid: 4 · 8 · 12 · 16 · 24 · 32 · 48. Phone side gutter is 16 px, or 8 px around the reels.' },
+      { k: 'RADIUS', v: 'sm 6 · md 10 · lg 14 · xl 22 · pill 999 · panel 20' },
+      { k: 'SAFE AREAS', v: 'Use env(safe-area-inset-*). Android: status bar 24 dp, gesture bar 16–24 dp. Never place controls inside them.' },
+      { k: 'SMALL 360 × 780', v: 'Symbols drop to 64 px. SPIN to 96 px. Labels stay 14 px and numbers 16 px; the LINES box hides (it is fixed at 25).' },
+      { k: 'LARGE 430 × 932', v: 'Symbols grow to 78 px. The extra height goes to the reels, not the control bar.' }
+    ];
+    return { cells, specs };
+  }
+}
+</script>
+</body>
+</html>

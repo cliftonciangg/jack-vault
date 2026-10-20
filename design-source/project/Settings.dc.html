@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Settings sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0B0820; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <div style="position: absolute; left: 0; right: 0; top: 70px; bottom: 0; border-radius: 28px 28px 0 0; background: #151030; border-top: 1px solid #8B5CF6; display: flex; flex-direction: column; padding: 10px 16px 34px; box-sizing: border-box">
+    <div style="width: 44px; height: 5px; border-radius: 3px; background: #4B4766; margin: 0 auto 12px"></div>
+    <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px; margin-bottom: 14px">Settings</div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <!-- sliders -->
+      <sc-for list="{{sliders}}" as="s" hint-placeholder-count="2">
+        <div style="background: #1F1844; border: 1px solid #2E2560; border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 700"><label for="{{s.id}}">{{s.label}}</label><span style="color: #22D3EE; font-family: 'Orbitron', sans-serif; font-size: 14px">{{s.pct}}%</span></div>
+          <div style="position: relative; height: 32px; display: flex; align-items: center">
+            <div style="position: absolute; left: 0; right: 0; height: 6px; border-radius: 3px; background: #2E2560"></div>
+            <div style="position: absolute; left: 0; width: {{s.w}}; height: 6px; border-radius: 3px; background: linear-gradient(90deg,#7C3AED,#22D3EE)"></div>
+            <div style="position: absolute; left: calc({{s.w}} - 14px); width: 28px; height: 28px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 0 12px rgba(34,211,238,.8)"></div>
+            <input id="{{s.id}}" type="range" min="0" max="100" value="{{s.pct}}" style="position: absolute; inset: 0; width: 100%; opacity: 0; margin: 0">
+          </div>
+        </div>
+      </sc-for>
+      <!-- toggles -->
+      <sc-for list="{{toggles}}" as="t" hint-placeholder-count="4">
+        <div style="background: #1F1844; border: 1px solid #2E2560; border-radius: 14px; padding: 0 16px; min-height: 60px; display: flex; align-items: center; gap: 12px">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 1px">
+            <span style="font-size: 16px; font-weight: 700">{{t.label}}</span>
+            <span style="font-size: 13px; color: #8A83AD">{{t.sub}}</span>
+          </div>
+          <button aria-label="{{t.label}}" aria-pressed="{{t.on}}" style="width: 56px; height: 32px; border-radius: 16px; border: 1px solid {{t.border}}; background: {{t.bg}}; position: relative; padding: 0; box-shadow: {{t.glow}}; flex-shrink: 0">
+            <span style="position: absolute; top: 3px; left: {{t.knobX}}; width: 24px; height: 24px; border-radius: 12px; background: {{t.knob}}"></span>
+          </button>
+        </div>
+      </sc-for>
+    </div>
+    <div style="flex: 1"></div>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <a href="#" style="font-size: 15px; font-weight: 700; text-decoration: underline">Play responsibly</a>
+      <button aria-label="Close" style="width: 48px; height: 48px; border-radius: 24px; border: 2px solid #22D3EE; background: rgba(34,211,238,.12); display: flex; align-items: center; justify-content: center; padding: 0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"></path></svg></button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sliders = [{ id: 'sfx', label: 'Sound effects', pct: 80 }, { id: 'music', label: 'Music', pct: 45 }].map(s => ({ ...s, w: s.pct + '%' }));
+    const toggles = [
+      ['Turbo spin', 'Faster reels, shorter win shows', true, '#FF7A1A', '#FFF3E0', '0 0 14px rgba(255,122,26,.55)'],
+      ['Vibration', 'Haptics on spin, stop and win', true, '#22D3EE', '#FFFFFF', '0 0 14px rgba(34,211,238,.5)'],
+      ['Left-handed mode', 'Mirrors the control bar', false, '', '', ''],
+      ['Battery saver', 'Fewer particles and glows', false, '', '', '']
+    ].map(([label, sub, on, c, knob, glow]) => ({ label, sub, on, border: on ? c : '#3B2F7A', bg: on ? c : '#151030', knob: on ? knob : '#8A83AD', knobX: on ? '29px' : '3px', glow: on ? glow : 'none' }));
+    return { sliders, toggles };
+  }
+}
+</script>
+</body>
+</html>

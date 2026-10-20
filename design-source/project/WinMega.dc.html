@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crown of the Cosmos mega win overlay</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.gold{background:linear-gradient(180deg,#FFE27A 0%,#F5B301 55%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(245,179,1,.8))}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <dc-import name="Reels" mode="idle" hint-size="390px,844px"></dc-import>
+  <div style="position: absolute; inset: 0; background: rgba(6,4,15,.8); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 59px 24px 34px; box-sizing: border-box">
+    <!-- light rays -->
+    <svg width="390" height="844" viewBox="0 0 390 844" style="position: absolute; inset: 0" aria-hidden="true">
+      <g transform="translate(195 400)" opacity=".35">
+        <sc-for list="{{rays}}" as="r" hint-placeholder-count="12">
+          <path d="M0 0 L-40 -600 L40 -600 Z" fill="#8B5CF6" transform="rotate({{r.a}})"></path>
+        </sc-for>
+      </g>
+    </svg>
+    <sc-for list="{{coins}}" as="c" hint-placeholder-count="26">
+      <span style="position: absolute; left: {{c.x}}; top: {{c.y}}; width: {{c.s}}; height: {{c.s}}; border-radius: 50%; background: linear-gradient(160deg,#FFE27A,#F5B301 55%,#B87400); box-shadow: 0 0 8px rgba(245,179,1,.6); transform: rotate({{c.r}}) scaleX(.6)"></span>
+    </sc-for>
+    <div style="position: relative; width: 340px; padding: 18px 0; border-radius: 22px; background: linear-gradient(180deg,#2E1065,#130E36); border: 3px solid #F5B301; box-shadow: 0 0 0 3px #8B5CF6, 0 0 60px rgba(139,92,246,.7), inset 0 0 24px rgba(245,179,1,.25); display: flex; flex-direction: column; align-items: center">
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 22px; letter-spacing: 6px; color: #C4B5FD; line-height: 1">MEGA</span>
+      <span class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 60px; letter-spacing: 2px; line-height: 1">WIN</span>
+    </div>
+    <div class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 52px; line-height: 1; font-variant-numeric: tabular-nums; position: relative">{{amount}}</div>
+    <div style="font-size: 15px; letter-spacing: 1.5px; font-weight: 700; color: #C4B5FD; position: relative">{{mult}} × BET</div>
+    <div style="position: absolute; bottom: 60px; font-size: 13px; letter-spacing: 2px; font-weight: 700; color: #8A83AD">TAP TO SKIP</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const rays = Array.from({ length: 12 }, (_, i) => ({ a: i * 30 }));
+    const coins = Array.from({ length: 26 }, (_, i) => ({ x: (10 + (i * 61) % 360) + 'px', y: (90 + ((i * 113) % 640)) + 'px', s: (8 + (i % 5) * 4) + 'px', r: ((i * 137.5) % 360) + 'deg' }));
+    return { rays, coins, amount: '41.25', mult: '33' };
+  }
+}
+</script>
+</body>
+</html>

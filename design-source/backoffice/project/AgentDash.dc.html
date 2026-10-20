@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Agent dashboard</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 24px; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 15px">Jack Vault</span><span style="color: #C7D2E3">Back Office</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #0F766E; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">AGENT</span>
+    <span style="color: #8A9AB5">/</span><span style="font-weight: 600; font-size: 15px">Dashboard</span>
+    <span style="flex: 1"></span>
+    <span style="color: #C7D2E3">Welcome, <strong style="color: #FFFFFF; font-weight: 600">agent01</strong></span>
+    <a href="Login.dc.html" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #5B6B85; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500">Log out</a>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 24px; gap: 10px">
+    <span style="color: #4B5563">Balance:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">12,450.00</span>
+    <button aria-label="Refresh balance" style="width: 28px; height: 28px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A78B4" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"></path></svg></button>
+    <span style="flex: 1"></span><span style="color: #4B5563; font-size: 13px">Times in EST</span>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <nav style="width: 240px; flex-shrink: 0; background: #E9EDF2; border-right: 1px solid #E5E7EB; padding: 12px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{menu}}" as="m" hint-placeholder-count="5">
+        <a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}</a>
+      </sc-for>
+      <span style="flex: 1"></span>
+      <a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none; border-left: 3px solid transparent; box-sizing: border-box">Log out</a>
+    </nav>
+    <main style="flex: 1; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+      <!-- shortcuts -->
+      <div style="display: flex; align-items: center; gap: 6px">
+        <span style="font-size: 13px; color: #4B5563; margin-right: 4px">Period</span>
+        <sc-for list="{{shortcuts}}" as="s" hint-placeholder-count="5"><button style="height: 28px; border-radius: 6px; border: 0; background: {{s.bg}}; color: #FFFFFF; font-weight: {{s.w}}; font-size: 13px; padding: 0 10px">{{s.label}}</button></sc-for>
+        <span style="font-size: 13px; color: #6B7280; margin-left: 6px">2026-10-20 00:00 ~ 23:59 EST</span>
+      </div>
+      <!-- stat cards -->
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+        <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px">
+            <span style="font-size: 13px; color: #4B5563; font-weight: 500">{{s.label}}</span>
+            <span style="font-size: 28px; font-weight: 600; color: {{s.color}}; font-variant-numeric: tabular-nums; line-height: 1.1">{{s.value}}</span>
+            <span style="font-size: 12px; color: #6B7280">{{s.sub}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+        <sc-for list="{{small}}" as="s" hint-placeholder-count="4">
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 18px; display: flex; align-items: center; justify-content: space-between">
+            <span style="font-size: 13px; color: #4B5563; font-weight: 500">{{s.label}}</span>
+            <span style="font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums">{{s.value}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; flex: 1; min-height: 0">
+        <div style="display: flex; flex-direction: column; gap: 14px; min-height: 0">
+          <!-- quick actions -->
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px">
+            <span style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">Quick actions</span>
+            <div style="display: flex; gap: 8px; align-items: center">
+              <input placeholder="Find player by username or ID" style="height: 36px; flex: 1; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px; min-width: 0">
+              <button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 14px">Search</button>
+              <span style="width: 1px; height: 24px; background: #E5E7EB; margin: 0 4px"></span>
+              <a href="Users.dc.html" style="height: 36px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #111827; font-weight: 500; padding: 0 12px; display: inline-flex; align-items: center; text-decoration: none">Create Player</a>
+              <button style="height: 36px; border-radius: 6px; border: 0; background: #15803D; color: #FFFFFF; font-weight: 600; padding: 0 16px">Load</button>
+              <button style="height: 36px; border-radius: 6px; border: 1px solid #DC2626; background: #FFFFFF; color: #DC2626; font-weight: 600; padding: 0 16px">Redeem</button>
+            </div>
+          </div>
+          <!-- recent activity -->
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #E5E7EB"><span style="font-size: 16px; font-weight: 600; color: #1A78B4">Recent activity</span><a href="Transactions.dc.html" style="font-size: 13px; font-weight: 500">View all</a></div>
+            <div style="display: grid; grid-template-columns: 1.1fr 90px 1.3fr 1fr 1.2fr; height: 32px; align-items: center; padding: 0 20px; gap: 10px; background: #F3F4F6; font-size: 12px; font-weight: 600; color: #4B5563"><span>Time</span><span>Type</span><span>Player</span><span style="text-align: right">Amount</span><span style="text-align: right">My balance after</span></div>
+            <sc-for list="{{recent}}" as="r" hint-placeholder-count="10">
+              <div style="display: grid; grid-template-columns: 1.1fr 90px 1.3fr 1fr 1.2fr; height: 32px; align-items: center; padding: 0 20px; gap: 10px; border-top: 1px solid #F3F4F6; font-variant-numeric: tabular-nums; font-size: 13px">
+                <span style="color: #4B5563">{{r.time}}</span>
+                <span><span style="height: 20px; padding: 0 7px; border-radius: 4px; background: {{r.pillBg}}; color: {{r.pillInk}}; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center">{{r.type}}</span></span>
+                <span style="font-weight: 500">{{r.player}}</span>
+                <span style="text-align: right; color: {{r.pillInk}}; font-weight: 600">{{r.amt}}</span>
+                <span style="text-align: right">{{r.after}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <!-- chart -->
+        <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-size: 16px; font-weight: 600; color: #1A78B4; padding-bottom: 8px; border-bottom: 1px solid #E5E7EB">Loads vs redeems, last 7 days</span>
+          <div style="display: flex; gap: 14px; font-size: 12px; color: #4B5563"><span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; background: #15803D; border-radius: 2px"></span>Loaded</span><span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; background: #DC2626; border-radius: 2px"></span>Redeemed</span></div>
+          <div style="flex: 1; display: flex; gap: 10px; min-height: 0">
+            <div style="display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: #6B7280; text-align: right; padding-bottom: 20px; font-variant-numeric: tabular-nums"><span>3,000</span><span>2,000</span><span>1,000</span><span>0</span></div>
+            <div style="flex: 1; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; border-left: 1px solid #E5E7EB; padding-left: 8px">
+              <sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+                <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; height: 100%">
+                  <div style="flex: 1; display: flex; align-items: flex-end; gap: 3px; border-bottom: 1px solid #E5E7EB; padding-bottom: 0">
+                    <div style="flex: 1; height: {{d.l}}; background: #15803D; border-radius: 2px 2px 0 0"></div>
+                    <div style="flex: 1; height: {{d.r}}; background: #DC2626; border-radius: 2px 2px 0 0"></div>
+                  </div>
+                  <span style="font-size: 11px; color: #4B5563; text-align: center; height: 16px">{{d.label}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = { dash: 'M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z', users: 'M9 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M16 5a3 3 0 0 1 0 6M22 20a6 6 0 0 0-5-6', records: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', game: 'M6 9h12a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4c-2 0-3-2-4-2h-4c-1 0-2 2-4 2a4 4 0 0 1-4-4v-2a4 4 0 0 1 4-4zM7 12v4M5 14h4M16 13h.01M18 15h.01', settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4' };
+    const menu = [['Dashboard', 'dash', 'AgentDash.dc.html'], ['User Management', 'users', 'Users.dc.html'], ['Transaction Records', 'records', 'Transactions.dc.html'], ['Game Records', 'game', 'GameRecords.dc.html'], ['Settings', 'settings', 'Settings.dc.html']].map(([label, ic, href]) => { const on = label === 'Dashboard'; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const shortcuts = ['Today', 'Yesterday', 'This Week', 'Last Week', 'This Month'].map((label, i) => ({ label, bg: i === 0 ? '#166FA3' : '#1A78B4', w: i === 0 ? 600 : 500 }));
+    const stats = [
+      { label: 'My balance', value: '12,450.00', color: '#111827', sub: 'Coins I can still load' },
+      { label: 'Loaded today', value: '1,870.00', color: '#15803D', sub: '23 loads' },
+      { label: 'Redeemed today', value: '640.00', color: '#DC2626', sub: '7 redeems' },
+      { label: 'Net today', value: '+1,230.00', color: '#111827', sub: 'Loaded minus redeemed' }
+    ];
+    const small = [{ label: 'Total players', value: '48' }, { label: 'Active players', value: '44' }, { label: 'Disabled players', value: '4' }, { label: "Players' total balance", value: '9,812.35' }];
+    const recent = [
+      ['15:48', 'LOAD', 'anil.m', '+150.00', '12,450.00'], ['15:31', 'LOAD', 'dev_k', '+20.00', '12,600.00'], ['15:10', 'REDEEM', 'pooja_s', '−300.00', '12,620.00'], ['14:55', 'LOAD', 'sita.k', '+100.00', '12,320.00'],
+      ['14:02', 'LOAD', 'player123', '+50.00', '12,420.00'], ['13:40', 'REDEEM', 'lucky_amy', '−120.00', '12,470.00'], ['12:18', 'LOAD', 'nita_09', '+200.00', '12,350.00'], ['11:55', 'LOAD', 'maya_p', '+25.00', '12,550.00'],
+      ['10:30', 'REDEEM', 'kiran77', '−80.00', '12,575.00'], ['09:12', 'LOAD', 'sita.k', '+500.00', '12,495.00']
+    ].map(([time, type, player, amt, after]) => ({ time, type, player, amt, after, pillBg: type === 'LOAD' ? '#DCFCE7' : '#FEE2E2', pillInk: type === 'LOAD' ? '#15803D' : '#DC2626' }));
+    const days = [['Tue', 62, 30], ['Wed', 48, 22], ['Thu', 75, 40], ['Fri', 88, 35], ['Sat', 95, 52], ['Sun', 70, 44], ['Mon', 62, 21]].map(([label, l, r]) => ({ label, l: l + '%', r: r + '%' }));
+    return { menu, shortcuts, stats, small, recent, days };
+  }
+}
+</script>
+</body>
+</html>

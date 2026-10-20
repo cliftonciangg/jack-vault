@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sidebars for the three roles</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+</style>
+</helmet>
+<div style="width: 900px; height: 900px; box-sizing: border-box; padding: 40px 48px; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; gap: 20px">
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div style="font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #4B5563">PROMPT 0 · SHELL</div>
+    <h1 style="margin: 0; font-size: 20px; font-weight: 600">Sidebar per role</h1>
+    <div style="color: #4B5563">Same shell, different menu. The role tag in the top bar and the sidebar are the only things that change.</div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, 240px); gap: 42px; align-items: start">
+    <sc-for list="{{roles}}" as="r" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden; background: #E9EDF2">
+        <div style="height: 48px; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; gap: 8px; padding: 0 14px">
+          <span style="font-weight: 700; font-size: 14px">Jack Vault</span>
+          <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: {{r.tagBg}}; color: {{r.tagInk}}; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">{{r.name}}</span>
+        </div>
+        <div style="padding: 12px; display: flex; flex-direction: column; gap: 4px; min-height: 420px">
+          <sc-for list="{{r.menu}}" as="m" hint-placeholder-count="6">
+            <a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}
+            </a>
+          </sc-for>
+          <span style="flex: 1"></span>
+          <a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none; border-left: 3px solid transparent; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg>Log out</a>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 16px 20px; color: #4B5563; line-height: 1.5">Each item is a real link to its page on this canvas, so the sidebar works in Play. The current page gets the light-blue fill and a 3 px blue left edge. Items stay white so they read as buttons on the gray rail.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":900,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = {
+      dash: 'M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z', users: 'M9 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M16 5a3 3 0 0 1 0 6M22 20a6 6 0 0 0-5-6',
+      records: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', game: 'M6 9h12a4 4 0 0 1 4 4v2a4 4 0 0 1-4 4c-2 0-3-2-4-2h-4c-1 0-2 2-4 2a4 4 0 0 1-4-4v-2a4 4 0 0 1 4-4zM7 12v4M5 14h4M16 13h.01M18 15h.01',
+      settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4',
+      agent: 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5 21a7 7 0 0 1 14 0M12 14v4M10 18h4', coins: 'M8 8a6 3 0 1 0 12 0 6 3 0 0 0-12 0zM8 8v4c0 1.7 2.7 3 6 3s6-1.3 6-3V8M4 13a6 3 0 0 0 6 3M4 13v4c0 1.7 2.7 3 6 3',
+      percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4', transfer: 'M4 8h13l-3-3M20 16H7l3 3'
+    };
+    const mk = (items, current) => items.map(([label, ic, href]) => { const on = label === current; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const roles = [
+      { name: 'AGENT', tagBg: '#0F766E', tagInk: '#FFFFFF', menu: mk([['Dashboard', 'dash', 'AgentDash.dc.html'], ['User Management', 'users', 'Users.dc.html'], ['Transaction Records', 'records', 'Transactions.dc.html'], ['Game Records', 'game', 'GameRecords.dc.html'], ['Settings', 'settings', 'Settings.dc.html']], 'Dashboard') },
+      { name: 'DISTRIBUTOR', tagBg: '#1A78B4', tagInk: '#FFFFFF', menu: mk([['Dashboard', 'dash', 'DistDash.dc.html'], ['Agent Management', 'agent', 'Agents.dc.html'], ['Coin Management', 'coins', 'Coins.dc.html'], ['Win Ratio', 'percent', 'WinRatio.dc.html'], ['Agent Records', 'records', 'AgentRecords.dc.html'], ['Settings', 'settings', 'Settings.dc.html']], 'Dashboard') },
+      { name: 'OPERATOR', tagBg: '#E5E7EB', tagInk: '#1B2B44', menu: mk([['Distributors', 'users', 'OpDistributors.dc.html'], ['Points Ledger', 'transfer', 'OpLedger.dc.html'], ['Audit', 'shield', 'OpAudit.dc.html'], ['Win Ratio & Games', 'percent', 'OpWinRatio.dc.html'], ['Settings', 'settings', 'Settings.dc.html']], 'Distributors') }
+    ];
+    return { roles };
+  }
+}
+</script>
+</body>
+</html>

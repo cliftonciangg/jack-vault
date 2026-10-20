@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault motion guidelines</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+</style>
+</helmet>
+<div style="width: 1200px; height: 960px; box-sizing: border-box; padding: 56px 64px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 24px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">07 · MOTION</div>
+      <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900">Fast &amp; snappy</h1>
+    </div>
+    <div style="font-size: 17px; color: #B9B3D9; max-width: 480px; text-align: right">UI motion stays under 250 ms. Only wins get to linger. Turbo halves every reel and UI duration. Battery saver halves particle counts.</div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+      <div style="display: grid; grid-template-columns: 220px repeat(3, minmax(0, 1fr)) 210px; gap: 12px; align-items: stretch">
+        <div style="display: flex; flex-direction: column; justify-content: center; gap: 2px">
+          <span style="font-size: 18px; font-weight: 700">{{r.name}}</span>
+          <span style="font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 700; color: #22D3EE">{{r.ms}}</span>
+        </div>
+        <sc-for list="{{r.frames}}" as="f" hint-placeholder-count="3">
+          <div style="background: #151030; border: 1px solid #2E2560; border-radius: 14px; height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; position: relative; overflow: hidden">
+            <sc-if value="{{f.isDot}}" hint-placeholder-val="{{true}}">
+              <div style="width: 44px; height: 44px; border-radius: 22px; background: radial-gradient(circle at 40% 30%, #FFD3A3, #FF7A1A 55%, #C2410C); border: 3px solid #F5B301; transform: scale({{f.scale}}); box-shadow: {{f.glow}}"></div>
+            </sc-if>
+            <sc-if value="{{f.isText}}" hint-placeholder-val="{{false}}">
+              <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 24px; color: {{f.color}}; transform: translateY({{f.y}}); opacity: {{f.opacity}}">{{f.text}}</div>
+            </sc-if>
+            <sc-if value="{{f.isBox}}" hint-placeholder-val="{{false}}">
+              <div style="width: 72px; height: 44px; border-radius: 10px; background: #1F1844; border: 1px solid #8B5CF6; transform: scale({{f.scale}}); opacity: {{f.opacity}}; box-shadow: 0 0 18px rgba(139,92,246,.4)"></div>
+            </sc-if>
+            <sc-if value="{{f.isCoins}}" hint-placeholder-val="{{false}}">
+              <div style="position: relative; width: 120px; height: 52px">
+                <sc-for list="{{f.coins}}" as="c" hint-placeholder-count="6">
+                  <span style="position: absolute; left: {{c.x}}; top: {{c.y}}; width: 14px; height: 14px; border-radius: 7px; background: linear-gradient(180deg,#FFE27A,#B87400); opacity: {{c.o}}"></span>
+                </sc-for>
+              </div>
+            </sc-if>
+            <span style="font-size: 13px; color: #8A83AD; font-weight: 600">{{f.cap}}</span>
+          </div>
+        </sc-for>
+        <div style="font-size: 14px; color: #B9B3D9; line-height: 1.35; display: flex; align-items: center">{{r.ease}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="background: #151030; border: 1px solid #2E2560; border-radius: 16px; padding: 16px 20px; display: grid; grid-template-columns: 160px repeat(4, minmax(0, 1fr)); gap: 16px; align-items: center">
+    <span style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">HAPTICS</span>
+    <span style="font-size: 15px"><strong>Spin</strong> · light, 10 ms</span>
+    <span style="font-size: 15px"><strong>Reel stop</strong> · tick, 6 ms, last reel only</span>
+    <span style="font-size: 15px"><strong>Win</strong> · medium, 25 ms (Big+: 3 pulses)</span>
+    <span style="font-size: 15px"><strong>Jackpot</strong> · heavy, 60-40-60-40-120 ms</span>
+  </div>
+  <div style="font-size: 14px; color: #8A83AD; margin-top: -12px">Android browsers support navigator.vibrate, but iOS Safari does not. iPhone haptics need a native app wrapper. Everything respects the Vibration toggle in Settings.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dot = (cap, scale, glow) => ({ cap, isDot: true, scale, glow });
+    const txt = (cap, text, color, y, opacity) => ({ cap, isText: true, text, color: color || '#F5B301', y: y || '0px', opacity: opacity ?? 1 });
+    const box = (cap, scale, opacity) => ({ cap, isBox: true, scale, opacity });
+    const coins = (cap, spread, o) => ({ cap, isCoins: true, coins: [0,1,2,3,4,5].map(i => {
+      const a = (i / 6) * Math.PI * 2;
+      return { x: (53 + Math.cos(a) * 50 * spread) + 'px', y: (19 + Math.sin(a) * 20 * spread + spread * 10) + 'px', o };
+    }) });
+    const rows = [
+      { name: 'Button press', ms: '80 ms ↓ · 140 ms ↑', ease: 'Down: ease-out. Release: back-out (1.4), so it springs past 1.0.', frames: [dot('0 ms · 1.00', 1, 'none'), dot('80 ms · 0.95', .95, 'none'), dot('220 ms · 1.00', 1, '0 0 14px rgba(255,122,26,.5)')] },
+      { name: 'SPIN idle pulse', ms: '1600 ms loop', ease: 'Sine in-out. Starts after 3 s idle and stops on any touch.', frames: [dot('0 ms · glow 35%', 1, '0 0 10px rgba(255,122,26,.35)'), dot('800 ms · glow 75%', 1.02, '0 0 36px rgba(255,122,26,.8)'), dot('1600 ms · glow 35%', 1, '0 0 10px rgba(255,122,26,.35)')] },
+      { name: 'Number count-up', ms: '600–3000 ms', ease: 'Ease-out cubic. Under 5× bet: 600 ms. Big Win and up: 3000 ms. Tap snaps to the final value.', frames: [txt('0%', '0.00'), txt('60% time · 85% value', '31.88'), txt('100%', '37.50')] },
+      { name: 'Jackpot ticker roll', ms: '220 ms per digit', ease: 'Each changed digit rolls up. 30 ms stagger from right to left. Updates every 2–4 s.', frames: [txt('0 ms', '…384.27', '#FFE27A', '0px', 1), txt('110 ms', '…384.2▴', '#FFE27A', '-6px', .55), txt('220 ms', '…384.31', '#FFE27A', '0px', 1)] },
+      { name: 'Modal pop-in', ms: '160 + 240 ms', ease: 'Backdrop fades in over 160 ms. Panel goes 0.85 → 1.04 → 1.0, back-out (1.6).', frames: [box('0 ms · 0.85, 0%', .85, 0.15), box('170 ms · 1.04', 1.04, 1), box('240 ms · 1.00', 1, 1)] },
+      { name: 'Coin burst', ms: '900 ms', ease: '24–40 coins with gravity and spin. 12 coins in battery saver.', frames: [coins('0 ms', 0.1, 1), coins('300 ms', 0.75, 1), coins('900 ms', 1.15, .25)] }
+    ];
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

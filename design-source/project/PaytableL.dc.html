@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Paytable sheet, landscape</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 844px; height: 390px; position: relative; overflow: hidden; background: #0B0820; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <div style="position: absolute; left: 59px; right: 59px; top: 24px; bottom: 0; border-radius: 24px 24px 0 0; background: #151030; border-top: 1px solid #8B5CF6; display: flex; flex-direction: column; padding: 8px 16px 21px; box-sizing: border-box; gap: 8px">
+    <div style="width: 44px; height: 5px; border-radius: 3px; background: #4B4766; margin: 0 auto"></div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px">Paytable</span>
+      <div style="display: flex; gap: 6px; margin-left: 8px">
+        <button style="height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid #8B5CF6; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 13px">Symbols</button>
+        <button style="height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid #3B2F7A; background: #1F1844; color: #B9B3D9; font-weight: 700; font-size: 13px">Specials</button>
+        <button style="height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid #3B2F7A; background: #1F1844; color: #B9B3D9; font-weight: 700; font-size: 13px">Jackpots</button>
+      </div>
+      <div style="flex: 1"></div>
+      <span style="font-size: 13px; color: #B9B3D9; font-weight: 700">BET <strong style="color: #FFE27A; font-family: 'Orbitron', sans-serif">1.25</strong></span>
+      <button aria-label="Close" style="width: 44px; height: 44px; border-radius: 22px; border: 2px solid #22D3EE; background: rgba(34,211,238,.12); display: flex; align-items: center; justify-content: center; padding: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"></path></svg></button>
+    </div>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 6px; min-height: 0">
+      <sc-for list="{{symbols}}" as="s" hint-placeholder-count="9">
+        <div style="background: #1F1844; border: 1px solid #2E2560; border-radius: 10px; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+          <div style="width: 44px; height: 44px; border-radius: 8px; background: {{s.bg}}; display: flex; align-items: center; justify-content: center">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="{{s.fill}}" stroke="{{s.ink}}" stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true"><path d="{{s.d}}"></path></svg>
+          </div>
+          <div style="width: 100%; display: flex; flex-direction: column; gap: 3px; font-size: 12px; font-variant-numeric: tabular-nums">
+            <div style="display: flex; justify-content: space-between"><span style="color: #8A83AD">5×</span><span style="color: #FFE27A; font-weight: 700; font-family: 'Orbitron', sans-serif; font-size: 11px">{{s.p5}}</span></div>
+            <div style="display: flex; justify-content: space-between"><span style="color: #8A83AD">4×</span><span style="font-weight: 700; font-family: 'Orbitron', sans-serif; font-size: 11px">{{s.p4}}</span></div>
+            <div style="display: flex; justify-content: space-between"><span style="color: #8A83AD">3×</span><span style="font-weight: 700; font-family: 'Orbitron', sans-serif; font-size: 11px">{{s.p3}}</span></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":844,"height":390}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const bet = 1.25; const f = (m) => (m * bet).toFixed(2);
+    const symbols = [
+      ['M3 18L4 7l5 5 3-8 3 8 5-5 1 11z', '#F5B301', '#FFE27A', 'radial-gradient(circle at 50% 30%, #3B2A05, #1A1203)', 40, 12, 4],
+      ['M12 3l7 6-7 12-7-12z M5 9h14', '#8B5CF6', '#C4B5FD', 'radial-gradient(circle at 50% 30%, #2E1F6B, #130E36)', 24, 8, 3],
+      ['M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M2 14c6 3 14 3 20 0', '#0D9488', '#F5B301', 'radial-gradient(circle at 50% 30%, #064E3B, #06241C)', 16, 6, 2],
+      ['M15 9a4 4 0 1 1 0 .1z M15 9L3 21 M12 7L2 15 M17 12L9 22', '#FF7A1A', '#FFB066', 'radial-gradient(circle at 50% 30%, #5A2606, #2A1003)', 12, 4, 1.6],
+      ['M5 20L12 4l7 16M8 14h8', 'none', '#F87171', '#2A0F14', 6, 2, 0.8],
+      ['M6 4v16M18 4l-9 8 9 8', 'none', '#22D3EE', '#0A2A33', 5, 1.6, 0.6],
+      ['M12 4a7 8 0 1 0 0 16 7 8 0 0 0 0-16zM14 16l5 5', 'none', '#A78BFA', '#1E1450', 4, 1.2, 0.4],
+      ['M15 4v11a4 4 0 0 1-8 0', 'none', '#4ADE80', '#0A2A1A', 3, 1, 0.4],
+      ['M5 6v12M9 6h6M12 6v12M18 6a3 6 0 1 0 0 12 3 6 0 0 0 0-12z', 'none', '#FBBF24', '#2A2005', 2.4, 0.8, 0.3]
+    ].map(([d, fill, ink, bg, m5, m4, m3]) => ({ d, fill, ink, bg, p5: f(m5), p4: f(m4), p3: f(m3) }));
+    return { symbols };
+  }
+}
+</script>
+</body>
+</html>

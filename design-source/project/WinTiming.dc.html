@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Win presentation timing for PixiJS</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 700px; height: 844px; box-sizing: border-box; padding: 36px 40px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 18px">
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div style="font-family: 'Orbitron', sans-serif; font-size: 13px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">P5 · TIMING</div>
+    <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 26px; font-weight: 900">Win sequence, in milliseconds</h1>
+    <div style="font-size: 15px; color: #B9B3D9">Turbo mode halves every value except the Big Win tiers. Tap anywhere skips to the end frame.</div>
+  </div>
+
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+    <div style="background: #151030; border: 1px solid #2E2560; border-radius: 14px; overflow: hidden">
+      <div style="padding: 8px 14px; background: #1F1844; display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font-size: 14px; letter-spacing: 2px; font-weight: 700; color: {{g.color}}">{{g.title}}</span>
+        <span style="font-size: 13px; color: #8A83AD">{{g.total}}</span>
+      </div>
+      <sc-for list="{{g.steps}}" as="s" hint-placeholder-count="4">
+        <div style="display: grid; grid-template-columns: 120px 1fr 190px; gap: 12px; align-items: center; padding: 7px 14px; border-top: 1px solid #241C4F">
+          <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 13px; color: #FFE27A">{{s.t}}</span>
+          <span style="font-size: 15px">{{s.what}}</span>
+          <span style="font-size: 13px; color: #8A83AD">{{s.ease}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+    <sc-for list="{{frames}}" as="f" hint-placeholder-count="3">
+      <div style="background: #151030; border: 1px solid #2E2560; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 13px; letter-spacing: 1.5px; font-weight: 700; color: #22D3EE">{{f.k}}</span>
+        <div style="height: 54px; border-radius: 8px; background: #0B0820; display: flex; align-items: center; justify-content: center">
+          <span style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: {{f.size}}; color: #F5B301; opacity: {{f.op}}; transform: scale({{f.scale}}); letter-spacing: 1px">BIG WIN</span>
+        </div>
+        <span style="font-size: 13px; color: #B9B3D9; line-height: 1.3">{{f.note}}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":700,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const groups = [
+      { title: 'LINE WIN', color: '#FFE27A', total: 'about 1.4 s per line', steps: [
+        { t: '0 → 200', what: 'Non-winning symbols dim to 35%', ease: 'ease-out' },
+        { t: '0 → 350', what: 'Payline draws left to right, 7 px stroke', ease: 'ease-in-out' },
+        { t: '150 → 400', what: 'Winning symbols pop to 1.08 with gold ring', ease: 'back-out 1.6' },
+        { t: '300 → 900', what: 'WIN box counts up; line tag fades in', ease: 'ease-out cubic' },
+        { t: '1400', what: 'Next line, or release reels', ease: '' }
+      ]},
+      { title: 'MULTIPLE LINES', color: '#FFE27A', total: 'all-at-once then cycle', steps: [
+        { t: '0 → 600', what: 'All winning lines drawn at once, total counts up', ease: 'ease-out' },
+        { t: '600 → ∞', what: 'Cycle one line per 1200 ms until the next spin', ease: 'loop' }
+      ]},
+      { title: 'SCATTER WIN', color: '#22D3EE', total: '1.6 s then Free Spins intro', steps: [
+        { t: '0 → 400', what: 'Portal ring pulses on each scatter, 1.0 → 1.15 → 1.0', ease: 'sine' },
+        { t: '400 → 1200', what: 'Message line types “3 SCATTERS! FREE SPINS”', ease: 'linear' },
+        { t: '1600', what: 'Reels fade, Free Spins intro slides up', ease: 'ease-in' }
+      ]},
+      { title: 'BIG · MEGA · EPIC', color: '#F5B301', total: '3.0 · 4.5 · 6.0 s', steps: [
+        { t: '0 → 240', what: 'Dim to 72% (Big) / 80% / radial violet (Epic); banner pops in', ease: 'back-out 1.6' },
+        { t: '240 → 3000', what: 'Amount counts up; coins fall at 24 / 40 / 60 per second', ease: 'ease-out cubic' },
+        { t: '+ 0 → 4500', what: 'Mega: light rays rotate 12°/s behind banner', ease: 'linear' },
+        { t: '+ 0 → 6000', what: 'Epic: fireworks every 600 ms, 2 screen shakes of 6 px at 0 and 300', ease: 'decay' },
+        { t: 'end', what: 'Banner shrinks to WIN box position, 400 ms', ease: 'ease-in' }
+      ]}
+    ];
+    const frames = [
+      { k: 'START · 0 ms', size: '14px', op: .4, scale: .7, note: 'Banner at 0.7, 40% opacity; no coins yet.' },
+      { k: 'PEAK · 240 ms → count end', size: '22px', op: 1, scale: 1.04, note: 'Banner overshoots to 1.04, coins at full rate, amount counting.' },
+      { k: 'END · last 400 ms', size: '14px', op: .8, scale: .8, note: 'Amount locks, banner shrinks toward the WIN box and fades.' }
+    ];
+    return { groups, frames };
+  }
+}
+</script>
+</body>
+</html>

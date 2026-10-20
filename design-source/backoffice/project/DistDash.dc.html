@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Distributor dashboard</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 24px; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 15px">Jack Vault</span><span style="color: #C7D2E3">Back Office</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #1A78B4; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">DISTRIBUTOR</span>
+    <span style="color: #8A9AB5">/</span><span style="font-weight: 600; font-size: 15px">Dashboard</span>
+    <span style="flex: 1"></span><span style="color: #C7D2E3">Welcome, <strong style="color: #FFFFFF; font-weight: 600">north-dist</strong></span>
+    <a href="Login.dc.html" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #5B6B85; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500">Log out</a>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 24px; gap: 10px">
+    <span style="color: #4B5563">Balance:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">4,820.00</span><span style="flex: 1"></span><span style="color: #4B5563; font-size: 13px">Times in EST</span>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <nav style="width: 240px; flex-shrink: 0; background: #E9EDF2; border-right: 1px solid #E5E7EB; padding: 12px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{menu}}" as="m" hint-placeholder-count="6"><a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}</a></sc-for>
+      <span style="flex: 1"></span><a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none">Log out</a>
+    </nav>
+    <main style="flex: 1; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <!-- low balance notice -->
+      <div style="background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; color: #92400E"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" aria-hidden="true"><path d="M12 3l10 18H2zM12 10v4M12 17h.01"></path></svg><span><strong>Your balance is running low.</strong> Contact the operator for more points.</span><span style="margin-left: auto; font-size: 12px">Threshold 5,000.00</span></div>
+      <div style="display: flex; align-items: center; gap: 6px">
+        <span style="font-size: 13px; color: #4B5563; margin-right: 4px">Period</span>
+        <sc-for list="{{shortcuts}}" as="s" hint-placeholder-count="5"><button style="height: 28px; border-radius: 6px; border: 0; background: {{s.bg}}; color: #FFFFFF; font-weight: {{s.w}}; font-size: 13px; padding: 0 10px">{{s.label}}</button></sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px">
+        <sc-for list="{{stats}}" as="s" hint-placeholder-count="5"><div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4B5563; font-weight: 500">{{s.label}}</span><span style="font-size: 24px; font-weight: 600; color: {{s.color}}; font-variant-numeric: tabular-nums; line-height: 1.1">{{s.value}}</span></div></sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+        <sc-for list="{{small}}" as="s" hint-placeholder-count="3"><div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between"><span style="font-size: 13px; color: #4B5563; font-weight: 500">{{s.label}}</span><span style="font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums">{{s.value}}</span></div></sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: 1.7fr 1fr; gap: 12px; flex: 1; min-height: 0">
+        <!-- agents at a glance -->
+        <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; min-height: 0">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid #E5E7EB"><span style="font-size: 16px; font-weight: 600; color: #1A78B4">Agents at a glance</span><a href="Agents.dc.html" style="font-size: 13px; font-weight: 500">Manage agents</a></div>
+          <div style="display: grid; grid-template-columns: 1.3fr 90px 1fr 60px 1fr 1fr 1fr 0.9fr 1.6fr; height: 34px; align-items: center; padding: 0 16px; gap: 8px; background: #1A78B4; color: #FFFFFF; font-size: 12px; font-weight: 600"><span>Agent</span><span>Status</span><span style="text-align: right">Balance</span><span style="text-align: right">Players</span><span style="text-align: right">Players' bal.</span><span style="text-align: right">Loaded</span><span style="text-align: right">Redeemed</span><span style="text-align: right">Net ▾</span><span>Actions</span></div>
+          <sc-for list="{{agents}}" as="a" hint-placeholder-count="6">
+            <div style="display: grid; grid-template-columns: 1.3fr 90px 1fr 60px 1fr 1fr 1fr 0.9fr 1.6fr; height: 34px; align-items: center; padding: 0 16px; gap: 8px; border-top: 1px solid #E5E7EB; background: {{a.bg}}; font-variant-numeric: tabular-nums; font-size: 13px">
+              <span style="font-weight: 500; display: flex; align-items: center; gap: 6px">{{a.name}}<sc-if value="{{a.low}}" hint-placeholder-val="{{false}}"><span style="height: 18px; padding: 0 6px; border-radius: 9px; background: #FEF3C7; color: #B45309; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center">Low</span></sc-if></span>
+              <span><span style="height: 20px; padding: 0 7px; border-radius: 10px; background: {{a.pillBg}}; color: {{a.pillInk}}; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center">{{a.status}}</span></span>
+              <span style="text-align: right">{{a.bal}}</span><span style="text-align: right">{{a.players}}</span><span style="text-align: right">{{a.pbal}}</span><span style="text-align: right; color: #15803D">{{a.loaded}}</span><span style="text-align: right; color: #DC2626">{{a.redeemed}}</span><span style="text-align: right; font-weight: 600">{{a.net}}</span>
+              <span style="display: flex; gap: 6px"><button style="height: 26px; border-radius: 6px; border: 0; background: #15803D; color: #FFFFFF; font-weight: 600; font-size: 12px; padding: 0 9px">Load</button><button style="height: 26px; border-radius: 6px; border: 1px solid #DC2626; background: #FFFFFF; color: #DC2626; font-weight: 600; font-size: 12px; padding: 0 9px">Redeem</button><a href="AgentsPlayers.dc.html" style="height: 26px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #111827; font-size: 12px; padding: 0 9px; display: inline-flex; align-items: center; text-decoration: none">View</a></span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; min-height: 0">
+          <!-- chart -->
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; height: 170px; box-sizing: border-box">
+            <span style="font-size: 14px; font-weight: 600; color: #1A78B4">Coins sent to agents vs redeemed, last 7 days</span>
+            <div style="flex: 1; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; align-items: end; border-bottom: 1px solid #E5E7EB">
+              <sc-for list="{{days}}" as="d" hint-placeholder-count="7"><div style="display: flex; align-items: flex-end; gap: 3px; height: 100%"><div style="flex: 1; height: {{d.l}}; background: #15803D; border-radius: 2px 2px 0 0"></div><div style="flex: 1; height: {{d.r}}; background: #DC2626; border-radius: 2px 2px 0 0"></div></div></sc-for>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; font-size: 11px; color: #4B5563; text-align: center"><sc-for list="{{days}}" as="d" hint-placeholder-count="7"><span>{{d.label}}</span></sc-for></div>
+          </div>
+          <!-- recent -->
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden">
+            <div style="padding: 10px 16px; border-bottom: 1px solid #E5E7EB; font-size: 14px; font-weight: 600; color: #1A78B4">Recent activity</div>
+            <sc-for list="{{recent}}" as="r" hint-placeholder-count="7">
+              <div style="display: grid; grid-template-columns: 50px 62px 1fr 1fr 80px; height: 30px; align-items: center; padding: 0 16px; gap: 6px; border-top: 1px solid #F3F4F6; font-size: 12px; font-variant-numeric: tabular-nums">
+                <span style="color: #4B5563">{{r.time}}</span><span><span style="height: 18px; padding: 0 6px; border-radius: 4px; background: {{r.pillBg}}; color: {{r.pillInk}}; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center">{{r.type}}</span></span><span style="color: #4B5563">{{r.from}} →</span><span style="font-weight: 500">{{r.to}}</span><span style="text-align: right; font-weight: 600; color: {{r.pillInk}}">{{r.amt}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = { dash: 'M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z', agent: 'M12 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5 21a7 7 0 0 1 14 0M12 14v4M10 18h4', coins: 'M8 8a6 3 0 1 0 12 0 6 3 0 0 0-12 0zM8 8v4c0 1.7 2.7 3 6 3s6-1.3 6-3V8M4 13a6 3 0 0 0 6 3M4 13v4c0 1.7 2.7 3 6 3', percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', records: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01', settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4' };
+    const menu = [['Dashboard', 'dash', 'DistDash.dc.html'], ['Agent Management', 'agent', 'Agents.dc.html'], ['Coin Management', 'coins', 'Coins.dc.html'], ['Win Ratio', 'percent', 'WinRatio.dc.html'], ['Agent Records', 'records', 'AgentRecords.dc.html'], ['Settings', 'settings', 'Settings.dc.html']].map(([label, ic, href]) => { const on = label === 'Dashboard'; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const shortcuts = ['Today', 'Yesterday', 'This Week', 'Last Week', 'This Month'].map((label, i) => ({ label, bg: i === 0 ? '#166FA3' : '#1A78B4', w: i === 0 ? 600 : 500 }));
+    const stats = [{ label: 'My balance', value: '4,820.00', color: '#B45309' }, { label: 'Loaded to agents (today)', value: '6,500.00', color: '#15803D' }, { label: 'Redeemed from agents (today)', value: '1,200.00', color: '#DC2626' }, { label: 'Coins held by my agents', value: '38,410.00', color: '#111827' }, { label: "Held by agents' players", value: '92,655.80', color: '#111827' }];
+    const small = [{ label: 'Total agents', value: '12' }, { label: 'Active agents', value: '11' }, { label: 'Total players under my agents', value: '614' }];
+    const P = { Active: ['#DCFCE7', '#15803D'], Disabled: ['#E5E7EB', '#4B5563'], Locked: ['#FEF3C7', '#B45309'] };
+    const agents = [
+      ['agent01', 'Active', '12,450.00', '48', '9,812.35', '1,870.00', '640.00', '+1,230.00'], ['agent04', 'Active', '820.00', '61', '14,208.10', '2,310.00', '1,400.00', '+910.00', true], ['agent02', 'Active', '6,100.00', '55', '11,430.00', '1,250.00', '480.00', '+770.00'],
+      ['agent09', 'Active', '3,340.00', '39', '7,015.60', '900.00', '350.00', '+550.00'], ['agent06', 'Locked', '4,900.00', '72', '18,920.00', '600.00', '720.00', '−120.00'], ['agent11', 'Disabled', '0.00', '14', '2,105.00', '0.00', '0.00', '0.00']
+    ].map(([name, status, bal, players, pbal, loaded, redeemed, net, low], i) => ({ name, status, bal, players, pbal, loaded, redeemed, net, low: !!low, bg: i % 2 ? '#F9FAFB' : '#FFFFFF', pillBg: P[status][0], pillInk: P[status][1] }));
+    const days = [['Tue', 55, 20], ['Wed', 40, 15], ['Thu', 70, 30], ['Fri', 85, 25], ['Sat', 95, 45], ['Sun', 60, 35], ['Mon', 65, 12]].map(([label, l, r]) => ({ label, l: l + '%', r: r + '%' }));
+    const recent = [['15:52', 'LOAD', 'north-dist', 'agent04', '+2,000.00'], ['15:48', 'LOAD', 'agent01', 'anil.m', '+150.00'], ['15:10', 'REDEEM', 'pooja_s', 'agent01', '−300.00'], ['14:40', 'REDEEM', 'agent06', 'north-dist', '−1,200.00'], ['13:05', 'LOAD', 'north-dist', 'agent02', '+1,500.00'], ['11:20', 'ISSUE', 'operator', 'north-dist', '+5,000.00'], ['09:30', 'LOAD', 'north-dist', 'agent09', '+3,000.00']].map(([time, type, from, to, amt]) => ({ time, type, from, to, amt, pillBg: amt.startsWith('+') ? '#DCFCE7' : '#FEE2E2', pillInk: amt.startsWith('+') ? '#15803D' : '#DC2626' }));
+    return { menu, shortcuts, stats, small, agents, days, recent };
+  }
+}
+</script>
+</body>
+</html>

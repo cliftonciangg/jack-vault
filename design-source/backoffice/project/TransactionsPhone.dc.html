@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Transaction records on a phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden; padding-top: 59px">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 12px; gap: 10px">
+    <button aria-label="Menu" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button>
+    <span style="font-weight: 600; font-size: 15px; flex: 1">Transaction Records</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #0F766E; color: #FFFFFF; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">AGENT</span>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 16px; gap: 8px">
+    <span style="color: #4B5563">Balance:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">12,450.00</span><span style="flex: 1"></span><span style="color: #4B5563; font-size: 12px">EST</span>
+  </div>
+  <div style="flex: 1; padding: 12px 16px 34px; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+    <div style="display: flex; gap: 6px; overflow: hidden"><sc-for list="{{shortcuts}}" as="s" hint-placeholder-count="5"><button style="height: 32px; border-radius: 6px; border: 0; background: {{s.bg}}; color: #FFFFFF; font-weight: {{s.w}}; font-size: 13px; padding: 0 10px; white-space: nowrap">{{s.label}}</button></sc-for></div>
+    <div style="display: flex; gap: 8px">
+      <input placeholder="Player (optional)" style="height: 44px; flex: 1; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 12px; font-size: 15px; min-width: 0; background: #FFFFFF">
+      <select style="height: 44px; width: 96px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 8px; font-size: 14px; background: #FFFFFF; color: #111827"><option>All</option><option>Load</option><option>Redeem</option></select>
+      <button style="height: 44px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 12px">Go</button>
+    </div>
+    <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; text-align: center">
+      <div style="display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 600; color: #15803D; font-variant-numeric: tabular-nums">1,870.00</span><span style="font-size: 11px; color: #4B5563">Loaded</span></div>
+      <div style="display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 600; color: #DC2626; font-variant-numeric: tabular-nums">640.00</span><span style="font-size: 11px; color: #4B5563">Redeemed</span></div>
+      <div style="display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums">+1,230.00</span><span style="font-size: 11px; color: #4B5563">Net · 30 entries</span></div>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; min-height: 44px">
+        <span style="height: 22px; padding: 0 7px; border-radius: 4px; background: {{r.pillBg}}; color: {{r.pillInk}}; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; width: 54px; justify-content: center">{{r.type}}</span>
+        <div style="flex: 1; display: flex; flex-direction: column; min-width: 0"><span style="font-weight: 600">{{r.player}}</span><span style="font-size: 12px; color: #6B7280; font-variant-numeric: tabular-nums">{{r.time}} · after {{r.after}}</span></div>
+        <span style="font-weight: 600; color: {{r.pillInk}}; font-variant-numeric: tabular-nums; font-size: 15px">{{r.amt}}</span>
+        <a href="#" aria-label="Receipt" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #D1D5DB; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1A78B4" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg></a>
+      </div>
+    </sc-for>
+    <button style="height: 44px; border-radius: 6px; border: 1px solid #1A78B4; background: #FFFFFF; color: #1A78B4; font-weight: 600; font-size: 15px">Load older</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const shortcuts = ['Today', 'Yesterday', 'This Week', 'Last Week', 'This Month'].map((label, i) => ({ label, bg: i === 0 ? '#166FA3' : '#1A78B4', w: i === 0 ? 600 : 500 }));
+    const rows = [['15:48', 'LOAD', 'anil.m', '+150.00', '150.00'], ['15:31', 'LOAD', 'dev_k', '+20.00', '27.00'], ['15:10', 'REDEEM', 'pooja_s', '−300.00', '905.10'], ['14:55', 'LOAD', 'sita.k', '+100.00', '2,232.95'], ['14:02', 'LOAD', 'player123', '+50.00', '75.00'], ['13:40', 'REDEEM', 'lucky_amy', '−120.00', '1,204.55']].map(([time, type, player, amt, after]) => ({ time, type, player, amt, after, pillBg: type === 'LOAD' ? '#DCFCE7' : '#FEE2E2', pillInk: type === 'LOAD' ? '#15803D' : '#DC2626' }));
+    return { shortcuts, rows };
+  }
+}
+</script>
+</body>
+</html>

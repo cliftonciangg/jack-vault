@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Crown of the Cosmos symbol set</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1000px; box-sizing: border-box; padding: 48px 56px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 24px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">P4 · SYMBOLS</div>
+      <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 34px; font-weight: 900">12 symbols · 3 states</h1>
+    </div>
+    <div style="font-size: 16px; color: #B9B3D9; max-width: 520px; text-align: right">Vector placeholders standing in for 256 × 256 painted art. Lighting from upper left, soft outer glow. These are the shapes, colors and silhouettes the final art must keep so each symbol reads at 70 px.</div>
+  </div>
+
+  <div style="display: flex; gap: 24px; flex: 1">
+    <!-- symbol table -->
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-content: start">
+      <sc-for list="{{symbols}}" as="s" hint-placeholder-count="12">
+        <div style="background: #151030; border: 1px solid {{s.border}}; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <span style="font-size: 15px; font-weight: 700">{{s.rank}} {{s.name}}</span>
+            <span style="font-size: 12px; color: {{s.tierColor}}; font-weight: 700; letter-spacing: 1px">{{s.tier}}</span>
+          </div>
+          <div style="display: flex; gap: 8px">
+            <div style="width: 64px; height: 64px; border-radius: 10px; background: {{s.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(255,255,255,.08)">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="{{s.fill}}" stroke="{{s.ink}}" stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true"><path d="{{s.d}}"></path></svg>
+              <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 7px; color: {{s.ink}}">{{s.label}}</span>
+            </div>
+            <div style="width: 64px; height: 64px; border-radius: 10px; background: {{s.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: .35; filter: saturate(.4)">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="{{s.fill}}" stroke="{{s.ink}}" stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true"><path d="{{s.d}}"></path></svg>
+              <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 7px; color: {{s.ink}}">{{s.label}}</span>
+            </div>
+            <div style="width: 64px; height: 64px; border-radius: 10px; background: {{s.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 0 2px #FFE27A, 0 0 16px rgba(245,179,1,.9); transform: scale(1.06); position: relative">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="{{s.fill}}" stroke="{{s.ink}}" stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true"><path d="{{s.d}}"></path></svg>
+              <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 7px; color: {{s.ink}}">{{s.label}}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#FFFFFF" style="position: absolute; top: -4px; right: -4px" aria-hidden="true"><path d="M12 0l3 9 9 3-9 3-3 9-3-9-9-3 9-3z"></path></svg>
+            </div>
+          </div>
+          <div style="font-size: 12px; color: #8A83AD; display: flex; justify-content: space-between"><span>normal</span><span>dimmed</span><span>win</span></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- phone-size sample grid -->
+    <div style="width: 300px; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">AT PHONE SIZE · 70 px</div>
+      <div style="border-radius: 14px; padding: 8px; background: linear-gradient(180deg,#3B2A05,#1A1203); border: 2px solid #F5B301; box-shadow: 0 0 0 1px #8B5CF6">
+        <div style="display: grid; grid-template-columns: repeat(5, 52px); gap: 3px; background: #0B0820; border-radius: 10px; padding: 4px; justify-content: center">
+          <sc-for list="{{sample}}" as="c" hint-placeholder-count="20">
+            <div style="height: 52px; border-radius: 6px; background: {{c.bg}}; display: flex; flex-direction: column; align-items: center; justify-content: center">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="{{c.fill}}" stroke="{{c.ink}}" stroke-width="1.6" stroke-linejoin="miter" aria-hidden="true"><path d="{{c.d}}"></path></svg>
+              <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 6px; color: {{c.ink}}">{{c.label}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="font-size: 15px; color: #B9B3D9; line-height: 1.4">Shown at 52 px here (70 px on device at 1×). Each symbol keeps its own hue family so the grid reads by color before shape: gold crown, violet gem, teal planet, orange comet. Royals are hollow crystal letters on dark tiles so they never compete with the picture symbols.</div>
+      <div style="background: #151030; border: 1px solid #2E2560; border-radius: 12px; padding: 12px 14px; font-size: 14px; color: #B9B3D9; line-height: 1.4">
+        <strong style="color: #FFFFFF">Export spec</strong><br>256 × 256 PNG, transparent, 2 px padding. Sheet: 4 × 3 atlas, normal + win frames. Dimmed is a runtime tint (alpha .35, saturation .4), not a separate asset.
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = { HIGH: ['HIGH PAY', '#FFE27A', '#F5B301'], LOW: ['LOW PAY', '#B9B3D9', '#2E2560'], SPECIAL: ['SPECIAL', '#22D3EE', '#22D3EE'] };
+    const raw = [
+      ['1', 'Crown', 'HIGH', 'M3 18L4 7l5 5 3-8 3 8 5-5 1 11z', '#F5B301', '#FFE27A', 'radial-gradient(circle at 50% 30%, #3B2A05, #1A1203)', 'CROWN'],
+      ['2', 'Gemstone', 'HIGH', 'M12 3l7 6-7 12-7-12z M5 9h14', '#8B5CF6', '#C4B5FD', 'radial-gradient(circle at 50% 30%, #2E1F6B, #130E36)', 'GEM'],
+      ['3', 'Ringed planet', 'HIGH', 'M12 5a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M2 14c6 3 14 3 20 0', '#0D9488', '#F5B301', 'radial-gradient(circle at 50% 30%, #064E3B, #06241C)', 'PLANET'],
+      ['4', 'Comet', 'HIGH', 'M15 9a4 4 0 1 1 0 .1z M15 9L3 21 M12 7L2 15 M17 12L9 22', '#FF7A1A', '#FFB066', 'radial-gradient(circle at 50% 30%, #5A2606, #2A1003)', 'COMET'],
+      ['5', 'Ace', 'LOW', 'M5 20L12 4l7 16M8 14h8', 'none', '#F87171', '#2A0F14', 'A'],
+      ['6', 'King', 'LOW', 'M6 4v16M18 4l-9 8 9 8', 'none', '#22D3EE', '#0A2A33', 'K'],
+      ['7', 'Queen', 'LOW', 'M12 4a7 8 0 1 0 0 16 7 8 0 0 0 0-16zM14 16l5 5', 'none', '#A78BFA', '#1E1450', 'Q'],
+      ['8', 'Jack', 'LOW', 'M15 4v11a4 4 0 0 1-8 0', 'none', '#4ADE80', '#0A2A1A', 'J'],
+      ['9', 'Ten', 'LOW', 'M5 6v12M9 6h6M12 6v12M18 6a3 6 0 1 0 0 12 3 6 0 0 0 0-12z', 'none', '#FBBF24', '#2A2005', '10'],
+      ['10', 'Wild', 'SPECIAL', 'M12 2l2.5 7h7l-5.6 4.2 2.1 7L12 16l-6 4.2 2.1-7L2.5 9h7z', '#FFE27A', '#FFFFFF', 'radial-gradient(circle at 50% 30%, #7C3AED, #2E1065)', 'WILD'],
+      ['11', 'Scatter', 'SPECIAL', 'M12 12a5 5 0 1 0 .1 0z M12 2a10 10 0 0 1 10 10 M12 22A10 10 0 0 1 2 12', '#22D3EE', '#A5F3FC', 'radial-gradient(circle at 50% 30%, #0E7490, #0A2A33)', 'FREE SPINS'],
+      ['12', 'Bonus', 'SPECIAL', 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 3v18M3 12h18M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z', '#B87400', '#FFE27A', 'radial-gradient(circle at 50% 30%, #3B2A05, #1A1203)', 'BONUS']
+    ];
+    const symbols = raw.map(([rank, name, tier, d, fill, ink, bg, label]) => ({ rank, name, d, fill, ink, bg, label, tier: T[tier][0], tierColor: T[tier][1], border: T[tier][2] }));
+    const by = Object.fromEntries(symbols.map(s => [s.label, s]));
+    const order = ['A','CROWN','K','GEM','PLANET','Q','WILD','10','J','COMET','A','BONUS','GEM','K','PLANET','Q','10','FREE SPINS','J','CROWN'];
+    const sample = order.map(k => by[k]);
+    return { symbols, sample };
+  }
+}
+</script>
+</body>
+</html>

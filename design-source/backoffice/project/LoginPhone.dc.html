@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Back office login on a phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input{font:inherit}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; align-items: center; padding: 120px 20px 34px; gap: 20px">
+  <div style="display: flex; align-items: center; gap: 8px; color: #1B2B44">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1B2B44" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 18px">Jack Vault</span><span style="font-size: 18px; color: #4B5563">Back Office</span>
+  </div>
+  <form style="width: 100%; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-sizing: border-box">
+    <div style="display: flex; background: #F3F4F6; border-radius: 6px; padding: 3px">
+      <button type="button" aria-pressed="true" style="flex: 1; height: 40px; border-radius: 5px; border: 0; background: #FFFFFF; color: #111827; font-weight: 600; box-shadow: 0 0 0 1px #E5E7EB">Distributor / Agent</button>
+      <button type="button" aria-pressed="false" style="flex: 1; height: 40px; border-radius: 5px; border: 0; background: transparent; color: #4B5563; font-weight: 500">Operator</button>
+    </div>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #4B5563">Username<input value="agent01" style="height: 48px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 12px; font-size: 16px; color: #111827"></label>
+    <label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #4B5563">Password<span style="position: relative; display: flex"><input type="password" value="••••••••••" style="height: 48px; width: 100%; box-sizing: border-box; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 48px 0 12px; font-size: 16px"><button type="button" aria-label="Show password" style="position: absolute; right: 2px; top: 2px; width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></span></label>
+    <a href="AgentDashPhone.dc.html" style="height: 48px; border-radius: 6px; background: #1A78B4; color: #FFFFFF; font-weight: 600; font-size: 16px; display: flex; align-items: center; justify-content: center; text-decoration: none">LOG IN</a>
+    <div style="font-size: 13px; color: #6B7280; text-align: center; line-height: 1.4">Accounts are created by your distributor or operator.</div>
+  </form>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

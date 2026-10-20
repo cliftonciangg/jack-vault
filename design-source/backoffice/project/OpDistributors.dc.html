@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Operator distributors with Issue dialog</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1A78B4}a:hover{color:#166FA3}
+button,input,select{font:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; background: #F3F4F6; color: #111827; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; font-size: 14px; display: flex; flex-direction: column; overflow: hidden; position: relative">
+  <div style="height: 56px; flex-shrink: 0; background: #1B2B44; color: #FFFFFF; display: flex; align-items: center; padding: 0 24px; gap: 12px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h11l4-4M14 12l4 4M14 12h7"></path></svg>
+    <span style="font-weight: 700; font-size: 15px">Jack Vault</span><span style="color: #C7D2E3">Back Office</span>
+    <span style="height: 20px; padding: 0 8px; border-radius: 4px; background: #E5E7EB; color: #1B2B44; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center">OPERATOR</span>
+    <span style="color: #8A9AB5">/</span><span style="font-weight: 600; font-size: 15px">Distributors</span>
+    <span style="flex: 1"></span><span style="color: #C7D2E3">Welcome, <strong style="color: #FFFFFF; font-weight: 600">op.admin</strong></span>
+    <a href="Login.dc.html" style="height: 32px; padding: 0 12px; border-radius: 6px; border: 1px solid #5B6B85; color: #FFFFFF; text-decoration: none; display: inline-flex; align-items: center; font-weight: 500">Log out</a>
+  </div>
+  <div style="height: 36px; flex-shrink: 0; background: #FFF8E6; border-bottom: 1px solid #F1E3B8; display: flex; align-items: center; padding: 0 24px; gap: 10px">
+    <span style="color: #4B5563">Points in circulation:</span><span style="color: #1A78B4; font-weight: 700; font-size: 15px; font-variant-numeric: tabular-nums">1,245,000.00</span>
+    <span style="height: 22px; padding: 0 8px; border-radius: 11px; background: #DCFCE7; color: #15803D; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-left: 8px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="3" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>Ledger balanced</span>
+    <span style="flex: 1"></span><span style="color: #4B5563; font-size: 13px">Times in EST</span>
+  </div>
+  <div style="flex: 1; display: flex; min-height: 0">
+    <nav style="width: 240px; flex-shrink: 0; background: #E9EDF2; border-right: 1px solid #E5E7EB; padding: 12px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{menu}}" as="m" hint-placeholder-count="5"><a href="{{m.href}}" style="height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 6px; background: {{m.bg}}; color: {{m.ink}}; text-decoration: none; font-weight: {{m.weight}}; border-left: 3px solid {{m.edge}}; box-sizing: border-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{m.ink}}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.d}}"></path></svg>{{m.label}}</a></sc-for>
+      <span style="flex: 1"></span><a href="Login.dc.html" style="height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 6px; background: #FFFFFF; color: #4B5563; text-decoration: none">Log out</a>
+    </nav>
+    <main style="flex: 1; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px">
+        <sc-for list="{{cards}}" as="c" hint-placeholder-count="6"><div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #4B5563; font-weight: 500">{{c.label}}</span><span style="font-size: 20px; font-weight: 600; color: {{c.color}}; font-variant-numeric: tabular-nums">{{c.value}}</span></div></sc-for>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; padding: 12px 20px; display: flex; gap: 10px; align-items: center">
+        <span style="font-size: 16px; font-weight: 600; color: #1A78B4; margin-right: 10px">Distributors</span>
+        <input placeholder="Distributor username or ID" style="height: 36px; width: 240px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px">
+        <button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 14px">Search</button>
+        <label style="display: flex; align-items: center; gap: 8px; margin-left: 10px; color: #4B5563"><button aria-pressed="false" aria-label="Show disabled" style="width: 40px; height: 22px; border-radius: 11px; border: 1px solid #D1D5DB; background: #E5E7EB; position: relative; padding: 0"><span style="position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 9px; background: #FFFFFF; border: 1px solid #D1D5DB; box-sizing: border-box"></span></button>Show disabled</label>
+        <span style="flex: 1"></span>
+        <button style="height: 36px; border-radius: 6px; border: 0; background: #1A78B4; color: #FFFFFF; font-weight: 600; padding: 0 14px">+ Create Distributor</button>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 8px; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden">
+        <div style="display: grid; grid-template-columns: 50px 1.1fr 90px 1fr 60px 1fr 1fr 90px 0.9fr 3fr; background: #1A78B4; color: #FFFFFF; font-size: 12px; font-weight: 600; height: 36px; align-items: center; padding: 0 16px; gap: 8px"><span>ID</span><span>Username</span><span>Status</span><span style="text-align: right">Balance</span><span style="text-align: right">Agents</span><span style="text-align: right">Held by agents</span><span style="text-align: right">Held by players</span><span>Win ratio</span><span>Created</span><span>Actions</span></div>
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: 50px 1.1fr 90px 1fr 60px 1fr 1fr 90px 0.9fr 3fr; height: 36px; align-items: center; padding: 0 16px; gap: 8px; background: {{r.bg}}; border-top: 1px solid #E5E7EB; font-variant-numeric: tabular-nums; font-size: 13px">
+            <span style="color: #4B5563">{{r.id}}</span><span style="font-weight: 500">{{r.user}}</span><span><span style="height: 20px; padding: 0 7px; border-radius: 10px; background: {{r.pillBg}}; color: {{r.pillInk}}; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center">{{r.status}}</span></span><span style="text-align: right">{{r.bal}}</span><span style="text-align: right">{{r.agents}}</span><span style="text-align: right">{{r.ha}}</span><span style="text-align: right">{{r.hp}}</span><span>{{r.rtp}}</span><span style="color: #4B5563">{{r.created}}</span>
+            <span style="display: flex; gap: 6px"><button style="height: 28px; border-radius: 6px; border: 0; background: #15803D; color: #FFFFFF; font-weight: 600; font-size: 13px; padding: 0 10px">Issue</button><button style="height: 28px; border-radius: 6px; border: 1px solid #DC2626; background: #FFFFFF; color: #DC2626; font-weight: 600; font-size: 13px; padding: 0 10px">Take back</button><button style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; font-size: 13px; padding: 0 10px; color: #111827">Agents</button><a href="OpWinRatio.dc.html" style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; font-size: 13px; padding: 0 10px; color: #111827; text-decoration: none; display: inline-flex; align-items: center">Win Ratio</a><button style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; font-size: 13px; padding: 0 10px; color: #111827">Reset Password</button><button style="height: 28px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; font-size: 13px; padding: 0 10px; color: {{r.toggleInk}}">{{r.toggle}}</button></span>
+          </div>
+        </sc-for>
+        <div style="margin-top: auto; padding: 10px 16px; border-top: 1px solid #E5E7EB; font-size: 13px; color: #4B5563">Showing 1–6 of 6 · The operator is the only account that creates points.</div>
+      </div>
+    </main>
+  </div>
+  <!-- ISSUE dialog with confirm -->
+  <div style="position: absolute; inset: 0; background: rgba(17,24,39,.35); display: flex; align-items: center; justify-content: center; gap: 24px">
+    <div style="width: 480px; background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 8px; display: flex; flex-direction: column">
+      <div style="padding: 14px 20px; font-size: 16px; font-weight: 600; border-bottom: 1px solid #E5E7EB">Issue points to north-dist</div>
+      <div style="padding: 16px 20px; display: flex; flex-direction: column; gap: 12px">
+        <div style="font-size: 13px; color: #4B5563; font-variant-numeric: tabular-nums">Distributor balance: <strong style="color: #111827">4,820.00</strong> · Points in circulation: <strong style="color: #111827">1,245,000.00</strong></div>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Amount<span style="display: flex; border: 1px solid #D1D5DB; border-radius: 6px; overflow: hidden; height: 40px"><input value="25,000.00" style="flex: 1; border: 0; padding: 0 10px; font-size: 18px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; min-width: 0"><span style="display: flex; align-items: center; padding: 0 10px; background: #F3F4F6; color: #4B5563; font-size: 13px; border-left: 1px solid #D1D5DB">points</span></span></label>
+        <div style="display: flex; gap: 6px"><button style="height: 30px; border-radius: 15px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 12px; font-size: 13px; color: #111827">1,000</button><button style="height: 30px; border-radius: 15px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 12px; font-size: 13px; color: #111827">5,000</button><button style="height: 30px; border-radius: 15px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 12px; font-size: 13px; color: #111827">10,000</button></div>
+        <label style="display: flex; flex-direction: column; gap: 4px; font-size: 13px; font-weight: 500; color: #4B5563">Note <span style="color: #B45309; font-weight: 400">(needs backend)</span><input value="October stock, request #R-0113" style="height: 36px; border: 1px solid #D1D5DB; border-radius: 6px; padding: 0 10px; font-size: 14px"></label>
+        <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px 12px; font-size: 13px; color: #4B5563; font-variant-numeric: tabular-nums">After: distributor <strong style="color: #15803D">29,820.00</strong> · circulation <strong style="color: #111827">1,270,000.00</strong></div>
+      </div>
+      <div style="padding: 12px 20px; border-top: 1px solid #E5E7EB; display: flex; justify-content: flex-end; gap: 8px"><button style="height: 36px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 14px; color: #111827">Cancel</button><button style="height: 36px; border-radius: 6px; border: 0; background: #15803D; color: #FFFFFF; font-weight: 600; padding: 0 18px">ISSUE 25,000.00</button></div>
+    </div>
+    <div style="width: 400px; background: #FFFFFF; border: 1px solid #D1D5DB; border-radius: 8px; display: flex; flex-direction: column">
+      <div style="padding: 14px 20px; font-size: 16px; font-weight: 600; border-bottom: 1px solid #E5E7EB; display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" aria-hidden="true"><path d="M12 3l10 18H2zM12 10v4M12 17h.01"></path></svg>Issue 25,000.00 points to north-dist?</div>
+      <div style="padding: 16px 20px; color: #4B5563; line-height: 1.5">This creates new points. Amounts over 10,000.00 always ask once more.</div>
+      <div style="padding: 12px 20px; border-top: 1px solid #E5E7EB; display: flex; justify-content: flex-end; gap: 8px"><button style="height: 36px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; padding: 0 14px; color: #111827">Cancel</button><button style="height: 36px; border-radius: 6px; border: 0; background: #15803D; color: #FFFFFF; font-weight: 600; padding: 0 14px">Issue</button></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = { users: 'M9 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20a7 7 0 0 1 14 0M16 5a3 3 0 0 1 0 6M22 20a6 6 0 0 0-5-6', transfer: 'M4 8h13l-3-3M20 16H7l3 3', shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4', percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', settings: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M6.3 17.7l1.4-1.4M16.3 7.7l1.4-1.4' };
+    const menu = [['Distributors', 'users', 'OpDistributors.dc.html'], ['Points Ledger', 'transfer', 'OpLedger.dc.html'], ['Audit', 'shield', 'OpAudit.dc.html'], ['Win Ratio & Games', 'percent', 'OpWinRatio.dc.html'], ['Settings', 'settings', 'Settings.dc.html']].map(([label, ic, href]) => { const on = label === 'Distributors'; return { label, href, d: I[ic], bg: on ? '#E3F0FA' : '#FFFFFF', ink: on ? '#166FA3' : '#111827', weight: on ? 600 : 500, edge: on ? '#1A78B4' : 'transparent' }; });
+    const cards = [{ label: 'Points issued (all time)', value: '1,310,000.00', color: '#15803D' }, { label: 'Points taken back', value: '65,000.00', color: '#DC2626' }, { label: 'Points in circulation', value: '1,245,000.00', color: '#111827' }, { label: 'Held by distributors', value: '38,760.00', color: '#111827' }, { label: 'Held by agents', value: '214,980.00', color: '#111827' }, { label: 'Held by players', value: '991,260.00', color: '#111827' }];
+    const P = { Active: ['#DCFCE7', '#15803D'], Disabled: ['#E5E7EB', '#4B5563'], Locked: ['#FEF3C7', '#B45309'] };
+    const rows = [
+      ['11', 'north-dist', 'Active', '4,820.00', '12', '38,410.00', '92,655.80', 'RTP 95%', '2026-08-14'], ['12', 'east-dist', 'Active', '12,300.00', '18', '61,200.00', '240,110.00', 'RTP 95%', '2026-08-14'], ['13', 'south-dist', 'Active', '9,140.00', '21', '58,900.00', '312,480.20', 'RTP 94%', '2026-08-20'],
+      ['14', 'west-dist', 'Active', '6,500.00', '9', '22,470.00', '98,300.00', 'RTP 95%', '2026-09-01'], ['15', 'metro-dist', 'Locked', '6,000.00', '14', '34,000.00', '247,714.00', 'RTP 95%', '2026-09-15'], ['16', 'valley-dist', 'Disabled', '0.00', '0', '0.00', '0.00', 'RTP 95%', '2026-09-28']
+    ].map(([id, user, status, bal, agents, ha, hp, rtp, created], i) => ({ id, user, status, bal, agents, ha, hp, rtp, created, bg: i % 2 ? '#F9FAFB' : '#FFFFFF', pillBg: P[status][0], pillInk: P[status][1], toggle: status === 'Disabled' ? 'Enable' : 'Disable', toggleInk: status === 'Disabled' ? '#15803D' : '#DC2626' }));
+    return { menu, cards, rows };
+  }
+}
+</script>
+</body>
+</html>

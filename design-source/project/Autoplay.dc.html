@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Autoplay settings sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0B0820; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <div style="position: absolute; left: 0; right: 0; top: 70px; bottom: 0; border-radius: 28px 28px 0 0; background: #151030; border-top: 1px solid #8B5CF6; display: flex; flex-direction: column; padding: 10px 16px 34px; box-sizing: border-box; gap: 14px">
+    <div style="width: 44px; height: 5px; border-radius: 3px; background: #4B4766; margin: 0 auto -2px"></div>
+    <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px">Autoplay</div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 14px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">NUMBER OF SPINS</span>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{spins}}" as="s" hint-placeholder-count="5">
+          <button aria-pressed="{{s.on}}" style="height: 48px; border-radius: 12px; border: 1px solid {{s.border}}; background: {{s.bg}}; color: {{s.ink}}; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 15px; box-shadow: {{s.glow}}">{{s.n}}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 14px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">STOP AUTOPLAY</span>
+      <sc-for list="{{rules}}" as="r" hint-placeholder-count="3">
+        <div style="background: #1F1844; border: 1px solid #2E2560; border-radius: 14px; padding: 0 12px 0 16px; min-height: 60px; display: flex; align-items: center; gap: 10px">
+          <span style="font-size: 16px; font-weight: 700; flex: 1">{{r.label}}</span>
+          <sc-if value="{{r.hasValue}}" hint-placeholder-val="{{true}}">
+            <div style="display: flex; align-items: center; gap: 4px; background: #0B0820; border: 1px solid #3B2F7A; border-radius: 22px; padding: 2px">
+              <button aria-label="Decrease" style="width: 40px; height: 40px; border-radius: 20px; border: 0; background: #2E1F6B; color: #FFFFFF; font-size: 22px; padding: 0">−</button>
+              <span style="width: 64px; text-align: center; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px; color: #FFE27A">{{r.value}}</span>
+              <button aria-label="Increase" style="width: 40px; height: 40px; border-radius: 20px; border: 0; background: #2E1F6B; color: #FFFFFF; font-size: 22px; padding: 0">+</button>
+            </div>
+          </sc-if>
+          <button aria-label="{{r.label}}" aria-pressed="{{r.on}}" style="width: 56px; height: 32px; border-radius: 16px; border: 1px solid {{r.border}}; background: {{r.bg}}; position: relative; padding: 0; flex-shrink: 0">
+            <span style="position: absolute; top: 3px; left: {{r.knobX}}; width: 24px; height: 24px; border-radius: 12px; background: {{r.knob}}"></span>
+          </button>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="flex: 1"></div>
+    <div style="font-size: 14px; color: #8A83AD; text-align: center">Autoplay always stops on any feature and when balance is too low for the bet.</div>
+    <div style="display: flex; gap: 10px; align-items: center">
+      <button style="flex: 1; height: 56px; border-radius: 28px; border: 0; background: #7C3AED; color: #FFFFFF; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 16px; letter-spacing: 1.5px; box-shadow: 0 0 24px rgba(139,92,246,.6)">START AUTOPLAY · 50</button>
+      <button aria-label="Close" style="width: 56px; height: 56px; border-radius: 28px; border: 2px solid #22D3EE; background: rgba(34,211,238,.12); display: flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2.4" stroke-linecap="square" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"></path></svg></button>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const spins = [10, 25, 50, 100, 500].map(n => { const on = n === 50; return { n, on, border: on ? '#8B5CF6' : '#3B2F7A', bg: on ? '#7C3AED' : '#1F1844', ink: on ? '#FFFFFF' : '#B9B3D9', glow: on ? '0 0 14px rgba(139,92,246,.6)' : 'none' }; });
+    const rules = [
+      ['If a single win exceeds', '25.00', true, true], ['If balance drops by', '50.00', true, false], ['On any feature', '', false, true]
+    ].map(([label, value, hasValue, on]) => ({ label, value, hasValue, on, border: on ? '#22D3EE' : '#3B2F7A', bg: on ? '#22D3EE' : '#151030', knob: on ? '#FFFFFF' : '#8A83AD', knobX: on ? '29px' : '3px' }));
+    return { spins, rules };
+  }
+}
+</script>
+</body>
+</html>

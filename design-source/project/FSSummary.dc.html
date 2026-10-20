@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Free spins complete summary</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;family=Cinzel:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font:inherit;cursor:pointer}
+.cyan{background:linear-gradient(180deg,#FFFFFF 0%,#A5F3FC 40%,#22D3EE 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(34,211,238,.8))}
+.gold{background:linear-gradient(180deg,#FFE27A 0%,#F5B301 55%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 16px rgba(245,179,1,.8))}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Rajdhani', 'Segoe UI', sans-serif; color: #FFFFFF">
+  <dc-import name="Reels" mode="freespins" hint-size="390px,844px"></dc-import>
+  <div style="position: absolute; inset: 0; background: rgba(6,4,15,.84); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 59px 24px 34px; box-sizing: border-box">
+    <sc-for list="{{coins}}" as="c" hint-placeholder-count="18">
+      <span style="position: absolute; left: {{c.x}}; top: {{c.y}}; width: {{c.s}}; height: {{c.s}}; border-radius: 50%; background: linear-gradient(160deg,#FFE27A,#F5B301 55%,#B87400); box-shadow: 0 0 8px rgba(245,179,1,.6); transform: rotate({{c.r}}) scaleX(.6)"></span>
+    </sc-for>
+    <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px">
+      <span class="cyan" style="font-family: 'Cinzel', serif; font-weight: 900; font-size: 40px; letter-spacing: 2px; line-height: 1">FREE SPINS</span>
+      <span style="font-family: 'Cinzel', serif; font-weight: 700; font-size: 18px; letter-spacing: 6px; color: #C4B5FD">COMPLETE</span>
+    </div>
+    <div style="position: relative; width: 100%; max-width: 320px; padding: 22px 20px; border-radius: 22px; background: linear-gradient(180deg,#3B2A05,#1A1203); border: 3px solid #F5B301; box-shadow: 0 0 40px rgba(245,179,1,.45), inset 0 0 20px rgba(245,179,1,.25); display: flex; flex-direction: column; align-items: center; gap: 6px">
+      <span style="font-size: 14px; letter-spacing: 2px; font-weight: 700; color: #B9B3D9">TOTAL WON</span>
+      <span class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 52px; line-height: 1; font-variant-numeric: tabular-nums">186.25</span>
+      <span style="font-size: 15px; font-weight: 700; color: #FFE27A">149 × BET</span>
+    </div>
+    <div style="position: relative; display: flex; gap: 12px; width: 100%; max-width: 320px">
+      <div style="flex: 1; height: 58px; border-radius: 12px; background: rgba(21,16,48,.9); border: 1px solid #3B2F7A; display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-size: 12px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">SPINS PLAYED</span><span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 18px">15</span></div>
+      <div style="flex: 1; height: 58px; border-radius: 12px; background: rgba(21,16,48,.9); border: 1px solid #3B2F7A; display: flex; flex-direction: column; align-items: center; justify-content: center"><span style="font-size: 12px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">MULTIPLIER</span><span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 18px; color: #F0ABFC">×2</span></div>
+    </div>
+    <button style="position: relative; width: 100%; max-width: 320px; height: 56px; border-radius: 28px; border: 0; background: linear-gradient(180deg,#FFE27A,#F5B301 60%,#D99A00); color: #0B0820; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 18px; letter-spacing: 2px; box-shadow: 0 0 28px rgba(245,179,1,.6); margin-top: 16px">COLLECT</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const coins = Array.from({ length: 18 }, (_, i) => ({ x: (10 + (i * 59) % 360) + 'px', y: (80 + ((i * 103) % 660)) + 'px', s: (8 + (i % 4) * 4) + 'px', r: ((i * 137.5) % 360) + 'deg' }));
+    return { coins };
+  }
+}
+</script>
+</body>
+</html>

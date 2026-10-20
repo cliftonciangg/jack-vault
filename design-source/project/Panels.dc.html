@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault panels and containers</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+button{font:inherit;cursor:pointer}
+.gold{background:linear-gradient(180deg,#FFE27A 0%,#F5B301 55%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1180px; box-sizing: border-box; padding: 56px 64px; background: radial-gradient(ellipse at 20% 0%, #1E1450 0%, #0B0820 55%); color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">05 · CONTAINERS</div>
+      <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900">Panels, badges &amp; values</h1>
+    </div>
+    <div style="font-size: 17px; color: #B9B3D9; max-width: 460px; text-align: right">Glass panel = bg/raised at 78% opacity, 16 px backdrop blur, and a 1 px neon border with a soft inner glow.</div>
+  </div>
+
+  <!-- Value boxes -->
+  <div style="display: flex; flex-direction: column; gap: 12px">
+    <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">VALUE DISPLAY BOX · label on top, number below</div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{values}}" as="v" hint-placeholder-count="4">
+        <div style="background: rgba(21,16,48,.78); border: 1px solid {{v.border}}; border-radius: 14px; padding: 10px 16px; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: inset 0 0 18px rgba(139,92,246,.18)">
+          <span style="font-size: 14px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">{{v.label}}</span>
+          <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 22px; color: {{v.color}}">{{v.value}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="font-size: 14px; color: #8A83AD">BALANCE: white · BET: gold light · WIN: gold, glows while counting · LINES: fixed at 25, display only (no border glow)</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 24px">
+    <!-- Modal -->
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">MODAL DIALOG · max 342 px wide on phone</div>
+      <div style="background: rgba(11,8,32,.7); border-radius: 20px; padding: 24px 19px; display: flex; justify-content: center">
+        <div style="width: 342px; background: rgba(31,24,68,.92); border: 1px solid #8B5CF6; border-radius: 22px; box-shadow: 0 0 0 1px rgba(139,92,246,.25), 0 0 40px rgba(139,92,246,.35), inset 0 1px 0 rgba(255,255,255,.08); padding: 24px 20px 20px; display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center">
+          <div style="width: 56px; height: 56px; border-radius: 28px; background: rgba(245,179,1,.14); display: flex; align-items: center; justify-content: center">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#F5B301" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="7" rx="7" ry="3"></ellipse><path d="M5 7v5c0 1.7 3.1 3 7 3s7-1.3 7-3V7M5 12v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"></path></svg>
+          </div>
+          <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 20px">Not enough coins</div>
+          <div style="font-size: 16px; color: #B9B3D9; line-height: 1.35">Your balance is lower than this bet. Lower the bet or add coins to keep playing.</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; width: 100%">
+            <button style="height: 52px; border-radius: 26px; border: 0; background: linear-gradient(180deg,#FFE27A,#F5B301 60%,#D99A00); color: #0B0820; font-weight: 700; font-size: 17px; letter-spacing: 1px">GET COINS</button>
+            <button style="height: 52px; border-radius: 26px; border: 2px solid #22D3EE; background: transparent; color: #22D3EE; font-weight: 700; font-size: 17px; letter-spacing: 1px">LOWER BET</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 22px">
+      <!-- Toasts -->
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">TOASTS · slide from top, auto-hide 3 s</div>
+        <div style="display: flex; gap: 12px">
+          <div style="flex: 1; background: rgba(31,24,68,.92); border: 1px solid #C026D3; border-radius: 16px; padding: 12px 16px; display: flex; gap: 12px; align-items: center; box-shadow: 0 0 24px rgba(192,38,211,.3)">
+            <div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(160deg,#F0ABFC,#C026D3 50%,#6D28D9); flex-shrink: 0"></div>
+            <div style="font-size: 16px; line-height: 1.3">A player just won the <strong style="color: #F0ABFC">MAJOR</strong>: <span class="gold" style="font-family: 'Orbitron', sans-serif; font-weight: 700">2,481.90</span></div>
+          </div>
+          <div style="flex: 1; background: rgba(31,24,68,.92); border: 1px solid #22C55E; border-radius: 16px; padding: 12px 16px; display: flex; gap: 12px; align-items: center">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>
+            <div style="font-size: 16px">Daily bonus added to your balance</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">BADGES · tile corner, 22 px tall</div>
+        <div style="display: flex; gap: 12px; align-items: center">
+          <span style="height: 24px; padding: 0 10px; border-radius: 6px; background: #22D3EE; color: #0B0820; font-weight: 700; font-size: 14px; letter-spacing: 1.5px; display: inline-flex; align-items: center; transform: skewX(-10deg)">NEW</span>
+          <span style="height: 24px; padding: 0 10px; border-radius: 6px; background: linear-gradient(90deg,#FF7A1A,#FFB066); color: #0B0820; font-weight: 700; font-size: 14px; letter-spacing: 1.5px; display: inline-flex; align-items: center; transform: skewX(-10deg)">HOT</span>
+          <span style="height: 24px; padding: 0 10px; border-radius: 6px; background: linear-gradient(90deg,#FFE27A,#F5B301); color: #0B0820; font-weight: 700; font-size: 14px; letter-spacing: 1.5px; display: inline-flex; align-items: center; transform: skewX(-10deg); box-shadow: 0 0 12px rgba(245,179,1,.6)">JACKPOT</span>
+          <span style="font-size: 14px; color: #8A83AD">Skewed −10° to echo the wordmark. Dark text on every badge.</span>
+        </div>
+      </div>
+
+      <!-- Tab bar -->
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">CATEGORY TABS · 44 px tall chips, scroll sideways</div>
+        <div style="display: flex; gap: 8px">
+          <button style="height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid #8B5CF6; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 16px; box-shadow: 0 0 16px rgba(139,92,246,.6)">All</button>
+          <button style="height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 16px">Slots</button>
+          <button style="height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 16px">Fish</button>
+          <button style="height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 16px">Arcade</button>
+          <button style="height: 44px; padding: 0 18px; border-radius: 22px; border: 1px solid #3B2F7A; background: #151030; color: #B9B3D9; font-weight: 700; font-size: 16px">Favorites</button>
+        </div>
+      </div>
+
+      <!-- Bottom nav -->
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">BOTTOM NAV · 64 px + home-indicator inset</div>
+        <nav style="background: rgba(21,16,48,.92); border: 1px solid #2E2560; border-radius: 20px; height: 64px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center">
+          <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+            <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: {{n.color}}; font-size: 13px; font-weight: 700; min-height: 48px; justify-content: center">
+              <span style="width: 22px; height: 3px; border-radius: 2px; background: {{n.bar}}"></span>
+              {{n.label}}
+            </a>
+          </sc-for>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const values = [
+      { label: 'BALANCE', value: '1,250.00', color: '#FFFFFF', border: '#3B2F7A' },
+      { label: 'TOTAL BET', value: '1.25', color: '#FFE27A', border: '#3B2F7A' },
+      { label: 'WIN', value: '37.50', color: '#F5B301', border: '#F5B301' },
+      { label: 'LINES', value: '25', color: '#B9B3D9', border: '#2E2560' }
+    ];
+    const nav = ['Home', 'Games', 'Rewards', 'History', 'Profile'].map((label, i) => ({
+      label, color: i === 0 ? '#22D3EE' : '#B9B3D9', bar: i === 0 ? '#22D3EE' : 'transparent'
+    }));
+    return { values, nav };
+  }
+}
+</script>
+</body>
+</html>

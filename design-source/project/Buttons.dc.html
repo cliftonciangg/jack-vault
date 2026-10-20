@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault buttons</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+button{font:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1240px; box-sizing: border-box; padding: 56px 64px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">04 · BUTTONS</div>
+      <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900">Touch states</h1>
+    </div>
+    <div style="font-size: 17px; color: #B9B3D9; max-width: 460px; text-align: right">Default, pressed, disabled and long-press. No hover states anywhere. Pressed = scale 0.95 plus a darker fill.</div>
+  </div>
+
+  <!-- SPIN -->
+  <div style="background: #151030; border: 1px solid #2E2560; border-radius: 20px; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">SPIN · 112 px (min 88) · afterburner fill, gold ring</div>
+      <div style="font-size: 14px; color: #8A83AD">Icon on orange: #0B0820, 7.5:1</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; align-items: start">
+      <!-- idle -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+        <button aria-label="Spin" style="width: 112px; height: 112px; border-radius: 56px; border: 4px solid #F5B301; background: radial-gradient(circle at 40% 30%, #FFD3A3 0%, #FF7A1A 55%, #C2410C 100%); box-shadow: 0 0 0 6px rgba(255,122,26,.18), 0 0 36px rgba(255,122,26,.65); display: flex; align-items: center; justify-content: center; padding: 0">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#0B0820" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 3.5v4.5h-4.5"></path></svg>
+        </button>
+        <div style="font-size: 13px; letter-spacing: 1.5px; font-weight: 700; color: #FFB066">HOLD FOR AUTO</div>
+        <div style="font-size: 15px; font-weight: 700">Idle (glow pulse)</div>
+      </div>
+      <!-- pressed -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+        <button aria-label="Spin, pressed" style="width: 112px; height: 112px; border-radius: 56px; border: 4px solid #B87400; background: radial-gradient(circle at 40% 30%, #FFB066 0%, #E0600A 55%, #9A3412 100%); box-shadow: 0 0 18px rgba(255,122,26,.45); transform: scale(.95); display: flex; align-items: center; justify-content: center; padding: 0">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#0B0820" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 3.5v4.5h-4.5"></path></svg>
+        </button>
+        <div style="font-size: 13px; letter-spacing: 1.5px; font-weight: 700; color: #FFB066">HOLD FOR AUTO</div>
+        <div style="font-size: 15px; font-weight: 700">Pressed · 0.95</div>
+      </div>
+      <!-- long press -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+        <div style="width: 124px; height: 124px; position: relative; display: flex; align-items: center; justify-content: center; margin: -6px 0">
+          <svg width="124" height="124" viewBox="0 0 124 124" style="position: absolute; inset: 0" aria-hidden="true"><circle cx="62" cy="62" r="59" fill="none" stroke="#2E2560" stroke-width="4"></circle><circle cx="62" cy="62" r="59" fill="none" stroke="#22D3EE" stroke-width="4" stroke-dasharray="371" stroke-dashoffset="130" stroke-linecap="round" transform="rotate(-90 62 62)"></circle></svg>
+          <button aria-label="Hold to start autoplay" style="width: 104px; height: 104px; border-radius: 52px; border: 4px solid #B87400; background: radial-gradient(circle at 40% 30%, #FFB066 0%, #E0600A 55%, #9A3412 100%); display: flex; align-items: center; justify-content: center; padding: 0">
+            <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#0B0820" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 3.5v4.5h-4.5"></path></svg>
+          </button>
+        </div>
+        <div style="font-size: 13px; letter-spacing: 1.5px; font-weight: 700; color: #22D3EE">KEEP HOLDING…</div>
+        <div style="font-size: 15px; font-weight: 700">Long-press · 600 ms</div>
+      </div>
+      <!-- spinning -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+        <button aria-label="Spinning, tap to stop" style="width: 112px; height: 112px; border-radius: 56px; border: 4px dashed #F5B301; background: radial-gradient(circle at 40% 30%, #FFD3A3 0%, #FF7A1A 55%, #C2410C 100%); box-shadow: 0 0 36px rgba(255,122,26,.65); display: flex; align-items: center; justify-content: center; padding: 0">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#0B0820" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" style="transform: rotate(140deg); opacity: .55"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path></svg>
+        </button>
+        <div style="font-size: 13px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">TAP TO STOP</div>
+        <div style="font-size: 15px; font-weight: 700">Spinning · ring rotates</div>
+      </div>
+      <!-- stop -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+        <button aria-label="Stop" style="width: 112px; height: 112px; border-radius: 56px; border: 4px solid #FFF3E0; background: radial-gradient(circle at 40% 30%, #F87171 0%, #DC2626 60%, #7F1D1D 100%); box-shadow: 0 0 30px rgba(239,68,68,.55); display: flex; align-items: center; justify-content: center; padding: 0">
+          <div style="width: 30px; height: 30px; border-radius: 6px; background: #FFFFFF"></div>
+        </button>
+        <div style="font-size: 13px; letter-spacing: 1.5px; font-weight: 700; color: #F87171">STOP</div>
+        <div style="font-size: 15px; font-weight: 700">Stop · autoplay or slam</div>
+      </div>
+      <!-- disabled -->
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+        <button disabled aria-label="Spin unavailable" style="width: 112px; height: 112px; border-radius: 56px; border: 4px solid #4B4766; background: #2A2548; display: flex; align-items: center; justify-content: center; padding: 0; cursor: not-allowed">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#6B6690" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 3.5v4.5h-4.5"></path></svg>
+        </button>
+        <div style="font-size: 13px; letter-spacing: 1.5px; font-weight: 700; color: #8A83AD">LOW BALANCE</div>
+        <div style="font-size: 15px; font-weight: 700">Disabled</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+    <!-- Pills -->
+    <div style="background: #151030; border: 1px solid #2E2560; border-radius: 20px; padding: 24px 28px; display: flex; flex-direction: column; gap: 16px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">PILL BUTTONS · 52 px tall</div>
+      <div style="display: grid; grid-template-columns: 90px repeat(3, minmax(0, 1fr)); gap: 12px; align-items: center">
+        <div></div>
+        <div style="font-size: 14px; color: #8A83AD; text-align: center">Default</div>
+        <div style="font-size: 14px; color: #8A83AD; text-align: center">Pressed</div>
+        <div style="font-size: 14px; color: #8A83AD; text-align: center">Disabled</div>
+
+        <div style="font-size: 15px; font-weight: 700">Primary</div>
+        <button style="height: 52px; border-radius: 26px; border: 0; background: #7C3AED; color: #FFFFFF; font-weight: 700; font-size: 17px; letter-spacing: 1px; box-shadow: 0 0 20px rgba(139,92,246,.55)">PLAY</button>
+        <button style="height: 52px; border-radius: 26px; border: 0; background: #5B21B6; color: #FFFFFF; font-weight: 700; font-size: 17px; letter-spacing: 1px; transform: scale(.95)">PLAY</button>
+        <button disabled style="height: 52px; border-radius: 26px; border: 0; background: #2A2548; color: #8A83AD; font-weight: 700; font-size: 17px; letter-spacing: 1px">PLAY</button>
+
+        <div style="font-size: 15px; font-weight: 700">Win / gold</div>
+        <button style="height: 52px; border-radius: 26px; border: 0; background: linear-gradient(180deg,#FFE27A,#F5B301 60%,#D99A00); color: #0B0820; font-weight: 700; font-size: 17px; letter-spacing: 1px; box-shadow: 0 0 20px rgba(245,179,1,.5)">COLLECT</button>
+        <button style="height: 52px; border-radius: 26px; border: 0; background: linear-gradient(180deg,#F5B301,#B87400); color: #0B0820; font-weight: 700; font-size: 17px; letter-spacing: 1px; transform: scale(.95)">COLLECT</button>
+        <button disabled style="height: 52px; border-radius: 26px; border: 0; background: #2A2548; color: #8A83AD; font-weight: 700; font-size: 17px; letter-spacing: 1px">COLLECT</button>
+
+        <div style="font-size: 15px; font-weight: 700">Secondary</div>
+        <button style="height: 52px; border-radius: 26px; border: 2px solid #22D3EE; background: transparent; color: #22D3EE; font-weight: 700; font-size: 17px; letter-spacing: 1px">LOWER BET</button>
+        <button style="height: 52px; border-radius: 26px; border: 2px solid #22D3EE; background: rgba(34,211,238,.16); color: #A5F3FC; font-weight: 700; font-size: 17px; letter-spacing: 1px; transform: scale(.95)">LOWER BET</button>
+        <button disabled style="height: 52px; border-radius: 26px; border: 2px solid #4B4766; background: transparent; color: #8A83AD; font-weight: 700; font-size: 17px; letter-spacing: 1px">LOWER BET</button>
+      </div>
+    </div>
+
+    <!-- Icon buttons + stepper -->
+    <div style="background: #151030; border: 1px solid #2E2560; border-radius: 20px; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">ICON BUTTONS · 48 × 48, 8 px apart</div>
+      <div style="display: flex; gap: 8px; align-items: center">
+        <button aria-label="Menu" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #3B2F7A; background: #1F1844; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h12M4 17h16"></path></svg></button>
+        <button aria-label="Sound on" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #3B2F7A; background: #1F1844; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M4 10h4l5-4v12l-5-4H4z"></path><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"></path></svg></button>
+        <button aria-label="Info" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #3B2F7A; background: #1F1844; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"></path><path d="M12 11v5M12 8h.01"></path></svg></button>
+        <button aria-label="Back" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #3B2F7A; background: #1F1844; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-8 7 8 7"></path></svg></button>
+        <button aria-label="Fullscreen" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #8B5CF6; background: #2E1F6B; transform: scale(.95); display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg></button>
+        <button disabled aria-label="Sound unavailable" style="width: 48px; height: 48px; border-radius: 14px; border: 1px solid #2E2560; background: #151030; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6B6690" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M4 10h4l5-4v12l-5-4H4z"></path><path d="M17 9l5 6M22 9l-5 6"></path></svg></button>
+      </div>
+      <div style="font-size: 14px; color: #8A83AD">Default ×4 · pressed (fullscreen) · disabled (sound)</div>
+
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700; margin-top: 6px">BET STEPPER</div>
+      <div style="display: flex; gap: 20px; align-items: center">
+        <div style="display: flex; align-items: center; gap: 8px; background: #0B0820; border: 1px solid #3B2F7A; border-radius: 30px; padding: 4px">
+          <button aria-label="Decrease bet" style="width: 48px; height: 48px; border-radius: 24px; border: 0; background: #2E1F6B; color: #FFFFFF; font-size: 26px; font-weight: 700; padding: 0">−</button>
+          <div style="width: 96px; display: flex; flex-direction: column; align-items: center">
+            <span style="font-size: 12px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">TOTAL BET</span>
+            <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 18px; color: #FFE27A">1.25</span>
+          </div>
+          <button aria-label="Increase bet" style="width: 48px; height: 48px; border-radius: 24px; border: 0; background: #7C3AED; color: #FFFFFF; font-size: 26px; font-weight: 700; padding: 0; box-shadow: 0 0 14px rgba(139,92,246,.6)">+</button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; background: #0B0820; border: 1px solid #3B2F7A; border-radius: 30px; padding: 4px">
+          <button disabled aria-label="Decrease bet, at minimum" style="width: 48px; height: 48px; border-radius: 24px; border: 0; background: #1F1844; color: #6B6690; font-size: 26px; font-weight: 700; padding: 0">−</button>
+          <div style="width: 96px; display: flex; flex-direction: column; align-items: center">
+            <span style="font-size: 12px; letter-spacing: 1.5px; font-weight: 700; color: #B9B3D9">MIN BET</span>
+            <span style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 18px; color: #FFE27A">0.25</span>
+          </div>
+          <button aria-label="Increase bet" style="width: 48px; height: 48px; border-radius: 24px; border: 0; background: #2E1F6B; color: #FFFFFF; font-size: 26px; font-weight: 700; padding: 0">+</button>
+        </div>
+      </div>
+      <div style="font-size: 14px; color: #8A83AD">Long-press ± repeats every 120 ms. Minus disables at the minimum bet.</div>
+    </div>
+  </div>
+
+  <!-- Toggles & slider -->
+  <div style="background: #151030; border: 1px solid #2E2560; border-radius: 20px; padding: 24px 28px; display: flex; gap: 48px; align-items: center">
+    <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700; width: 140px">SETTINGS CONTROLS</div>
+    <div style="display: flex; gap: 28px; align-items: center">
+      <div style="display: flex; gap: 12px; align-items: center">
+        <button aria-label="Turbo on" aria-pressed="true" style="width: 56px; height: 32px; border-radius: 16px; border: 0; background: #FF7A1A; position: relative; padding: 0; box-shadow: 0 0 14px rgba(255,122,26,.55)"><span style="position: absolute; top: 3px; right: 3px; width: 26px; height: 26px; border-radius: 13px; background: #FFF3E0"></span></button>
+        <span style="font-size: 16px; font-weight: 700">On</span>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center">
+        <button aria-label="Vibration off" aria-pressed="false" style="width: 56px; height: 32px; border-radius: 16px; border: 1px solid #3B2F7A; background: #1F1844; position: relative; padding: 0"><span style="position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 12px; background: #8A83AD"></span></button>
+        <span style="font-size: 16px; font-weight: 700">Off</span>
+      </div>
+      <div style="font-size: 14px; color: #8A83AD">Whole row is the 48 px tap target</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 700"><label for="vol">Music volume</label><span style="color: #22D3EE">70%</span></div>
+      <div style="position: relative; height: 32px; display: flex; align-items: center">
+        <div style="position: absolute; left: 0; right: 0; height: 6px; border-radius: 3px; background: #2E2560"></div>
+        <div style="position: absolute; left: 0; width: 70%; height: 6px; border-radius: 3px; background: linear-gradient(90deg,#7C3AED,#22D3EE)"></div>
+        <div style="position: absolute; left: calc(70% - 14px); width: 28px; height: 28px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 0 12px rgba(34,211,238,.8)"></div>
+        <input id="vol" type="range" min="0" max="100" value="70" style="position: absolute; inset: 0; width: 100%; opacity: 0; margin: 0">
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

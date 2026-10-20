@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jack Vault typography</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&amp;family=Rajdhani:wght@500;600;700&amp;family=Cinzel:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#22D3EE}a:hover{color:#A5F3FC}
+.gold{background:linear-gradient(180deg,#FFE27A 0%,#F5B301 55%,#B87400 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+</style>
+</helmet>
+<div style="width: 1200px; height: 1120px; box-sizing: border-box; padding: 56px 64px; background: #0B0820; color: #FFFFFF; font-family: 'Rajdhani', 'Segoe UI', sans-serif; display: flex; flex-direction: column; gap: 32px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-family: 'Orbitron', sans-serif; font-size: 14px; letter-spacing: 4px; color: #22D3EE; font-weight: 700">03 · TYPE</div>
+      <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; font-size: 40px; font-weight: 900">Typography</h1>
+    </div>
+    <div style="font-size: 17px; color: #B9B3D9; max-width: 460px; text-align: right">All Google Fonts. Body text is 14 px minimum. Numbers in value boxes are 16 px minimum.</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px">
+    <div style="background: #151030; border: 1px solid #2E2560; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">DISPLAY · PLATFORM</div>
+      <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 44px; line-height: 1">Orbitron</div>
+      <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 18px; color: #C4B5FD">ABCDEFG 0123456789</div>
+      <div style="font-size: 15px; color: #B9B3D9; line-height: 1.4">Logos, jackpot amounts, win banners and SPIN. Wide and machined. Weights 500, 700 and 900.</div>
+    </div>
+    <div style="background: #151030; border: 1px solid #2E2560; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">UI · LABELS &amp; BODY</div>
+      <div style="font-weight: 700; font-size: 44px; line-height: 1">Rajdhani</div>
+      <div style="font-weight: 600; font-size: 18px; color: #C4B5FD">Abcdefg 0123456789</div>
+      <div style="font-size: 15px; color: #B9B3D9; line-height: 1.4">Menus, labels, rules and body text. Its squared shapes match Orbitron and read cleanly at small sizes. Chosen over Inter, which looks generic.</div>
+    </div>
+    <div style="background: radial-gradient(ellipse at 50% 0%, #241A5C 0%, #151030 80%); border: 1px solid #2E2560; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">DISPLAY · CROWN OF THE COSMOS</div>
+      <div class="gold" style="font-family: 'Cinzel', serif; font-weight: 900; font-size: 44px; line-height: 1">Cinzel</div>
+      <div style="font-family: 'Cinzel', serif; font-weight: 700; font-size: 18px; color: #C4B5FD">ROYAL TITLES ONLY</div>
+      <div style="font-size: 15px; color: #B9B3D9; line-height: 1.4">For the game logo and feature titles such as FREE SPINS and SUPER WHEEL. Never for numbers or UI.</div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 24px">
+    <div style="flex: 3; background: #151030; border: 1px solid #2E2560; border-radius: 18px; padding: 8px 24px">
+      <sc-for list="{{scale}}" as="t" hint-placeholder-count="8">
+        <div style="display: flex; align-items: center; gap: 20px; padding: 12px 0; border-bottom: 1px solid #241C4F">
+          <div style="width: 130px; flex-shrink: 0; display: flex; flex-direction: column">
+            <span style="font-size: 15px; font-weight: 700; color: #22D3EE">{{t.token}}</span>
+            <span style="font-size: 14px; color: #8A83AD">{{t.spec}}</span>
+          </div>
+          <div style="font-family: {{t.family}}; font-weight: {{t.weight}}; font-size: {{t.size}}; line-height: {{t.lh}}; letter-spacing: {{t.ls}}; font-variant-numeric: tabular-nums">{{t.sample}}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="flex: 2; display: flex; flex-direction: column; gap: 16px">
+      <div style="background: #151030; border: 1px solid #2E2560; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 14px">
+        <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">TABULAR FIGURES</div>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: 14px; color: #F87171; font-weight: 600">Proportional: digits shift as the value changes</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 26px; font-variant-numeric: proportional-nums">1,111.11</div>
+          <div style="font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 26px; font-variant-numeric: proportional-nums">8,888.88</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: 14px; color: #4ADE80; font-weight: 600">Fixed digit cells: columns stay locked</div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <div class="gold" style="display: flex; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 26px">
+              <sc-for list="{{digitsA}}" as="d" hint-placeholder-count="8"><span style="width: {{d.w}}; text-align: center">{{d.c}}</span></sc-for>
+            </div>
+            <div class="gold" style="display: flex; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 26px">
+              <sc-for list="{{digitsB}}" as="d" hint-placeholder-count="8"><span style="width: {{d.w}}; text-align: center">{{d.c}}</span></sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="font-size: 15px; color: #B9B3D9; line-height: 1.4">Orbitron has no reliable tnum feature. In PixiJS, build counters from a BitmapFont and place each digit in a fixed-width cell. Separators take a narrow cell.</div>
+      </div>
+      <div style="background: #151030; border: 1px solid #2E2560; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+        <div style="font-size: 14px; letter-spacing: 2px; color: #B9B3D9; font-weight: 700">PHONE MINIMUMS</div>
+        <div style="font-size: 16px; line-height: 1.5">Body 14 px · value-box numbers 16 px · button labels 16 px · win banners 32 px or larger in portrait</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":1120}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const O = "'Orbitron', sans-serif", R = "'Rajdhani', sans-serif";
+    const scale = [
+      { token: 'jackpot/xl', spec: 'Orbitron 900 · 40/44', family: O, weight: 900, size: '40px', lh: '44px', ls: '0', sample: '152,384.27' },
+      { token: 'h1', spec: 'Orbitron 900 · 28/32', family: O, weight: 900, size: '28px', lh: '32px', ls: '0.5px', sample: 'BIG WIN' },
+      { token: 'h2', spec: 'Orbitron 700 · 22/28', family: O, weight: 700, size: '22px', lh: '28px', ls: '0.5px', sample: 'Free Spins Complete' },
+      { token: 'h3', spec: 'Rajdhani 700 · 20/24', family: R, weight: 700, size: '20px', lh: '24px', ls: '0', sample: 'Paytable · Special symbols' },
+      { token: 'value', spec: 'Orbitron 700 · 18/22', family: O, weight: 700, size: '18px', lh: '22px', ls: '0', sample: '1,250.00' },
+      { token: 'body', spec: 'Rajdhani 600 · 16/22', family: R, weight: 600, size: '16px', lh: '22px', ls: '0', sample: 'Land 3 Scatters anywhere to unlock 10 Free Spins.' },
+      { token: 'label', spec: 'Rajdhani 700 · 14/16 caps', family: R, weight: 700, size: '14px', lh: '16px', ls: '1.5px', sample: 'BALANCE · TOTAL BET · WIN' },
+      { token: 'caption', spec: 'Rajdhani 600 · 14/18', family: R, weight: 600, size: '14px', lh: '18px', ls: '0', sample: 'Hold for auto · Tap to skip' }
+    ];
+    const cells = (s) => s.split('').map(c => ({ c, w: (c === ',' || c === '.') ? '10px' : '22px' }));
+    return { scale, digitsA: cells('1,111.11'), digitsB: cells('8,888.88') };
+  }
+}
+</script>
+</body>
+</html>
