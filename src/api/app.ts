@@ -94,7 +94,10 @@ const MAX_BODY = 16 * 1024;
  *   types: state, spin {requestId, betCents}, wheel {requestId}, freeSpin {requestId}, history {limit, before},
  *          round {roundId}, replay {roundId}, config, jackpots
  *   pushes: { type: "jackpots", jackpots }, { type: "jackpotWon", tier, amountCents },
- *           { type: "balance", balanceCents } (to that player, after an agent load / redeem)
+ *           { type: "balance", balanceCents } (to that player, after an agent load / redeem),
+ *           { type: "sessionEnded", reason: LOGGED_IN_ELSEWHERE | SIGNED_OUT } (then the socket closes)
+ *   A player account plays on one device at a time: /api/player/login ends its older game sessions,
+ *   whose next request gets 401 LOGGED_IN_ELSEWHERE.
  */
 export function createApp(o: AppOptions): { server: Server; wss: WebSocketServer } {
   const svc = o.service;
@@ -112,7 +115,16 @@ export function createApp(o: AppOptions): { server: Server; wss: WebSocketServer
       if (req.method === "OPTIONS") return send(res, 204, null);
       const url = new URL(req.url ?? "/", "http://localhost");
       const path = url.pathname;
-      const auth = () => svc.playerForToken(bearer(req));
+      const auth = () => {
+        try {
+          return svc.playerForToken(bearer(req));
+        } catch (e) {
+          if (o.accounts?.replacedByNewerLogin(bearer(req))) {
+            throw new GameError("LOGGED_IN_ELSEWHERE", "This account was logged in on another device", 401);
+          }
+          throw e;
+        }
+      };
       const admin = () => {
         if (!o.adminKey || req.headers["x-admin-key"] !== o.adminKey) throw new GameError("FORBIDDEN", "Admin key required", 403);
       };
@@ -189,15 +201,19 @@ export function createApp(o: AppOptions): { server: Server; wss: WebSocketServer
 
   const wss = new WebSocketServer({ server, path: "/ws", maxPayload: MAX_BODY });
   const socketPlayer = new WeakMap<WebSocket, string>();
+  const socketToken = new WeakMap<WebSocket, string>();
   wss.on("connection", (ws, req) => {
     let playerId: string;
+    const token = new URL(req.url ?? "/", "http://localhost").searchParams.get("token") ?? undefined;
     try {
-      playerId = svc.playerForToken(new URL(req.url ?? "/", "http://localhost").searchParams.get("token") ?? undefined);
+      playerId = svc.playerForToken(token);
     } catch {
-      ws.close(4401, "unauthorized");
+      if (o.accounts?.replacedByNewerLogin(token)) ws.close(4409, "LOGGED_IN_ELSEWHERE");
+      else ws.close(4401, "unauthorized");
       return;
     }
     socketPlayer.set(ws, playerId);
+    socketToken.set(ws, token!);
     // Like HTTP responses, WebSocket replies go out only once the result is durable.
     const reply = (data: string) =>
       o.store ? o.store.flushed().then(() => ws.send(data), () => ws.terminate()) : ws.send(data);
@@ -237,6 +253,17 @@ export function createApp(o: AppOptions): { server: Server; wss: WebSocketServer
   o.accounts?.events.on("playerBalance", (b: { playerId: string; balanceCents: number }) => {
     const data = JSON.stringify({ type: "balance", balanceCents: b.balanceCents });
     for (const c of wss.clients) if (c.readyState === WebSocket.OPEN && socketPlayer.get(c) === b.playerId) c.send(data);
+  });
+  // A newer login (or a password reset / disable) ends sessions: tell those games and close their sockets.
+  o.accounts?.events.on("sessionsEnded", (e: { tokens: string[]; reason: string }) => {
+    const ended = new Set(e.tokens);
+    const data = JSON.stringify({ type: "sessionEnded", reason: e.reason });
+    for (const c of wss.clients) {
+      const t = socketToken.get(c);
+      if (!t || !ended.has(t)) continue;
+      if (c.readyState === WebSocket.OPEN) c.send(data);
+      c.close(e.reason === "LOGGED_IN_ELSEWHERE" ? 4409 : 4401, e.reason);
+    }
   });
   server.on("close", () => timer && clearTimeout(timer));
 

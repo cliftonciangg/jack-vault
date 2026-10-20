@@ -86,7 +86,10 @@ export function verifyPassword(password: string, stored: string): boolean {
 const DUMMY_HASH = hashPassword(randomBytes(12).toString("hex"));
 
 export class AccountService {
-  /** "playerBalance" { playerId, balanceCents } after a load or redeem, for the live game. */
+  /**
+   * "playerBalance" { playerId, balanceCents } after a load or redeem, for the live game.
+   * "sessionsEnded" { tokens, reason } when game sessions are ended from the server side.
+   */
   readonly events = new EventEmitter();
   readonly store: Store;
   private readonly now: () => Date;
@@ -94,6 +97,8 @@ export class AccountService {
   private readonly profileFor?: (distributorId: string) => string;
   /** Failed logins per lower-case username (in memory; resets on restart). */
   private readonly fails = new Map<string, { count: number; until: number }>();
+  /** Game tokens ended by a newer login of the same player, so their next request can say why (in memory). */
+  private readonly replaced = new Map<string, number>();
 
   constructor(o: AccountServiceOptions) {
     this.store = o.store;
@@ -235,8 +240,26 @@ export class AccountService {
     const a = this.login(username, password, ["PLAYER"]);
     const token = randomBytes(24).toString("base64url");
     const at = this.iso();
-    this.store.commit({ at, accounts: [{ ...a, lastLoginAt: at, lastLoginIp: meta.ip ?? null }], sessions: [{ token, playerId: a.id, createdAt: at }] });
+    // One device at a time: a new login ends the player's other game sessions.
+    const ended = [...this.store.sessions.values()].filter((s) => s.playerId === a.id).map((s) => s.token);
+    this.store.commit({
+      at,
+      accounts: [{ ...a, lastLoginAt: at, lastLoginIp: meta.ip ?? null }],
+      sessions: [{ token, playerId: a.id, createdAt: at }],
+      revokeSessions: ended,
+    });
+    if (ended.length) {
+      const t = this.now().getTime();
+      for (const [k, when] of this.replaced) if (t - when > 7 * 86400_000) this.replaced.delete(k);
+      for (const k of ended) this.replaced.set(k, t);
+      this.events.emit("sessionsEnded", { tokens: ended, reason: "LOGGED_IN_ELSEWHERE" });
+    }
     return { token, playerId: a.id };
+  }
+
+  /** True if this game token was ended because the player logged in on another device. */
+  replacedByNewerLogin(token: string | undefined): boolean {
+    return !!token && this.replaced.has(token);
   }
 
   logout(token: string | undefined): void {
@@ -365,14 +388,18 @@ export class AccountService {
   setPassword(target: Account, password: string): void {
     checkPassword(password);
     const at = this.iso();
-    this.store.commit({ at, accounts: [{ ...target, passwordHash: hashPassword(password) }], revokeSessions: this.tokensOf(target.id) });
+    const tokens = this.tokensOf(target.id);
+    this.store.commit({ at, accounts: [{ ...target, passwordHash: hashPassword(password) }], revokeSessions: tokens });
+    if (tokens.length) this.events.emit("sessionsEnded", { tokens, reason: "SIGNED_OUT" });
   }
 
   setStatus(target: Account, status: string): AccountView {
     if (status !== "ACTIVE" && status !== "DISABLED") throw new GameError("BAD_STATUS", "status must be ACTIVE or DISABLED");
     const at = this.iso();
     const next = { ...target, status } as Account;
-    this.store.commit({ at, accounts: [next], revokeSessions: status === "DISABLED" ? this.tokensOf(target.id) : [] });
+    const tokens = status === "DISABLED" ? this.tokensOf(target.id) : [];
+    this.store.commit({ at, accounts: [next], revokeSessions: tokens });
+    if (tokens.length) this.events.emit("sessionsEnded", { tokens, reason: "SIGNED_OUT" });
     return this.view(next);
   }
 

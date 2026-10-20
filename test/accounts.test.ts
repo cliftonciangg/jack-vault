@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { AddressInfo } from "node:net";
+import { WebSocket } from "ws";
 import { AccountService } from "../src/accounts/accounts.js";
 import { createApp } from "../src/api/app.js";
 import { loadProfile } from "../src/math/profile.js";
@@ -198,4 +199,74 @@ test("REST: office login, create, load, redeem, ledger; player login and spin; a
   } finally {
     await new Promise<void>((r) => server.close(() => r()));
   }
+});
+
+test("a player plays on one device at a time: a new login logs the older device out", async () => {
+  const { svc, acc, store } = setup();
+  const { player } = chain(acc);
+  const service = svc;
+  const { server, wss } = createApp({ service, accounts: acc, allowPlayerCreate: false, store });
+  await new Promise<void>((r) => server.listen(0, r));
+  const port = (server.address() as AddressInfo).port;
+  const base = `http://127.0.0.1:${port}`;
+  const call = async (method: string, path: string, body?: unknown, token?: string) => {
+    const res = await fetch(base + path, {
+      method,
+      headers: { "content-type": "application/json", ...(token ? { authorization: `Bearer ${token}` } : {}) },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+    return { status: res.status, json: (await res.json().catch(() => null)) as any };
+  };
+  const login = async () => (await call("POST", "/api/player/login", { username: "player1", password: "player-pass" })).json.token as string;
+  try {
+    // Laptop logs in and keeps its socket open.
+    const laptop = await login();
+    const ws = new WebSocket(`ws://127.0.0.1:${port}/ws?token=${laptop}`);
+    await new Promise((r) => ws.addEventListener("open", r, { once: true }));
+    const pushes: any[] = [];
+    ws.addEventListener("message", (ev) => pushes.push(JSON.parse(String(ev.data))));
+    const closed = new Promise<number>((r) => ws.addEventListener("close", (ev) => r(ev.code), { once: true }));
+
+    // Phone logs in: the laptop is told and its socket closes.
+    const phone = await login();
+    assert.equal(await closed, 4409);
+    assert.deepEqual(pushes.find((m) => m.type === "sessionEnded"), { type: "sessionEnded", reason: "LOGGED_IN_ELSEWHERE" });
+
+    // The phone plays the balance down; the laptop's next spin is refused, whatever balance it still shows.
+    store.commit({ at: new Date().toISOString(), players: [{ ...store.players.get(player.id)!, balanceCents: 23 }] });
+    assert.equal((await call("POST", "/api/spin", { requestId: rid(), betCents: 25 }, phone)).json.error.code, "INSUFFICIENT_FUNDS");
+    const stale = await call("POST", "/api/spin", { requestId: rid(), betCents: 25 }, laptop);
+    assert.equal(stale.status, 401);
+    assert.equal(stale.json.error.code, "LOGGED_IN_ELSEWHERE");
+    assert.equal((await call("GET", "/api/state", undefined, laptop)).json.error.code, "LOGGED_IN_ELSEWHERE");
+    assert.equal(svc.state(player.id).balanceCents, 23, "nothing was spent");
+
+    // A reconnect with the old token is closed at once with the same reason.
+    const again = new WebSocket(`ws://127.0.0.1:${port}/ws?token=${laptop}`);
+    assert.equal(await new Promise<number>((r) => again.addEventListener("close", (ev) => r(ev.code), { once: true })), 4409);
+
+    // The phone is still fine, and logging in on the laptop again ends the phone instead.
+    assert.equal((await call("GET", "/api/state", undefined, phone)).status, 200);
+    const laptop2 = await login();
+    assert.equal((await call("GET", "/api/state", undefined, phone)).json.error.code, "LOGGED_IN_ELSEWHERE");
+    assert.equal((await call("GET", "/api/state", undefined, laptop2)).json.balanceCents, 23);
+    assert.equal([...store.sessions.values()].filter((s) => s.playerId === player.id).length, 1);
+
+    // A plain logout is not "another device".
+    await call("POST", "/api/player/logout", undefined, laptop2);
+    assert.equal((await call("GET", "/api/state", undefined, laptop2)).json.error.code, "UNAUTHORIZED");
+  } finally {
+    wss.close();
+    server.closeAllConnections();
+    await new Promise((r) => server.close(r));
+  }
+});
+
+test("staff can stay logged in on several devices", () => {
+  const { acc } = setup();
+  chain(acc);
+  const a = acc.staffLogin("agent1", "agent-pass");
+  const b = acc.staffLogin("agent1", "agent-pass");
+  assert.equal(acc.staffForToken(a.token).username, "agent1");
+  assert.equal(acc.staffForToken(b.token).username, "agent1");
 });
