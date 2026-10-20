@@ -252,6 +252,8 @@ Back up the database the usual way (`pg_dump`, or your host's automatic backups)
 
 ## Before production
 
+To put it online at jackvault777.com, follow [docs/hosting.md](docs/hosting.md) (Railway, with HTTPS, PostgreSQL backups and production settings).
+
 These are deliberate simplifications for a runnable first build:
 
 - **Storage.** Use PostgreSQL (`DATABASE_URL`) in production. The journal file is for development and demos.
