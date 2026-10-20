@@ -6,9 +6,10 @@ import type { Account, Commit, LedgerEntry, LedgerType, Role, Store } from "../s
 import { WalletTxBuilder } from "../wallet/wallet.js";
 
 /**
- * Distributor -> agent -> player coin system.
+ * Operator -> distributor -> agent -> player coin system.
  *
- * The operator (ADMIN_KEY) creates distributors and issues points to them.
+ * The operator (an OPERATOR account, or the ADMIN_KEY) creates distributors
+ * and issues points to them.
  * A distributor creates agents and loads / redeems their points. An agent
  * creates players and loads / redeems their coins, out of and back into the
  * agent's own points. Every move is one LedgerEntry, committed in the same
@@ -25,7 +26,18 @@ export interface AccountServiceOptions {
   now?: () => Date;
   /** Back-office session lifetime. Default 12 hours. */
   staffSessionMs?: number;
+  /** The math profile a distributor's players play on (from GameService), shown on distributor views. */
+  profileFor?: (distributorId: string) => string;
 }
+
+/** Who is logging in and from where, for the session list and last-login column. */
+export interface LoginMeta {
+  ip?: string | null;
+  userAgent?: string | null;
+}
+
+/** Which tab of the back-office login page: operators log in separately from distributors and agents. */
+export type Portal = "staff" | "operator";
 
 export interface AccountView {
   id: string;
@@ -35,16 +47,24 @@ export interface AccountView {
   status: Account["status"];
   balanceCents: number;
   createdAt: string;
+  lastLoginAt: string | null;
+  /** Locked for a minute after five wrong passwords. */
+  locked: boolean;
   /** Distributor's agents / agent's players. */
   children?: number;
   /** Sum of the children's balances. */
   childrenBalanceCents?: number;
+  /** Distributor: the math profile its players play on. */
+  profileId?: string;
 }
 
-const CHILD_ROLE: Record<Role, Role | null> = { DISTRIBUTOR: "AGENT", AGENT: "PLAYER", PLAYER: null };
-const ID_PREFIX: Record<Role, string> = { DISTRIBUTOR: "d_", AGENT: "a_", PLAYER: "p_" };
+const CHILD_ROLE: Record<Role, Role | null> = { OPERATOR: "DISTRIBUTOR", DISTRIBUTOR: "AGENT", AGENT: "PLAYER", PLAYER: null };
+const ID_PREFIX: Record<Role, string> = { OPERATOR: "o_", DISTRIBUTOR: "d_", AGENT: "a_", PLAYER: "p_" };
+const STAFF_ROLES: Record<Portal, Role[]> = { staff: ["DISTRIBUTOR", "AGENT"], operator: ["OPERATOR"] };
 const MAX_FAILS = 5;
 const LOCK_MS = 60_000;
+/** A session's last-active time is written at most this often. */
+const SEEN_EVERY_MS = 5 * 60_000;
 /** One move at most 10,000,000.00, so sums stay far inside safe integers. */
 const MAX_AMOUNT = 1_000_000_000;
 
@@ -68,9 +88,10 @@ const DUMMY_HASH = hashPassword(randomBytes(12).toString("hex"));
 export class AccountService {
   /** "playerBalance" { playerId, balanceCents } after a load or redeem, for the live game. */
   readonly events = new EventEmitter();
-  private readonly store: Store;
+  readonly store: Store;
   private readonly now: () => Date;
   private readonly staffSessionMs: number;
+  private readonly profileFor?: (distributorId: string) => string;
   /** Failed logins per lower-case username (in memory; resets on restart). */
   private readonly fails = new Map<string, { count: number; until: number }>();
 
@@ -78,6 +99,7 @@ export class AccountService {
     this.store = o.store;
     this.now = o.now ?? (() => new Date());
     this.staffSessionMs = o.staffSessionMs ?? 12 * 3600_000;
+    this.profileFor = o.profileFor;
   }
 
   private iso(): string {
@@ -101,8 +123,41 @@ export class AccountService {
     return a.role === "PLAYER" ? (this.store.players.get(a.id)?.balanceCents ?? 0) : a.balanceCents;
   }
 
-  children(parentId: string): Account[] {
-    return [...this.store.accounts.values()].filter((a) => a.parentId === parentId);
+  /** Direct children: an operator's are all distributors (they have no parent account). */
+  children(parent: Account | string): Account[] {
+    const p = typeof parent === "string" ? this.store.accounts.get(parent) : parent;
+    if (!p) return [];
+    return [...this.store.accounts.values()].filter((a) => isChild(p, a));
+  }
+
+  /** Every account below `a`, at any depth. */
+  descendants(a: Account): Account[] {
+    if (a.role === "OPERATOR") return [...this.store.accounts.values()].filter((x) => x.role !== "OPERATOR");
+    const out: Account[] = [];
+    for (let level = this.children(a); level.length; level = level.flatMap((k) => this.children(k))) out.push(...level);
+    return out;
+  }
+
+  /** True if `actor` is `a` or above it in the tree. */
+  canSee(actor: Account, a: Account): boolean {
+    if (actor.id === a.id) return true;
+    if (actor.role === "OPERATOR") return a.role !== "OPERATOR";
+    for (let p = a.parentId ? this.store.accounts.get(a.parentId) : undefined; p; p = p.parentId ? this.store.accounts.get(p.parentId) : undefined) {
+      if (p.id === actor.id) return true;
+    }
+    return false;
+  }
+
+  /** The account `id` if `actor` may look at it (itself or anything below it). */
+  visible(actor: Account, id: string): Account {
+    const a = this.store.accounts.get(id) ?? this.byUsername(id);
+    if (!a || !this.canSee(actor, a)) throw new GameError("ACCOUNT_NOT_FOUND", "Account not found", 404);
+    return a;
+  }
+
+  isLocked(username: string): boolean {
+    const f = this.fails.get(username.toLowerCase());
+    return !!f && f.until > this.now().getTime();
   }
 
   view(a: Account): AccountView {
@@ -114,12 +169,15 @@ export class AccountService {
       status: a.status,
       balanceCents: this.balanceOf(a),
       createdAt: a.createdAt,
+      lastLoginAt: a.lastLoginAt ?? null,
+      locked: this.isLocked(a.username),
     };
     if (a.role !== "PLAYER") {
-      const kids = this.children(a.id);
+      const kids = this.children(a);
       v.children = kids.length;
       v.childrenBalanceCents = kids.reduce((s, k) => s + this.balanceOf(k), 0);
     }
+    if (a.role === "DISTRIBUTOR" && this.profileFor) v.profileId = this.profileFor(a.id);
     return v;
   }
 
@@ -146,24 +204,38 @@ export class AccountService {
     return a!;
   }
 
-  /** Back-office login for distributors and agents. */
-  staffLogin(username: string, password: string): { token: string; account: AccountView } {
-    const a = this.login(username, password, ["DISTRIBUTOR", "AGENT"]);
+  /** Back-office login: distributors and agents on the staff tab, operators on the operator tab. */
+  staffLogin(username: string, password: string, portal: Portal = "staff", meta: LoginMeta = {}): { token: string; account: AccountView } {
+    const a = this.login(username, password, STAFF_ROLES[portal] ?? STAFF_ROLES.staff);
     const at = this.now();
+    const iso = at.toISOString();
     const token = randomBytes(24).toString("base64url");
+    const ip = meta.ip ?? null;
+    const next = { ...a, lastLoginAt: iso, lastLoginIp: ip };
     this.store.commit({
-      at: at.toISOString(),
-      staffSessions: [{ token, accountId: a.id, createdAt: at.toISOString(), expiresAt: new Date(at.getTime() + this.staffSessionMs).toISOString() }],
+      at: iso,
+      accounts: [next],
+      staffSessions: [
+        {
+          token,
+          accountId: a.id,
+          createdAt: iso,
+          expiresAt: new Date(at.getTime() + this.staffSessionMs).toISOString(),
+          ip,
+          userAgent: meta.userAgent?.slice(0, 200) ?? null,
+          lastSeenAt: iso,
+        },
+      ],
     });
-    return { token, account: this.view(a) };
+    return { token, account: this.view(next) };
   }
 
   /** Game login for players: opens a normal game session, so every game route works unchanged. */
-  playerLogin(username: string, password: string): { token: string; playerId: string } {
+  playerLogin(username: string, password: string, meta: LoginMeta = {}): { token: string; playerId: string } {
     const a = this.login(username, password, ["PLAYER"]);
     const token = randomBytes(24).toString("base64url");
     const at = this.iso();
-    this.store.commit({ at, sessions: [{ token, playerId: a.id, createdAt: at }] });
+    this.store.commit({ at, accounts: [{ ...a, lastLoginAt: at, lastLoginIp: meta.ip ?? null }], sessions: [{ token, playerId: a.id, createdAt: at }] });
     return { token, playerId: a.id };
   }
 
@@ -173,13 +245,68 @@ export class AccountService {
     }
   }
 
-  /** The active distributor or agent behind a back-office token. */
+  /** The active operator, distributor or agent behind a back-office token. */
   staffForToken(token: string | undefined): Account {
     const s = token ? this.store.staffSessions.get(token) : undefined;
-    if (!s || Date.parse(s.expiresAt) <= this.now().getTime()) throw new GameError("UNAUTHORIZED", "Please log in again", 401);
+    const t = this.now().getTime();
+    if (!s || Date.parse(s.expiresAt) <= t) throw new GameError("UNAUTHORIZED", "Please log in again", 401);
     const a = this.account(s.accountId);
     if (a.status !== "ACTIVE") throw new GameError("ACCOUNT_DISABLED", "This account is disabled", 403);
+    if (!s.lastSeenAt || t - Date.parse(s.lastSeenAt) >= SEEN_EVERY_MS) {
+      this.store.commit({ at: this.iso(), staffSessions: [{ ...s, lastSeenAt: this.iso() }] });
+    }
     return a;
+  }
+
+  // ---------------------------------------------------------------- own account
+
+  /** Changes the caller's own password; every other session of theirs is logged out. */
+  changeOwnPassword(actor: Account, current: string, next: string, keepToken?: string): void {
+    if (!verifyPassword(String(current ?? ""), actor.passwordHash)) throw new GameError("BAD_PASSWORD", "Current password is wrong", 403);
+    checkStrongPassword(next);
+    if (verifyPassword(next, actor.passwordHash)) throw new GameError("BAD_PASSWORD", "The new password must be different");
+    this.store.commit({
+      at: this.iso(),
+      accounts: [{ ...actor, passwordHash: hashPassword(next) }],
+      revokeSessions: this.tokensOf(actor.id).filter((t) => t !== keepToken),
+    });
+  }
+
+  setTimeZone(actor: Account, timeZone: string): AccountView {
+    timeZone = String(timeZone ?? "");
+    try {
+      if (!timeZone) throw new Error();
+      new Intl.DateTimeFormat("en-US", { timeZone });
+    } catch {
+      throw new GameError("BAD_TIME_ZONE", "Unknown time zone");
+    }
+    const next = { ...actor, timeZone };
+    this.store.commit({ at: this.iso(), accounts: [next] });
+    return this.view(next);
+  }
+
+  /** The caller's live back-office sessions, newest first. */
+  sessions(actor: Account, currentToken?: string) {
+    const t = this.now().getTime();
+    return [...this.store.staffSessions.values()]
+      .filter((s) => s.accountId === actor.id && Date.parse(s.expiresAt) > t)
+      .reverse()
+      .map((s) => ({
+        // A short handle, never the token itself.
+        id: s.token.slice(0, 8),
+        current: s.token === currentToken,
+        ip: s.ip ?? null,
+        userAgent: s.userAgent ?? null,
+        createdAt: s.createdAt,
+        lastSeenAt: s.lastSeenAt ?? s.createdAt,
+      }));
+  }
+
+  /** Logs the caller out everywhere except this session. Returns how many were ended. */
+  logoutOthers(actor: Account, keepToken: string | undefined): number {
+    const tokens = [...this.store.staffSessions.values()].filter((s) => s.accountId === actor.id && s.token !== keepToken).map((s) => s.token);
+    if (tokens.length) this.store.commit({ at: this.iso(), revokeSessions: tokens });
+    return tokens.length;
   }
 
   // ---------------------------------------------------------------- accounts
@@ -195,17 +322,26 @@ export class AccountService {
     return { id, username, role, parentId, passwordHash: hashPassword(password), status: "ACTIVE", balanceCents: 0, createdAt: this.iso() };
   }
 
-  /** Operator: a new distributor. */
-  createDistributor(username: string, password: string): AccountView {
+  /** Operator: a new distributor, optionally on a chosen math profile (checked by the caller). */
+  createDistributor(username: string, password: string, profileId?: string): AccountView {
     const a = this.newAccount("DISTRIBUTOR", null, username, password);
+    if (profileId) a.profileId = profileId;
     this.store.commit({ at: a.createdAt, accounts: [a] });
     return this.view(a);
   }
 
-  /** A distributor creates an agent; an agent creates a player. */
-  createChild(actor: Account, username: string, password: string): AccountView {
+  /** A back-office login for the operator. Created with the admin key or SEED_OPERATOR. */
+  createOperator(username: string, password: string): AccountView {
+    const a = this.newAccount("OPERATOR", null, username, password);
+    this.store.commit({ at: a.createdAt, accounts: [a] });
+    return this.view(a);
+  }
+
+  /** An operator creates a distributor, a distributor an agent, an agent a player. */
+  createChild(actor: Account, username: string, password: string, profileId?: string): AccountView {
     const role = CHILD_ROLE[actor.role];
     if (!role) throw new GameError("FORBIDDEN", "Players can't create accounts", 403);
+    if (role === "DISTRIBUTOR") return this.createDistributor(username, password, profileId);
     const a = this.newAccount(role, actor.id, username, password);
     const commit: Commit = { at: a.createdAt, accounts: [a] };
     if (role === "PLAYER") commit.players = [{ id: a.id, balanceCents: 0, createdAt: a.createdAt }];
@@ -216,14 +352,14 @@ export class AccountService {
   /** The account `id`, if `actor` is its direct parent. */
   childOf(actor: Account, id: string): Account {
     const a = this.store.accounts.get(id);
-    if (!a || a.parentId !== actor.id) throw new GameError("ACCOUNT_NOT_FOUND", "Account not found", 404);
+    if (!a || !isChild(actor, a)) throw new GameError("ACCOUNT_NOT_FOUND", "Account not found", 404);
     return a;
   }
 
-  /** Children of `actor`, or of one of its agents (read-only view for a distributor). */
+  /** Children of `actor`, or (read only) of any account below it. */
   list(actor: Account, parentId?: string): AccountView[] {
-    const parent = parentId && parentId !== actor.id ? this.childOf(actor, parentId) : actor;
-    return this.children(parent.id).map((a) => this.view(a));
+    const parent = parentId && parentId !== actor.id ? this.visible(actor, parentId) : actor;
+    return this.children(parent).map((a) => this.view(a));
   }
 
   setPassword(target: Account, password: string): void {
@@ -249,23 +385,26 @@ export class AccountService {
 
   // ---------------------------------------------------------------- coin movements
 
-  /** Operator: issue points to a distributor (positive) or take them back (negative). */
-  issue(distributorId: string, requestId: string, amountCents: number): { entry: LedgerEntry; balanceCents: number } {
+  /**
+   * Operator: issue points to a distributor (positive) or take them back
+   * (negative). `actorId` is the operator account, or "operator" for the admin key.
+   */
+  issue(distributorId: string, requestId: string, amountCents: number, actorId = "operator", note?: string): { entry: LedgerEntry; balanceCents: number } {
     const d = this.account(distributorId);
     if (d.role !== "DISTRIBUTOR") throw new GameError("NOT_DISTRIBUTOR", "Points are issued to distributors only");
     if (!Number.isInteger(amountCents) || amountCents === 0) throw new GameError("BAD_AMOUNT", "amountCents must be a non-zero integer");
     const type: LedgerType = amountCents > 0 ? "ISSUE" : "REVOKE";
-    return this.move("operator", type, type === "ISSUE" ? null : d, type === "ISSUE" ? d : null, Math.abs(amountCents), requestId);
+    return this.move(actorId, type, type === "ISSUE" ? null : d, type === "ISSUE" ? d : null, Math.abs(amountCents), requestId, note);
   }
 
   /** Parent gives coins to a child (distributor -> agent, agent -> player). */
-  load(actor: Account, childId: string, requestId: string, amountCents: number) {
-    return this.move(actor.id, "LOAD", actor, this.childOf(actor, childId), amountCents, requestId);
+  load(actor: Account, childId: string, requestId: string, amountCents: number, note?: string) {
+    return this.move(actor.id, "LOAD", actor, this.childOf(actor, childId), amountCents, requestId, note);
   }
 
   /** Parent takes coins back from a child into its own balance. */
-  redeem(actor: Account, childId: string, requestId: string, amountCents: number) {
-    return this.move(actor.id, "REDEEM", this.childOf(actor, childId), actor, amountCents, requestId);
+  redeem(actor: Account, childId: string, requestId: string, amountCents: number, note?: string) {
+    return this.move(actor.id, "REDEEM", this.childOf(actor, childId), actor, amountCents, requestId, note);
   }
 
   /**
@@ -273,13 +412,14 @@ export class AccountService {
    * ledger entry. Idempotent on (actor, requestId): a retry returns the
    * original result and moves nothing.
    */
-  private move(actorId: string, type: LedgerType, from: Account | null, to: Account | null, amountCents: number, requestId: string) {
+  private move(actorId: string, type: LedgerType, from: Account | null, to: Account | null, amountCents: number, requestId: string, note?: string) {
     if (typeof requestId !== "string" || !/^[A-Za-z0-9_-]{8,64}$/.test(requestId)) {
       throw new GameError("BAD_REQUEST_ID", "requestId must be 8-64 chars [A-Za-z0-9_-] (a UUID works)");
     }
     if (!Number.isInteger(amountCents) || amountCents <= 0 || amountCents > MAX_AMOUNT) {
       throw new GameError("BAD_AMOUNT", "Amount must be a positive whole number of cents, at most 10,000,000.00");
     }
+    note = typeof note === "string" ? note.trim().slice(0, 200) : "";
     const key = `ledger:${actorId}:${requestId}`;
     const fingerprint = canonicalJson({ type, from: from?.id ?? null, to: to?.id ?? null, amountCents });
     const prior = this.store.idempotency.get(key);
@@ -322,8 +462,10 @@ export class AccountService {
       requestId,
       at,
     };
-    const actorAccount = actorId === "operator" ? null : this.store.accounts.get(actorId)!;
-    const own = actorAccount ? (actorAccount.id === from?.id ? fromAfter : toAfter) : (to ? toAfter : fromAfter);
+    if (note) entry.note = note;
+    const actorAccount = this.store.accounts.get(actorId);
+    // The operator holds no balance, so it sees the distributor's.
+    const own = actorAccount && actorAccount.role !== "OPERATOR" ? (actorAccount.id === from?.id ? fromAfter : toAfter) : to ? toAfter : fromAfter;
     const response = { entry, balanceCents: own ?? 0 };
     commit.ledger = [entry];
     commit.idempotency = [{ key, fingerprint, response, at }];
@@ -335,27 +477,54 @@ export class AccountService {
   }
 
   /**
-   * Ledger entries an account may see: its own moves and its children's, newest
-   * first. With `accountId`, only entries touching that account (itself or a child).
+   * Ledger entries an account may see (its own moves and those of every account
+   * below it), newest first. Filters: `accountId` (id or username) keeps entries
+   * touching that account, `types`, and a time range [from, to).
    */
-  ledger(actor: Account, opts: { accountId?: string; limit?: number; before?: string } = {}) {
-    const mine = new Set([actor.id, ...this.children(actor.id).map((c) => c.id)]);
-    if (actor.role === "DISTRIBUTOR") for (const agent of this.children(actor.id)) for (const p of this.children(agent.id)) mine.add(p.id);
-    if (opts.accountId && !mine.has(opts.accountId)) throw new GameError("ACCOUNT_NOT_FOUND", "Account not found", 404);
+  ledger(actor: Account, opts: LedgerQuery = {}) {
     const n = Math.max(1, Math.min(500, opts.limit ?? 100));
     const out: LedgerEntry[] = [];
+    for (const e of this.ledgerEntries(actor, opts, opts.before)) {
+      out.push(e);
+      if (out.length >= n) break;
+    }
+    return out.map((e) => this.describe(e));
+  }
+
+  /** Every entry `ledger` would page through, newest first, without the page limit. */
+  *ledgerEntries(actor: Account, opts: LedgerQuery = {}, before?: string): Generator<LedgerEntry> {
+    const target = opts.accountId ? this.visible(actor, opts.accountId).id : null;
+    const mine = actor.role === "OPERATOR" ? null : new Set([actor.id, ...this.descendants(actor).map((c) => c.id)]);
+    const types = opts.types?.length ? new Set(opts.types) : null;
     const all = [...this.store.ledger.values()];
     let i = all.length - 1;
-    if (opts.before) {
-      const j = all.findIndex((e) => e.entryId === opts.before);
+    if (before) {
+      const j = all.findIndex((e) => e.entryId === before);
       if (j >= 0) i = j - 1;
     }
-    for (; i >= 0 && out.length < n; i--) {
+    for (; i >= 0; i--) {
       const e = all[i];
-      const touches = opts.accountId ? e.fromId === opts.accountId || e.toId === opts.accountId : (e.fromId && mine.has(e.fromId)) || (e.toId && mine.has(e.toId));
-      if (touches) out.push(e);
+      if (opts.to && e.at >= opts.to) continue;
+      if (opts.from && e.at < opts.from) break;
+      if (types && !types.has(e.type)) continue;
+      const touches = target
+        ? e.fromId === target || e.toId === target
+        : !mine || (e.fromId !== null && mine.has(e.fromId)) || (e.toId !== null && mine.has(e.toId));
+      if (touches) yield e;
     }
-    return out.map((e) => ({ ...e, from: this.nameOf(e.fromId), to: this.nameOf(e.toId), actor: this.nameOf(e.actorId === "operator" ? null : e.actorId) }));
+  }
+
+  /** A ledger entry with names and roles, for display. */
+  describe(e: LedgerEntry) {
+    const role = (id: string | null) => (id ? (this.store.accounts.get(id)?.role ?? null) : "OPERATOR");
+    return {
+      ...e,
+      from: this.nameOf(e.fromId),
+      to: this.nameOf(e.toId),
+      fromRole: role(e.fromId),
+      toRole: role(e.toId),
+      actor: this.nameOf(e.actorId === "operator" ? null : e.actorId),
+    };
   }
 
   private nameOf(id: string | null): string {
@@ -391,6 +560,11 @@ export class AccountService {
     return { staffBalancesMatchLedger: staffOk, pointsConserved: held === issued, issuedCents: issued, ledgerEntries: this.store.ledger.size };
   }
 
+  /** Creates the first operator login at startup (SEED_OPERATOR) if the username is free. */
+  seedOperator(username: string, password: string): AccountView | null {
+    return this.byUsername(username) ? null : this.createOperator(username, password);
+  }
+
   /** Creates the first distributor at startup (dev, or from SEED_DISTRIBUTOR) if the username is free. */
   seed(username: string, password: string, pointsCents: number): AccountView | null {
     if (this.byUsername(username)) return null;
@@ -400,8 +574,31 @@ export class AccountService {
   }
 }
 
+export interface LedgerQuery {
+  accountId?: string;
+  types?: LedgerType[];
+  /** ISO time, inclusive. */
+  from?: string;
+  /** ISO time, exclusive. */
+  to?: string;
+  limit?: number;
+  before?: string;
+}
+
+/** Operators have no parent account: every distributor is theirs. */
+function isChild(parent: Account, a: Account): boolean {
+  return parent.role === "OPERATOR" ? a.role === "DISTRIBUTOR" : a.parentId === parent.id;
+}
+
 function checkPassword(p: unknown): void {
   if (typeof p !== "string" || p.length < 6 || p.length > 64) throw new GameError("BAD_PASSWORD", "Password must be 6-64 characters");
+}
+
+/** The rule for staff changing their own password. */
+export function checkStrongPassword(p: unknown): void {
+  if (typeof p !== "string" || p.length < 10 || p.length > 64 || !/[A-Z]/.test(p) || !/[0-9]/.test(p)) {
+    throw new GameError("WEAK_PASSWORD", "At least 10 characters with an upper-case letter and a number");
+  }
 }
 
 function fmt(cents: number): string {

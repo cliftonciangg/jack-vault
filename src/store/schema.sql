@@ -88,3 +88,18 @@ CREATE TABLE IF NOT EXISTS ledger (
 );
 CREATE INDEX IF NOT EXISTS ledger_from ON ledger (from_id, seq);
 CREATE INDEX IF NOT EXISTS ledger_to ON ledger (to_id, seq);
+
+CREATE TABLE IF NOT EXISTS settings (
+  id   int PRIMARY KEY CHECK (id = 1),
+  data jsonb NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS change_log (
+  id        text PRIMARY KEY,
+  kind      text NOT NULL,
+  target_id text,
+  actor_id  text NOT NULL,
+  at        timestamptz NOT NULL,
+  data      jsonb NOT NULL,
+  seq       bigserial
+);
