@@ -36,6 +36,7 @@ const service = new GameService({
   store,
   startingBalanceCents: Number(env.STARTING_BALANCE_CENTS ?? 100_000),
 });
+service.warmProfileStats();
 const accounts = new AccountService({ store, profileFor: (id) => service.distributorProfileId(id) });
 const seedOp = env.SEED_OPERATOR ?? (env.NODE_ENV === "production" ? "" : "demo-operator:demo1234");
 if (seedOp.includes(":")) {

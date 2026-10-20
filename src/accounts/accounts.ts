@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { EventEmitter } from "node:events";
 import { GameError } from "../engine/engine.js";
 import { canonicalJson } from "../math/profile.js";
@@ -292,8 +292,8 @@ export class AccountService {
       .filter((s) => s.accountId === actor.id && Date.parse(s.expiresAt) > t)
       .reverse()
       .map((s) => ({
-        // A short handle, never the token itself.
-        id: s.token.slice(0, 8),
+        // A short handle derived from the token, never any part of the token itself.
+        id: createHash("sha256").update(s.token).digest("hex").slice(0, 12),
         current: s.token === currentToken,
         ip: s.ip ?? null,
         userAgent: s.userAgent ?? null,
@@ -496,6 +496,7 @@ export class AccountService {
     const target = opts.accountId ? this.visible(actor, opts.accountId).id : null;
     const mine = actor.role === "OPERATOR" ? null : new Set([actor.id, ...this.descendants(actor).map((c) => c.id)]);
     const types = opts.types?.length ? new Set(opts.types) : null;
+    const actorId = opts.actorId ? this.visible(actor, opts.actorId).id : null;
     const all = [...this.store.ledger.values()];
     let i = all.length - 1;
     if (before) {
@@ -507,6 +508,7 @@ export class AccountService {
       if (opts.to && e.at >= opts.to) continue;
       if (opts.from && e.at < opts.from) break;
       if (types && !types.has(e.type)) continue;
+      if (actorId && e.actorId !== actorId) continue;
       const touches = target
         ? e.fromId === target || e.toId === target
         : !mine || (e.fromId !== null && mine.has(e.fromId)) || (e.toId !== null && mine.has(e.toId));
@@ -576,6 +578,8 @@ export class AccountService {
 
 export interface LedgerQuery {
   accountId?: string;
+  /** Only moves made by this account (id or username). */
+  actorId?: string;
   types?: LedgerType[];
   /** ISO time, inclusive. */
   from?: string;

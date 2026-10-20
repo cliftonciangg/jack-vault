@@ -128,8 +128,13 @@ export class OfficeReports {
     let revoked = 0;
     let periodIssued = 0;
     let periodRevoked = 0;
+    /** Period loads and redeems, by the role of the account doing the loading / redeeming. */
+    const moves = { distributorLoadedCents: 0, agentLoadedCents: 0, distributorRedeemedCents: 0, agentRedeemedCents: 0 };
+    const roleOf = (id: string | null) => (id ? this.store.accounts.get(id)?.role : undefined);
     for (const e of this.store.ledger.values()) {
       const inPeriod = (!p.from || e.at >= p.from) && (!p.to || e.at < p.to);
+      if (inPeriod && e.type === "LOAD") moves[roleOf(e.fromId) === "DISTRIBUTOR" ? "distributorLoadedCents" : "agentLoadedCents"] += e.amountCents;
+      if (inPeriod && e.type === "REDEEM") moves[roleOf(e.toId) === "DISTRIBUTOR" ? "distributorRedeemedCents" : "agentRedeemedCents"] += e.amountCents;
       if (e.type === "ISSUE") {
         issued += e.amountCents;
         if (inPeriod) periodIssued += e.amountCents;
@@ -146,6 +151,7 @@ export class OfficeReports {
       circulationCents: issued - revoked,
       periodIssuedCents: periodIssued,
       periodRevokedCents: periodRevoked,
+      ...moves,
       heldByDistributorsCents: held.DISTRIBUTOR,
       heldByAgentsCents: held.AGENT,
       heldByPlayersCents: held.PLAYER,
@@ -217,7 +223,7 @@ export class OfficeReports {
           id: "conservation",
           ok: accounts.pointsConserved,
           title: "Points conserved: issued minus taken back equals what accounts received",
-          detail: `Issued net ${accounts.issuedCents} cents, held through the ledger ${held} cents`,
+          detail: `Issued minus taken back ${money(accounts.issuedCents)}, held by accounts ${money(held)}`,
           mismatches: accounts.pointsConserved ? [] : [{ id: "platform", username: "platform", balanceCents: held, expectedCents: accounts.issuedCents }],
         },
         {
@@ -231,6 +237,10 @@ export class OfficeReports {
       profiles: this.svc.profileIds().map((id) => ({ id, hash: this.svc.profileHashOf(id), isDefault: id === settings.defaultProfileId })),
     };
   }
+}
+
+function money(cents: number): string {
+  return (cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function checkPeriod(p: Period): void {

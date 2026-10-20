@@ -75,7 +75,7 @@ const MAX_BODY = 16 * 1024;
  *   POST /api/office/accounts/:id/profile (office auth) { profileId }  operator sets a distributor's win ratio
  *   GET  /api/office/accounts/:id/rounds?from=&to=&limit=&before= (office auth) a visible player's rounds and totals
  *   GET  /api/office/rounds/:id           (office auth) one round with its replay check
- *   GET  /api/office/ledger?account=&type=&from=&to=&limit=&before= (office auth) type: comma list
+ *   GET  /api/office/ledger?account=&actor=&type=&from=&to=&limit=&before= (office auth) type: comma list
  *   GET  /api/office/summary?from=&to=&parent= (office auth) period flows for me and each child
  *   GET  /api/office/daily?from=&to=&tz=&account= (office auth) loads / redeems per day
  *   GET  /api/office/win-ratio?distributor=&from=&to= (office auth) distributor (own) or operator
@@ -371,7 +371,7 @@ function accountRoute(
       .filter(Boolean) as LedgerType[];
     for (const t of types) if (!["ISSUE", "REVOKE", "LOAD", "REDEEM"].includes(t)) throw new GameError("BAD_TYPE", `Unknown ledger type ${t}`);
     return {
-      body: { entries: acc.ledger(me, { accountId: q.get("account") || undefined, types, ...period(), limit: limit(), before: q.get("before") ?? undefined }) },
+      body: { entries: acc.ledger(me, { accountId: q.get("account") || undefined, actorId: q.get("actor") || undefined, types, ...period(), limit: limit(), before: q.get("before") ?? undefined }) },
     };
   }
   if (method === "GET" && path === "/api/office/summary") return { body: reports.summary(me, { ...period(), parentId: q.get("parent") || undefined }) };

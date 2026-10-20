@@ -237,6 +237,37 @@ export class GameService {
     return r;
   }
 
+  /**
+   * Works out every profile's hit frequency in small slices off the event loop,
+   * so the first win-ratio page doesn't stall spins. Called once at server start.
+   */
+  warmProfileStats(): void {
+    const ids = [...this.profiles.keys()].filter((id) => !this.hitFrequency.has(id));
+    const next = () => {
+      const id = ids.shift();
+      if (!id) return;
+      const p = this.profiles.get(id)!;
+      this.rtpReports(p);
+      const rng = new SeededRng(1);
+      let done = 0;
+      let hits = 0;
+      const slice = () => {
+        if (this.hitFrequency.has(id)) return next();
+        for (const end = Math.min(HIT_FREQUENCY_SPINS, done + 5_000); done < end; done++) {
+          const s = baseSpin(p, p.betLevelsCents[0], rng).step;
+          if (s.winCents > 0 || s.freeSpinsAwarded > 0 || s.wheelTriggered) hits++;
+        }
+        if (done < HIT_FREQUENCY_SPINS) setTimeout(slice, 0).unref();
+        else {
+          this.hitFrequency.set(id, hits / HIT_FREQUENCY_SPINS);
+          next();
+        }
+      };
+      setTimeout(slice, 0).unref();
+    };
+    next();
+  }
+
   profileInfo(id: string): ProfileInfo {
     const p = this.profiles.get(id);
     if (!p) throw new GameError("UNKNOWN_PROFILE", `No math profile ${id}`, 404);

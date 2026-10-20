@@ -150,7 +150,7 @@ test("REST: office login, create, load, redeem, ledger; player login and spin; a
   try {
     const page = await call("GET", "/office");
     assert.equal(page.status, 200);
-    assert.match(page.json, /Back office/);
+    assert.match(page.json, /Back office/i);
 
     assert.equal((await call("POST", "/api/admin/distributors", { username: "boss", password: "boss-pass" })).status, 403);
     const d = (await call("POST", "/api/admin/distributors", { username: "boss", password: "boss-pass" }, adminH)).json;
