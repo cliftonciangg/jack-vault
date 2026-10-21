@@ -18,7 +18,8 @@
     "db:up": "docker compose up -d db",
     "sim": "tsx src/sim/simulate.ts",
     "par": "tsx src/sim/par.ts",
-    "tune": "tsx src/sim/tune.ts"
+    "tune": "tsx src/sim/tune.ts",
+    "bj:sim": "tsx src/sim/bjsim.ts"
   },
   "dependencies": {
     "pg": "^8.23.1",

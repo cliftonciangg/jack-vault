@@ -10,7 +10,7 @@ Needs Node 20+.
 
 ```bash
 npm install
-npm test          # 38 tests: math, RNG, wallet, jackpots, replay, API, accounts and ledger, PostgreSQL, and 1M-spin RTP checks per profile
+npm test          # tests: math, RNG, wallet, jackpots, replay, API, accounts and ledger, PostgreSQL, and 1M-spin RTP checks per profile
 npm run sim       # 5M-spin Monte Carlo of rtp95 vs. the exact RTP (options below)
 npm start         # API on http://localhost:8080 (journal file in ./data, no database needed)
 ```
@@ -29,6 +29,7 @@ Other scripts:
 | `npm run par` | Writes the math sheet (strips, paytable, RTP by bet, feature odds) to `docs/par-sheet.md`. |
 | `npm run tune` | Rebuilds `profiles/rtp94.json`, `rtp95.json`, `rtp96.json` from `src/math/design.ts`. |
 | `npm run tune -- --target 0.955 --id rtp955` | Builds a profile for any RTP target. |
+| `npm run bj:sim -- --rules standard --rounds 2000000 --seed 42` | Blackjack house edge per rule set, plus exact side-bet edges. |
 | `npm run typecheck` / `npm run build` | TypeScript check / compile to `dist/`. |
 
 Server environment variables:
@@ -151,6 +152,27 @@ Other characteristics (rtp95, max bet): hit frequency about 46%, free spins abou
 
 **Changing the RTP.** Edit counts or pays in `src/math/design.ts`, or run `npm run tune -- --target <rtp>`. The tuner adjusts filler symbols on reels 2-5 until the exact RTP hits the target, then writes a new profile JSON. The operator assigns profiles to distributors in the back office (`MATH_PROFILE` only sets the first default). Each profile has a SHA-256 hash (`GET /api/config`, `npm run par`), and every round records the hash it was played on.
 
+## Blackjack (in progress)
+
+A second game for the same lobby, accounts and coins. Step 1, the card engine and its math, is in `src/blackjack/`; the table server, client table scene and back-office records come next. Research and decisions: [Blackjack research](https://claude.ai/artifact/N3FeB8fuGrsQhtmNSZjcZo).
+
+- **Table:** five seats, one real player plus bots. Bets 1.00 to 10.00. Optional side bets, 1.00 to 5.00 each: Perfect Pairs (25/12/6 to 1) and 21+3 (100/40/30/10/5 to 1).
+- **Default rules (`standard`):** 6 decks, blackjack pays 3 to 2, dealer hits soft 17, double any two cards, double after split, split to 4 hands, split Aces get one card, no surrender, the dealer peeks under an Ace or 10, insurance pays 2 to 1. The shoe is reshuffled once half of it is dealt.
+- **Win ratio = rule set.** Blackjack odds come from the posted rules, so the distributor choice is between rule sets printed on the felt, never a hidden adjustment to the cards.
+- **Engine** (`engine.ts`): pure functions over a round state: `startRound`, `decideInsurance`, `legalActions`, `act`, `costOf`. The caller owns the shoe and the clock and debits `costOf(...)` before a double, split or insurance. Each round records every card dealt and every decision, for replay.
+- **Bots** play `basicStrategy` (`strategy.ts`) and never take insurance.
+
+House edge with basic strategy, 10M rounds x 5 seats per rule set (`npm run bj:sim -- --rounds 10000000`, full output in [`docs/blackjack-simulation-50M.txt`](docs/blackjack-simulation-50M.txt)):
+
+| Rule set | Rules | House edge | RTP |
+|---|---|---|---|
+| `classic` | 6 decks, 3:2, S17, DAS | 0.44% ± 0.03% | 99.56% |
+| `standard` (default) | 6 decks, 3:2, H17, DAS | 0.60% ± 0.03% | 99.40% |
+| `tight` | 8 decks, 3:2, H17, no DAS, double on 10-11 | 0.99% ± 0.03% | 99.01% |
+| `shortpay` | 6 decks, 6:5, H17, DAS | 1.97% ± 0.03% | 98.03% |
+
+Side bets, exact (`sideBetEdges`): Perfect Pairs 6.11% at 6 decks (4.10% at 8), 21+3 4.62% at 6 decks (3.70% at 8). Real players who stray from basic strategy lose more than the table figure, typically 1% to 3% of what they bet.
+
 ## API
 
 Money is always **integer cents**. Every call that moves money takes a client-generated `requestId` (8-64 chars, a UUID works). Retrying with the same `requestId` returns the original response and never plays or pays twice; reusing it for a different request returns `409 IDEMPOTENCY_CONFLICT`.
@@ -224,7 +246,8 @@ src/
   store/      in-memory state, persisted to a JSON-lines journal or to PostgreSQL (pgStore.ts, schema.sql)
   service/    GameService: sessions, play, history, replay, audit
   api/        HTTP + WebSocket server
-  sim/        Monte Carlo simulator, tuner, PAR sheet
+  sim/        Monte Carlo simulator, tuner, PAR sheet, blackjack simulator (bjsim.ts)
+  blackjack/  cards and shoe, rule sets, round engine, side bets, basic strategy, simulation
 profiles/     rtp94.json, rtp95.json, rtp96.json (the reel strips and every number the math uses)
 docs/         par-sheet.md
 test/         node:test suites

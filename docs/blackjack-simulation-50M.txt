@@ -1,0 +1,17 @@
+Blackjack  rounds=10,000,000 x 5 seats  rng=crypto
+
+Classic: 6 decks, 3:2, S17, DAS  (classic, 105.7s)
+  house edge  0.441% ± 0.032% (95% CI)   RTP 99.559%
+  SD per hand 1.154x bet   blackjacks 4.53%   seat wins 43.34%   pushes 8.78%   shuffles 1,006,120
+Standard: 6 decks, 3:2, H17, DAS  (standard, 103.9s)
+  house edge  0.600% ± 0.032% (95% CI)   RTP 99.400%
+  SD per hand 1.160x bet   blackjacks 4.53%   seat wins 43.27%   pushes 8.70%   shuffles 1,007,862
+Tight: 8 decks, 3:2, H17, no DAS, double on 10-11  (tight, 109.6s)
+  house edge  0.990% ± 0.031% (95% CI)   RTP 99.010%
+  SD per hand 1.104x bet   blackjacks 4.52%   seat wins 43.22%   pushes 8.82%   shuffles 763,708
+Short pay: 6 decks, 6:5, H17, DAS  (shortpay, 105.0s)
+  house edge  1.967% ± 0.032% (95% CI)   RTP 98.033%
+  SD per hand 1.144x bet   blackjacks 4.53%   seat wins 43.27%   pushes 8.71%   shuffles 1,007,821
+
+Side bets, 6 decks (exact)   Perfect Pairs 6.109%   21+3 4.621%
+Side bets, 8 decks (exact)   Perfect Pairs 4.096%   21+3 3.704%
