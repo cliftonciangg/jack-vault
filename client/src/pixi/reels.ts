@@ -60,7 +60,6 @@ export interface LandOptions {
 
 export class Reel extends Container {
   readonly cells: Cell[] = [];
-  private maskG = new Graphics();
   private glow = new Graphics();
   private tex: SymbolTextures | null = null;
 
@@ -98,8 +97,6 @@ export class Reel extends Container {
       this.cells.push(c);
       this.addChild(c);
     }
-    this.addChild(this.maskG);
-    this.mask = this.maskG;
     every((dt) => {
       this.step(dt);
       return false;
@@ -114,7 +111,6 @@ export class Reel extends Container {
     this.cellW = cellW;
     this.cellH = cellH;
     this.gap = gap;
-    this.maskG.clear().rect(-3, -3, cellW + 6, ROWS * cellH + (ROWS - 1) * gap + 6).fill(0xffffff);
     if (!this.glow.parent) glowLayer.addChild(this.glow);
     this.glow.position.set(this.x, this.y);
     this.render();
