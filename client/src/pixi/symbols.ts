@@ -28,8 +28,15 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.roundRect(x, y, w, h, r);
 }
 
+/**
+ * Copies the drawn canvas into a canvas Pixi sizes itself. Handing Pixi the drawn canvas directly
+ * is unsafe: at some sizes its width / resolution * resolution rounds 1 px off, Pixi then resizes
+ * the canvas to match, and resizing a canvas erases it (blank reel symbols after a resize).
+ */
 function tex(c: HTMLCanvasElement, resolution: number): Texture {
-  return new Texture({ source: new CanvasSource({ resource: c, resolution, antialias: true }) });
+  const source = new CanvasSource({ width: c.width / resolution, height: c.height / resolution, resolution, antialias: true });
+  (source.resource as HTMLCanvasElement).getContext("2d")!.drawImage(c, 0, 0);
+  return new Texture({ source });
 }
 
 /** Draws one reel tile exactly like the design's symbol cell: tile gradient, icon, label. */
