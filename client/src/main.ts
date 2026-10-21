@@ -246,6 +246,7 @@ async function main() {
   };
   // The size may have changed while loading (full screen from the LOG IN tap).
   refit(true);
+  if (new URLSearchParams(location.search).has("debug")) showDebug(stage);
   // Phones can drop GPU images when going full screen or coming back to the tab: redraw the symbols.
   const redraw = () => setTimeout(() => stage.rebuild(), 700);
   document.addEventListener("fullscreenchange", redraw);
@@ -256,6 +257,29 @@ async function main() {
   unlockAudio();
   await loading.close();
   await game.start(st);
+}
+
+/** ?debug: a small on-screen readout for checking rendering on a phone (send a screenshot of it). */
+function showDebug(stage: Stage) {
+  const el = document.createElement("div");
+  el.style.cssText = "position:fixed;left:4px;top:4px;z-index:9999;max-width:96vw;font:11px/1.3 monospace;color:#0f0;background:rgba(0,0,0,.75);padding:4px 6px;pointer-events:none;white-space:pre-wrap";
+  document.body.appendChild(el);
+  const errors: string[] = [];
+  window.addEventListener("error", (e) => errors.push(e.message));
+  const gl = (stage.app.renderer as unknown as { gl?: WebGLRenderingContext }).gl;
+  const tick = () => {
+    const a = gl?.getContextAttributes();
+    const c = stage.app.canvas;
+    el.textContent = [
+      `view ${innerWidth}x${innerHeight} dpr ${devicePixelRatio} fs ${!!document.fullscreenElement}`,
+      `canvas ${c.width}x${c.height} css ${c.style.width} ${c.style.height}`,
+      `gl ${gl ? (gl instanceof WebGL2RenderingContext ? "webgl2" : "webgl1") : "none"} lost ${gl?.isContextLost()} stencil ${a?.stencil} aa ${a?.antialias} bits ${gl?.getParameter(gl.STENCIL_BITS)}`,
+      `clip ${c.style.clipPath}`,
+      errors.slice(-3).join(" | "),
+    ].join("\n");
+  };
+  tick();
+  setInterval(tick, 1000);
 }
 
 void main();

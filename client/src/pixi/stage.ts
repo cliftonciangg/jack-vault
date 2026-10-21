@@ -56,7 +56,12 @@ export class Stage {
     const r = gridEl.getBoundingClientRect();
     const k = frame.scale;
     this.reels.layout({ x: (r.left - root.left) / k, y: (r.top - root.top) / k, w: r.width / k, h: r.height / k }, 1, rowGap);
-    const { cellW, cellH } = this.reels.geom;
+    const { cellW, cellH, y, h, pad, colPad, gap } = this.reels.geom;
+    // Clip the canvas to the reel window, so the symbols scrolling in above and below the 4 rows stay
+    // hidden. This used to be a Pixi (stencil) mask on each reel, but some Android phones lose the
+    // stencil buffer in full screen and the mask then hid every symbol.
+    const m = Math.max(0, gap - 1);
+    this.app.canvas.style.clipPath = `inset(${(y + pad + colPad - m).toFixed(1)}px 0 ${(frame.h - (y + h - pad - colPad) - m).toFixed(1)}px 0)`;
     const key = `${cellW.toFixed(1)}x${cellH.toFixed(1)}@${res.toFixed(2)}`;
     if (key !== this.texKey) {
       const old = this.tex;
