@@ -16,6 +16,14 @@ export interface SymbolTextures {
 /** Final art dropped into public/art (see client/README.md). Missing entries use the vector placeholders. */
 export type ArtImages = Partial<Record<Sym, HTMLImageElement>>;
 
+/**
+ * 2D context kept in main memory (willReadFrequently): GPU-backed canvases can lose their pixels on
+ * phones when the GPU is reset (going full screen, switching apps), which left the reels blank.
+ */
+function ctx2d(c: HTMLCanvasElement) {
+  return c.getContext("2d", { willReadFrequently: true })!;
+}
+
 function canvas(w: number, h: number) {
   const c = document.createElement("canvas");
   c.width = Math.max(1, Math.round(w));
@@ -35,7 +43,7 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
  */
 function tex(c: HTMLCanvasElement, resolution: number): Texture {
   const source = new CanvasSource({ width: c.width / resolution, height: c.height / resolution, resolution, antialias: true });
-  (source.resource as HTMLCanvasElement).getContext("2d")!.drawImage(c, 0, 0);
+  ctx2d(source.resource as HTMLCanvasElement).drawImage(c, 0, 0);
   return new Texture({ source });
 }
 
@@ -43,7 +51,7 @@ function tex(c: HTMLCanvasElement, resolution: number): Texture {
 function drawSymbol(sym: Sym, w: number, h: number, res: number, art?: HTMLImageElement): HTMLCanvasElement {
   const a = SYMBOL_ART[sym];
   const c = canvas(w * res, h * res);
-  const ctx = c.getContext("2d")!;
+  const ctx = ctx2d(c);
   ctx.scale(res, res);
   const k = h / 62;
   roundRect(ctx, 0, 0, w, h, 7 * k);
@@ -117,7 +125,7 @@ function drawSymbol(sym: Sym, w: number, h: number, res: number, art?: HTMLImage
 /** Averages copies of the tile shifted along Y: a cheap, exact vertical motion blur. */
 function motionBlur(src: HTMLCanvasElement, spreadPx: number): HTMLCanvasElement {
   const c = canvas(src.width, src.height);
-  const ctx = c.getContext("2d")!;
+  const ctx = ctx2d(c);
   const n = 13;
   for (let i = 0; i < n; i++) {
     const off = -spreadPx + (2 * spreadPx * i) / (n - 1);
@@ -129,7 +137,7 @@ function motionBlur(src: HTMLCanvasElement, spreadPx: number): HTMLCanvasElement
 
 function drawRing(w: number, h: number, res: number, color: string, glow: string, pad: number): HTMLCanvasElement {
   const c = canvas((w + pad * 2) * res, (h + pad * 2) * res);
-  const ctx = c.getContext("2d")!;
+  const ctx = ctx2d(c);
   ctx.scale(res, res);
   const k = h / 62;
   ctx.shadowColor = glow;
@@ -159,6 +167,12 @@ export function buildSymbolTextures(w: number, h: number, res: number, art: ArtI
     ringCyan: tex(drawRing(w, h, res, "#A5F3FC", "rgba(34,211,238,1)", ringPad), res),
     ringPad,
   };
+}
+
+/** False when a symbol texture came out blank (its canvas lost its pixels): build again. */
+export function texturesOk(t: SymbolTextures): boolean {
+  const c = t.sharp.A.source.resource as HTMLCanvasElement;
+  return ctx2d(c).getImageData(c.width >> 1, c.height >> 1, 1, 1).data[3] > 0;
 }
 
 export function destroyTextures(t: SymbolTextures | null) {

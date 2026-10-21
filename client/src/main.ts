@@ -246,6 +246,10 @@ async function main() {
   };
   // The size may have changed while loading (full screen from the LOG IN tap).
   refit(true);
+  // Phones can drop GPU images when going full screen or coming back to the tab: redraw the symbols.
+  const redraw = () => setTimeout(() => stage.rebuild(), 700);
+  document.addEventListener("fullscreenchange", redraw);
+  document.addEventListener("visibilitychange", () => !document.hidden && redraw());
 
   loading.progress(1);
   await loading.ready();

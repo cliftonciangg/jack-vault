@@ -1,7 +1,7 @@
 import { Application } from "pixi.js";
 import { onFrameEnd } from "../anim";
 import { ReelSet } from "./reels";
-import { ArtImages, buildSymbolTextures, destroyTextures, SymbolTextures } from "./symbols";
+import { ArtImages, buildSymbolTextures, destroyTextures, SymbolTextures, texturesOk } from "./symbols";
 import { WinFx } from "./winfx";
 
 /**
@@ -18,6 +18,8 @@ export class Stage {
   private texKey = "";
   art: ArtImages = {};
   private size = { w: 390, h: 844, res: 2 };
+  private last: Parameters<Stage["layout"]> | null = null;
+  private retries = 0;
 
   async init(canvas: HTMLCanvasElement) {
     await this.app.init({
@@ -33,6 +35,8 @@ export class Stage {
       preference: "webgl",
     });
     this.app.ticker.stop();
+    // After the GPU drops and restores the WebGL context, draw the symbols again from scratch.
+    canvas.addEventListener("webglcontextrestored", () => this.rebuild());
     this.app.stage.addChild(this.reels);
     this.reels.addChild(this.winfx);
     onFrameEnd(() => this.app.render());
@@ -40,6 +44,7 @@ export class Stage {
 
   /** frame: design size and CSS scale of #root; gridEl: the DOM area the reels fill. */
   layout(frame: { w: number; h: number; scale: number }, gridEl: HTMLElement, rowGap: number) {
+    this.last = [frame, gridEl, rowGap];
     const res = Math.min(4, (window.devicePixelRatio || 1) * frame.scale);
     if (frame.w !== this.size.w || frame.h !== this.size.h || res !== this.size.res) {
       this.size = { w: frame.w, h: frame.h, res };
@@ -60,6 +65,17 @@ export class Stage {
       this.reels.setTextures(this.tex);
       this.winfx.setTextures(this.tex);
       destroyTextures(old);
+      // A blank build (the phone dropped the canvas pixels mid-resize): try again shortly.
+      if (!texturesOk(this.tex) && this.retries < 3) {
+        this.retries++;
+        setTimeout(() => this.rebuild(), 250);
+      } else this.retries = 0;
     }
+  }
+
+  /** Redraws the symbol textures at the current layout. */
+  rebuild() {
+    this.texKey = "";
+    if (this.last) this.layout(...this.last);
   }
 }
