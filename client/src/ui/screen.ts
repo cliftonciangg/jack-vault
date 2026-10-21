@@ -21,6 +21,13 @@ const spin = `<div class="spinwrap">
     <svg class="ring" width="112" height="112" viewBox="0 0 112 112"><circle cx="56" cy="56" r="52" fill="none" stroke="#22D3EE" stroke-width="3" stroke-dasharray="327" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 56 56)" opacity=".9"/></svg>
   </button>
   <span class="spincap">HOLD FOR AUTO</span></div>`;
+/** Shrinks a value box's number to fit its box (large balances in the narrow landscape bar). */
+function fit(out: HTMLElement) {
+  out.style.fontSize = "";
+  const avail = out.parentElement!.clientWidth - 8;
+  const w = out.scrollWidth;
+  if (avail > 0 && w > avail) out.style.fontSize = `${Math.max(9, (parseFloat(getComputedStyle(out).fontSize) * avail) / w)}px`;
+}
 const vbox = (cls: string, label: string, value: string) => `<div class="vbox ${cls}"><label>${label}</label><output>${value}</output></div>`;
 
 function portraitHtml() {
@@ -139,10 +146,11 @@ export class GameScreen {
 
   private render() {
     this.balOut.textContent = money(this.v.balance);
+    fit(this.balOut);
     this.renderJackpots();
     this.msgEl.textContent = this.v.msg;
     this.msgEl.style.color = this.v.msgColor;
-    this.winBox.querySelector("output")!.textContent = money(this.v.win);
+    this.setWinText(money(this.v.win));
     this.renderMode();
     this.renderSpin();
     this.turboBtn.classList.toggle("on-burn", this.v.turbo);
@@ -165,11 +173,13 @@ export class GameScreen {
     if (fs) {
       lbl.textContent = "FREE SPINS";
       out.textContent = `${fs.played} / ${fs.total}`;
+      fit(out);
       out.style.color = "#A5F3FC";
       this.betBox.style.borderColor = "#22D3EE";
     } else {
       lbl.textContent = "TOTAL BET";
       out.textContent = money(this.v.bet);
+      fit(out);
       out.style.color = "";
       this.betBox.style.borderColor = "";
     }
@@ -177,6 +187,7 @@ export class GameScreen {
       this.box3.querySelector("label")!.textContent = fs ? "TOTAL WIN" : "LINES";
       const o = this.box3.querySelector("output")!;
       o.textContent = fs ? money(fs.win) : "25";
+      fit(o);
       o.style.color = fs ? "#F5B301" : "#B9B3D9";
       this.box3.style.borderColor = fs ? "#F5B301" : "";
     } else if (fs) {
@@ -216,6 +227,7 @@ export class GameScreen {
   setBalance(c: number) {
     this.v.balance = c;
     this.balOut.textContent = money(c);
+    fit(this.balOut);
   }
   setBet(c: number) {
     this.v.bet = c;
@@ -263,11 +275,10 @@ export class GameScreen {
   async countWin(from: number, to: number, ms: number, skip?: Skippable) {
     this.winSkip = skip ?? new Skippable();
     this.winBox.classList.toggle("lit", to > 0);
-    const out = this.winBox.querySelector("output")!;
     let lastTick = 0;
     await tween(ms, (v, k) => {
       const val = Math.round(from + (to - from) * v);
-      out.textContent = money(val);
+      this.setWinText(money(val));
       if (k - lastTick > 0.06 && k < 1) {
         lastTick = k;
         sfx.tick();
@@ -277,8 +288,13 @@ export class GameScreen {
   }
   setWin(c: number) {
     this.v.win = c;
-    this.winBox.querySelector("output")!.textContent = money(c);
+    this.setWinText(money(c));
     this.winBox.classList.toggle("lit", c > 0);
+  }
+  private setWinText(t: string) {
+    const out = this.winBox.querySelector("output")!;
+    out.textContent = t;
+    fit(out);
   }
   get win() {
     return this.v.win;
