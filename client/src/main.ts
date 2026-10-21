@@ -35,8 +35,9 @@ function safeAreas() {
 }
 
 /**
- * Fits the design frame to the phone: 390 px wide in portrait (height follows the
- * phone, 740-1000) and 390 px tall in landscape (width 740-1100), scaled to fill.
+ * Fits the design frame to the screen: 390 px wide in portrait (height follows the
+ * phone, 740-1000) and in landscape 390 px tall with width 844-1100, or 844 px wide
+ * and up to 560 tall on squarer screens, scaled to fill.
  */
 const frame = { w: 390, h: 844, scale: 1 };
 
@@ -58,9 +59,13 @@ function fitRoot(): Orientation {
     H = 390;
     s = vh / H;
     W = vw / s;
-    if (W < 740) {
-      s = vw / 740;
-      W = 740;
+    // Screens squarer than the 844x390 design (desktops, tablets, short phones) keep the
+    // 844 px width and grow taller instead (16:9 is 844x475, 16:10 is 844x527), so the
+    // control bar and lobby keep their designed widths and the reels take the extra height.
+    if (W < 844) {
+      s = vw / 844;
+      W = 844;
+      H = Math.min(vh / s, 560);
     }
     W = Math.min(W, 1100);
   }
