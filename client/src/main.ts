@@ -143,6 +143,30 @@ async function main() {
   startClock();
   setOverlayHost(root);
   let orientation = fitRoot();
+  // Refit on every size change from the start: the first tap (LOG IN or TAP TO PLAY) goes full screen
+  // while the splash is still up, and the game must fill the new height. Some phones report the full
+  // screen size a moment after the resize event, so check again shortly after.
+  let onRefit: (orientationChanged: boolean) => void = () => {};
+  let pending = 0;
+  let late = 0;
+  let fitted = `${window.innerWidth}x${window.innerHeight}`;
+  const refit = (force = false) => {
+    const size = `${window.innerWidth}x${window.innerHeight}`;
+    if (size === fitted && !force) return;
+    fitted = size;
+    const o = fitRoot();
+    const changed = o !== orientation;
+    orientation = o;
+    onRefit(changed);
+  };
+  const scheduleRefit = () => {
+    clearTimeout(pending);
+    clearTimeout(late);
+    pending = window.setTimeout(() => refit(), 80);
+    late = window.setTimeout(() => refit(), 600);
+  };
+  window.addEventListener("resize", scheduleRefit);
+  document.addEventListener("fullscreenchange", scheduleRefit);
   const loading = new Loading(root);
   loading.progress(0.05);
 
@@ -212,20 +236,16 @@ async function main() {
   };
   api.onJackpots((j) => lobby?.setJackpots(j));
 
-  let pending = 0;
-  window.addEventListener("resize", () => {
-    clearTimeout(pending);
-    pending = window.setTimeout(() => {
-      const o = fitRoot();
-      if (o !== orientation) {
-        orientation = o;
-        screen.build(o);
-        game.bindScreen();
-      }
-      game.relayout();
-      relayout();
-    }, 80);
-  });
+  onRefit = (changed) => {
+    if (changed) {
+      screen.build(orientation);
+      game.bindScreen();
+    }
+    game.relayout();
+    relayout();
+  };
+  // The size may have changed while loading (full screen from the LOG IN tap).
+  refit(true);
 
   loading.progress(1);
   await loading.ready();
