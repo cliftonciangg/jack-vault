@@ -185,6 +185,11 @@ export class Game {
     else if (this.phase === "presenting") this.presentSkip?.skip();
   }
 
+  /** Opens the game menu on a tab (the lobby's History and Profile buttons). */
+  showMenu(tab: Tab) {
+    this.openMenu(tab);
+  }
+
   private openMenu(tab: Tab) {
     if (this.menuOpen) return;
     sfx.click();

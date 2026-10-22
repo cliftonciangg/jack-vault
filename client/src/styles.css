@@ -439,6 +439,9 @@ body.fs .frame { box-shadow: 0 0 0 2px var(--cyan), 0 0 34px rgba(34,211,238,.7)
 .landscape-root .lb-hero button { width: auto; height: 40px; padding: 0 18px; align-self: flex-start; }
 .landscape-root .lb-hero .art { top: 34px; right: -12px; opacity: .85; }
 .landscape-root .lb-hero .art svg { width: 100px; height: auto; }
+/* Lobby nav "Games": the games list takes the featured banner's space. */
+.lobby.games-view .lb-hero { display: none; }
+.landscape-root .lobby.games-view .lb-games { grid-column: 2 / -1; }
 .landscape-root .lb-games { grid-column: 3; grid-row: 3; container-type: size; padding: 0; grid-template-columns: none; grid-template-rows: minmax(0, 1fr); grid-auto-flow: column; grid-auto-columns: max-content; gap: 10px; align-content: stretch; overflow-x: auto; overflow-y: hidden; touch-action: pan-x; }
 .landscape-root .tile-game { aspect-ratio: auto; width: calc(100cqh * .62); padding: 8px; }
 .landscape-root .tile-game .nm { font-size: 12px; }
