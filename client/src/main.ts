@@ -229,9 +229,13 @@ async function main() {
 
   let lobby: Lobby | null = null;
   game.onLobby = () => {
-    lobby = new Lobby(root, game.balance, st.jackpots, () => {
+    const close = () => {
       lobby?.remove();
       lobby = null;
+    };
+    lobby = new Lobby(root, game.balance, st.jackpots, close, (tab) => {
+      close();
+      game.showMenu(tab);
     });
   };
   api.onJackpots((j) => lobby?.setJackpots(j));

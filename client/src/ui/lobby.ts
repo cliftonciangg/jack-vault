@@ -2,6 +2,7 @@ import type { Jackpots } from "../api/types";
 import { JACKPOT_TIERS } from "../api/types";
 import { JP_STYLE } from "../theme";
 import { $, h, ICON, money } from "./dom";
+import { toast } from "./overlays";
 
 const GAMES: { name: string; bg: string; badge?: [string, string]; live?: boolean }[] = [
   { name: "Crown of the Cosmos", bg: "radial-gradient(circle at 50% 35%, #5B3FBF, #130E36 70%)", badge: ["NEW", "#22D3EE"], live: true },
@@ -19,7 +20,7 @@ const GAMES: { name: string; bg: string; badge?: [string, string]; live?: boolea
 export class Lobby {
   el: HTMLElement;
   private jpEls = new Map<string, HTMLElement>();
-  constructor(host: HTMLElement, balance: number, jackpots: Jackpots, onPlay: () => void) {
+  constructor(host: HTMLElement, balance: number, jackpots: Jackpots, onPlay: () => void, onMenu: (tab: "history" | "menu") => void) {
     this.el = h(`<div class="screen lobby" style="z-index:15">
       <div class="lb-top">
         <div class="brand"><b>JACK</b><i>VAULT</i></div>
@@ -32,7 +33,7 @@ export class Lobby {
       <div class="lb-games">${GAMES.map((g, i) => `<button class="tile-game press ${g.live ? "" : "locked"}" data-i="${i}" style="background:${g.bg}">
           ${g.badge ? `<span class="bd" style="background:${g.badge[1]};color:#0B0820">${g.badge[0]}</span>` : ""}
           <span class="nm">${g.name}</span></button>`).join("")}</div>
-      <nav class="lb-nav"><button class="on">${ICON.home()}Home</button><button>${ICON.grid()}Games</button><button>${ICON.gift()}Rewards</button><button>${ICON.history()}History</button><button>${ICON.user()}Profile</button></nav>
+      <nav class="lb-nav"><button class="on" data-nav="home">${ICON.home()}Home</button><button data-nav="games">${ICON.grid()}Games</button><button data-nav="rewards">${ICON.gift()}Rewards</button><button data-nav="history">${ICON.history()}History</button><button data-nav="profile">${ICON.user()}Profile</button></nav>
     </div>`);
     host.appendChild(this.el);
     this.el.querySelectorAll<HTMLElement>("[data-t]").forEach((e) => this.jpEls.set(e.dataset.t!, e));
@@ -48,6 +49,32 @@ export class Lobby {
     this.el.querySelectorAll<HTMLElement>(".lb-tabs button").forEach((b) => b.addEventListener("click", () => {
       this.el.querySelectorAll(".lb-tabs button").forEach((x) => x.classList.remove("on"));
       b.classList.add("on");
+    }));
+    // Bottom nav: Games hides the featured banner so the games list fills the lobby, Home brings it back, History and Profile open the game menu.
+    const navBtns = this.el.querySelectorAll<HTMLElement>(".lb-nav button");
+    const select = (b: HTMLElement) => navBtns.forEach((x) => x.classList.toggle("on", x === b));
+    navBtns.forEach((b) => b.addEventListener("click", () => {
+      switch (b.dataset.nav) {
+        case "home":
+          select(b);
+          this.el.classList.remove("games-view");
+          games.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+          break;
+        case "games":
+          select(b);
+          this.el.classList.add("games-view");
+          games.scrollTo({ top: 0, left: 0 });
+          break;
+        case "rewards":
+          toast(`${ICON.gift()} Rewards are coming soon.`);
+          break;
+        case "history":
+          onMenu("history");
+          break;
+        case "profile":
+          onMenu("menu");
+          break;
+      }
     }));
   }
   setJackpots(j: Jackpots) {
