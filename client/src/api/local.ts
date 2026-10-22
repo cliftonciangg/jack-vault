@@ -6,8 +6,10 @@ import { initialJackpots, JackpotPools, JackpotState } from "../../../src/engine
 import { theoreticalRtp } from "../../../src/math/theoretical";
 import type { MathProfile } from "../../../src/math/types";
 import type { Rng } from "../../../src/rng/rng";
+import { RoundError } from "../../../src/blackjack/engine";
+import { type Frame, type TableData, Table, newTable, playerSeat, roundOpen } from "../../../src/blackjack/table";
 import {
-  ApiError, newRequestId, GameApi, GameConfig, GameState, HistoryRound, JackpotTier, Jackpots, PlayResponse, RoundView, Step,
+  ApiError, BjAction, BjBet, BjResponse, BjView, newRequestId, GameApi, GameConfig, GameState, HistoryRound, JackpotTier, Jackpots, PlayResponse, RoundView, Step,
 } from "./types";
 
 const profile = profileJson as unknown as MathProfile;
@@ -45,6 +47,8 @@ interface Save {
   jackpots: JackpotState;
   open: OpenRound | null;
   history: HistoryRound[];
+  /** The demo blackjack table. */
+  bj?: TableData;
 }
 
 /**
@@ -239,6 +243,60 @@ export class LocalApi implements GameApi {
     this.wonSubs.add(cb);
     return () => this.wonSubs.delete(cb);
   }
+  async bjTable(): Promise<{ view: BjView; balanceCents: number }> {
+    if (!this.s.bj) {
+      this.s.bj = newTable("standard", this.rng, new Date().toISOString());
+      this.save();
+    }
+    const t = new Table(structuredClone(this.s.bj), this.rng, () => this.s.balanceCents);
+    return this.latency({ view: t.view(), balanceCents: this.s.balanceCents });
+  }
+  bjBet(requestId: string, bet: BjBet) {
+    return this.bjRun(requestId, (t, roundId) => t.bet(bet, roundId));
+  }
+  bjInsurance(requestId: string, take: boolean) {
+    return this.bjRun(requestId, (t) => t.insurance(take));
+  }
+  bjAction(requestId: string, action: BjAction) {
+    return this.bjRun(requestId, (t) => t.act(action));
+  }
+
+  /** The browser twin of the server's BlackjackService.run: same table, wallet arithmetic and retry safety. */
+  private bjRun(requestId: string, step: (t: Table, roundId: string) => Frame[]): Promise<BjResponse> {
+    const key = "bj:" + requestId;
+    const prior = this.idem.get(key) as unknown as BjResponse | undefined;
+    if (prior) return this.latency(prior);
+    const data = structuredClone(this.s.bj ?? newTable("standard", this.rng, new Date().toISOString()));
+    const wasOpen = roundOpen(data);
+    const debited = wasOpen ? playerSeat(data.round)!.stakeCents : 0;
+    const startRoundId = data.roundId;
+    const balance = this.s.balanceCents;
+    const pending = () => {
+      const s = playerSeat(data.round);
+      return !s ? 0 : data.roundId !== startRoundId ? s.stakeCents : wasOpen ? s.stakeCents - debited : 0;
+    };
+    const t = new Table(data, this.rng, () => balance - pending());
+    let frames: Frame[];
+    try {
+      frames = step(t, newRequestId());
+    } catch (e) {
+      if (e instanceof RoundError) return Promise.reject(new ApiError(e.code, e.message, e.code === "INVALID_BET" ? 400 : 409));
+      return Promise.reject(e);
+    }
+    const seat = playerSeat(data.round)!;
+    const isNew = data.roundId !== startRoundId;
+    const extra = seat.stakeCents - (isNew ? 0 : debited);
+    if (extra > balance) return Promise.reject(new ApiError("INSUFFICIENT_FUNDS", "Not enough balance for this bet", 402));
+    this.s.balanceCents = balance - extra + (data.round!.phase === "settled" ? seat.returnCents : 0);
+    data.updatedAt = new Date().toISOString();
+    this.s.bj = data;
+    this.save();
+    const bal = this.s.balanceCents;
+    const res: BjResponse = { roundId: data.roundId, frames, view: new Table(structuredClone(data), this.rng, () => bal).view(), balanceCents: bal };
+    this.idem.set(key, res as unknown as PlayResponse);
+    return this.latency(res);
+  }
+
   async addCoins(amountCents: number): Promise<number> {
     this.s.balanceCents += amountCents;
     this.save();

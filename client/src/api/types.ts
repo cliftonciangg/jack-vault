@@ -1,4 +1,16 @@
 /** Wire types for the Jack Vault server API (see ../../README.md, "API"). Money is integer cents. */
+import type { Frame, PlayerBet, TableView } from "../../../src/blackjack/table";
+
+export type BjView = TableView;
+export type BjFrame = Frame;
+export type BjBet = PlayerBet;
+export type BjAction = "hit" | "stand" | "double" | "split" | "surrender";
+export interface BjResponse {
+  roundId: string | null;
+  frames: BjFrame[];
+  view: BjView;
+  balanceCents: number;
+}
 
 export type Sym =
   | "CROWN" | "GEM" | "PLANET" | "COMET"
@@ -142,6 +154,11 @@ export interface GameApi {
   onBalance?(cb: (balanceCents: number) => void): () => void;
   /** Server only: end the player's session. */
   logout?(): Promise<void>;
+  /** Blackjack: the player's table, and the three moves. Each move is idempotent on its requestId. */
+  bjTable(): Promise<{ view: BjView; balanceCents: number }>;
+  bjBet(requestId: string, bet: BjBet): Promise<BjResponse>;
+  bjInsurance(requestId: string, take: boolean): Promise<BjResponse>;
+  bjAction(requestId: string, action: BjAction): Promise<BjResponse>;
 }
 
 export function newRequestId(): string {

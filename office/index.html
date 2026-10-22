@@ -1380,17 +1380,39 @@ PAGES.transactions = async (main, q) => {
 
 // ---------------------------------------------------------------- game records (agent, Prompt 5)
 
+const BJ_OUTCOME = { blackjack: "Blackjack", win: "Win", push: "Push", lose: "Lose", bust: "Bust", surrender: "Surrender" };
+function cardsText(cards) {
+  return cards.map((c) => ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"][c % 13] + ["♠", "♥", "♦", "♣"][Math.floor(c / 13)]).join(" ");
+}
 const SYMBOL_LABEL = { CROWN: "Crown", GEM: "Gem", PLANET: "Planet", COMET: "Comet", A: "A", K: "K", Q: "Q", J: "J", TEN: "10", WILD: "Wild", SCATTER: "Scatter", BONUS: "Bonus" };
 PAGES.games = async (main, q) => {
   const st = { key: "all", from: null, to: null };
   const player = h("input", { type: "search", placeholder: "Username or ID", value: q.get("player") || "", list: "jv-players", style: "width:260px", "aria-label": "Player" });
   const players = h("datalist", { id: "jv-players" });
   get("/api/office/accounts").then((r) => players.replaceChildren(...r.accounts.filter((a) => a.role === "PLAYER").map((a) => h("option", { value: a.username })))).catch(() => {});
-  const game = h("select", { "aria-label": "Game" }, h("option", {}, "All"), h("option", {}, "Jack Vault"));
+  const game = h("select", { "aria-label": "Game" }, h("option", {}, "Jack Vault"), h("option", {}, "Blackjack"));
+  if (q.get("game") === "blackjack") game.value = "Blackjack";
+  const isBj = () => game.value === "Blackjack";
+  game.addEventListener("change", () => search());
   const bar = periodBar(st, () => search(), ["today", "yesterday", "week", "lastweek", "all"]);
   const out = h("div", { style: "display:flex;flex-direction:column;gap:16px" });
   let rounds = [], who = null;
   const olderBtn = btn("Load older", "neutral sm", () => more());
+  const bjTable = dataTable({
+    rows: [], empty: "No hands found", older: olderBtn,
+    onRow: (r) => openBjRound(r.roundId),
+    cols: [
+      { label: "Time", value: (r) => fmtTime(r.startedAt) },
+      { label: "Hand ID", value: (r) => h("span", { class: "mono muted", title: r.roundId }, shortId(r.roundId)) },
+      { label: "Game", value: () => "Blackjack" },
+      { label: "Bet", num: true, value: (r) => money(r.stakeCents) },
+      { label: "Win", num: true, value: (r) => h("span", { class: r.returnCents > 0 ? "in" : "" }, money(r.returnCents)) },
+      { label: "Net", num: true, value: (r) => r.status === "OPEN" ? h("span", { class: "muted" }, "—") : h("span", { class: r.returnCents - r.stakeCents < 0 ? "out" : "in" }, signed(r.returnCents - r.stakeCents)) },
+      { label: "Balance before", num: true, value: (r) => money(r.balanceBeforeCents) },
+      { label: "Balance after", num: true, value: (r) => money(r.balanceAfterCents) },
+      { label: "Hand", value: (r) => r.status === "OPEN" ? pill("IN PROGRESS", "DISABLED") : h("span", { class: "nums" }, r.hands.map((x) => `${cardsText(x.cards)} ${BJ_OUTCOME[x.outcome] || ""}`).join(" · ") + ` vs ${cardsText(r.dealer)}`) },
+    ],
+  });
   const table = dataTable({
     rows: [], empty: "No rounds found", older: olderBtn,
     onRow: (r) => openRound(r.roundId),
@@ -1418,10 +1440,10 @@ PAGES.games = async (main, q) => {
     const q2 = periodQuery(st);
     q2.set("limit", "100");
     if (!reset && rounds.length) q2.set("before", rounds[rounds.length - 1].roundId);
-    const r = await get(`/api/office/accounts/${encodeURIComponent(player.value.trim())}/rounds`, q2);
+    const r = await get(`/api/office/accounts/${encodeURIComponent(player.value.trim())}/${isBj() ? "bj-rounds" : "rounds"}`, q2);
     rounds = reset ? r.rounds : rounds.concat(r.rounds);
     olderBtn.classList.toggle("hidden", r.rounds.length < 100);
-    table.update(rounds);
+    (isBj() ? bjTable : table).update(rounds);
     return r;
   }
   async function search() {
@@ -1436,6 +1458,13 @@ PAGES.games = async (main, q) => {
       who = r.player;
       const t = r.totals;
       const net = t.winCents - t.betCents;
+      if (isBj()) {
+        out.replaceChildren(
+          h("div", { class: "stats small" }, stat("Player", who.username), stat("Hands played", count(t.rounds)), stat("Total bet", money(t.betCents)), stat("Total win", money(t.winCents), "in"),
+            stat("Net", signed(net), net < 0 ? "out" : "in")),
+          h("section", { class: "panel flush" }, h("div", { class: "phead" }, h("h2", {}, "Blackjack hands"), h("span", { class: "hint" }, periodText(st))), bjTable));
+        return;
+      }
       out.replaceChildren(
         h("div", { class: "stats small" }, stat("Player", who.username), stat("Rounds played", count(t.rounds)), stat("Total bet", money(t.betCents)), stat("Total win", money(t.winCents), "in"),
           stat("Net", signed(net), net < 0 ? "out" : "in"), stat("Biggest win", money(t.biggestWinCents)), stat("Features hit", `${t.freeSpins} FS · ${t.wheels} wheel · ${t.jackpots} JP`)),
@@ -1463,6 +1492,40 @@ PAGES.games = async (main, q) => {
           { label: "Line", num: true, value: (w) => w.line }, { label: "Symbol", value: (w) => SYMBOL_LABEL[w.symbol] || w.symbol }, { label: "Count", num: true, value: (w) => w.count }, { label: "Pay", num: true, value: (w) => money(w.winCents) }] }) : h("div", { class: "hint" }, "No line wins on the base spin."),
         h("div", { class: "lbl" }, "Steps"),
         h("ol", { style: "margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px" }, round.steps.map((s) => h("li", { class: "nums" }, stepText(s)))));
+    } catch (e) { d.setBody(errorBanner(e)); }
+  }
+  async function openBjRound(id) {
+    const d = dialog({ title: "Hand " + shortId(id), drawer: true, body: skeletonRows(6) });
+    try {
+      const { round: rec, verified } = await get(`/api/office/bj-rounds/${encodeURIComponent(id)}`);
+      const r = rec.round;
+      const done = rec.status === "COMPLETE";
+      const seatName = (n) => (n === 2 ? "Player" : "House seat " + (n + 1));
+      d.setBody(
+        h("div", { class: "row" }, verified ? pill("✓ Verified", "ok") : done ? pill("Not verified", "bad") : pill("In progress", "DISABLED"),
+          h("span", { class: "hint" }, "The server replayed this hand from its recorded cards and decisions.")),
+        kv("Hand ID", h("span", { class: "mono" }, rec.roundId), "Started", fmtTime(rec.startedAt), "Rules", r.rules.name,
+          "Bet", money(rec.stakeCents), "Total win", h("b", { class: rec.returnCents ? "in" : "" }, money(rec.returnCents)), "Balance", `${money(rec.balanceBeforeCents)} → ${money(rec.balanceAfterCents)}`,
+          "Shoe", `shuffle #${rec.shoeShuffle} · ${rec.shoeHash.slice(0, 12)}`, "Status", done ? "Complete" : "In progress"),
+        h("div", { class: "lbl" }, "Dealer"),
+        h("div", { class: "nums" }, done ? cardsText(r.dealer) : cardsText(r.dealer.slice(0, 1)) + " ?"),
+        h("div", { class: "lbl" }, "Seats"),
+        dataTable({ rows: r.seats.flatMap((st2) => st2.hands.map((x, i) => ({ id: `${st2.seat}-${i}`, seat: st2.seat, hand: i, x, st2 }))), cols: [
+          { label: "Seat", value: (o) => h(o.seat === 2 ? "b" : "span", {}, seatName(o.seat) + (o.st2.hands.length > 1 ? ` · hand ${o.hand + 1}` : "")) },
+          { label: "Cards", value: (o) => h("span", { class: "nums" }, cardsText(o.x.cards)) },
+          { label: "Bet", num: true, value: (o) => money(o.x.betCents) + (o.x.doubled ? " (doubled)" : "") },
+          { label: "Result", value: (o) => BJ_OUTCOME[o.x.outcome] || "—" },
+          { label: "Paid", num: true, value: (o) => money(o.x.returnCents) },
+        ] }),
+        (() => {
+          const me = r.seats.find((x) => x.seat === 2);
+          const side = [me && me.perfectPairs ? `Perfect Pairs ${money(me.perfectPairs.betCents)}: ${me.perfectPairs.kind || "lost"}, paid ${money(me.perfectPairs.returnCents)}` : "",
+            me && me.plus3 ? `21+3 ${money(me.plus3.betCents)}: ${me.plus3.kind || "lost"}, paid ${money(me.plus3.returnCents)}` : "",
+            me && me.insuranceCents ? `Insurance ${money(me.insuranceCents)}, paid ${money(me.insuranceReturnCents)}` : ""].filter(Boolean);
+          return side.length ? [h("div", { class: "lbl" }, "Side bets"), h("ul", { style: "margin:0;padding-left:20px" }, side.map((t) => h("li", { class: "nums" }, t)))] : null;
+        })(),
+        h("div", { class: "lbl" }, "Player decisions"),
+        h("div", { class: "nums" }, r.actions.filter((a) => a.seat === 2).map((a) => a.action === "noInsurance" ? "no insurance" : a.action).join(", ") || "none"));
     } catch (e) { d.setBody(errorBanner(e)); }
   }
   function stepText(s) {

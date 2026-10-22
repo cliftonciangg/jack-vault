@@ -13,6 +13,7 @@ import {
   Step,
   stepWin,
 } from "../engine/engine.js";
+import { BlackjackService } from "../blackjack/service.js";
 import { initialJackpots, JackpotPools, reconcileJackpots } from "../engine/jackpots.js";
 import { canonicalJson, profileHash } from "../math/profile.js";
 import { TheoreticalReport, theoreticalRtp } from "../math/theoretical.js";
@@ -94,6 +95,8 @@ const HIT_FREQUENCY_SPINS = 100_000;
 
 export class GameService {
   readonly events = new EventEmitter();
+  /** Blackjack tables, on the same players, wallet and store. */
+  readonly blackjack: BlackjackService;
   /** Shared by every profile: jackpot pools and bet levels are the same across profiles. */
   private readonly profile: MathProfile;
   private readonly hashes = new Map<string, string>();
@@ -122,6 +125,10 @@ export class GameService {
         settings: { defaultProfileId: o.profile.id, allowedProfileIds: [...this.profiles.keys()].sort(), maintenance: { on: false, message: "" } },
       });
     }
+    this.blackjack = new BlackjackService(this.store, this.rng, this.now, () => {
+      const m = this.settings().maintenance;
+      return m.on ? m.message || "The game is under maintenance. Please try again later." : null;
+    });
   }
 
   private iso(): string {

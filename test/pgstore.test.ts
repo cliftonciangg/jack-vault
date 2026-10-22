@@ -18,7 +18,7 @@ import { freeSpinStops, ScriptedRng, wheelStops } from "./helpers.js";
 const url = process.env.TEST_DATABASE_URL;
 const profile = loadProfile("rtp95");
 const rid = () => randomUUID();
-const TABLES = ["players", "txs", "rounds", "jackpots", "sessions", "staff_sessions", "idempotency", "accounts", "ledger", "settings", "change_log"];
+const TABLES = ["players", "txs", "rounds", "jackpots", "sessions", "staff_sessions", "idempotency", "accounts", "ledger", "settings", "change_log", "bj_tables", "bj_rounds"];
 
 async function resetDb() {
   const c = new pg.Client({ connectionString: url });
@@ -196,4 +196,33 @@ test("PostgreSQL: win-ratio settings, change log and operator logins survive a r
   } finally {
     await store.close();
   }
+});
+
+test("PostgreSQL: a blackjack hand left open survives a restart and finishes on the same table", opts, async () => {
+  await resetDb();
+  let store = await PgStore.open({ connectionString: url!, onFatal: () => undefined });
+  let svc = new GameService({ profile, store, rng: new ScriptedRng(), startingBalanceCents: 50_000 });
+  const playerId = svc.createSession("bjp", { allowCreate: true }).player.id;
+  let open = null;
+  for (let i = 0; i < 50 && !open; i++) {
+    const r = svc.blackjack.bet(playerId, rid(), { betCents: 500 });
+    if (r.view.phase !== "settled") open = r;
+  }
+  assert.ok(open);
+  await store.flushed();
+  await store.close();
+
+  store = await PgStore.open({ connectionString: url!, onFatal: () => undefined });
+  svc = new GameService({ profile, store, rng: new ScriptedRng() });
+  const t = svc.blackjack.table(playerId);
+  assert.equal(t.view.roundId, open.roundId);
+  assert.deepEqual(t.view.seats[2].hands, open.view.seats[2].hands);
+  let r = { ...open, view: t.view };
+  while (r.view.phase !== "settled") r = r.view.insuranceOffered ? svc.blackjack.insurance(playerId, rid(), false) : svc.blackjack.action(playerId, rid(), "stand");
+  assert.equal(svc.blackjack.round(open.roundId!)!.verified, true);
+  assert.equal(svc.audit().ledgerBalancesMatch, true);
+  await store.flushed();
+  const rows = await sql<{ status: string }>("SELECT status FROM bj_rounds WHERE round_id = $1", [open.roundId]);
+  assert.equal(rows[0].status, "COMPLETE");
+  await store.close();
 });

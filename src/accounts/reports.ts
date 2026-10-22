@@ -1,4 +1,5 @@
 import { GameError } from "../engine/engine.js";
+import type { BjTotals } from "../blackjack/service.js";
 import { reconcileJackpots } from "../engine/jackpots.js";
 import { JACKPOT_TIERS } from "../math/types.js";
 import type { GameService, PlayTotals } from "../service/gameService.js";
@@ -41,6 +42,8 @@ export interface Flows {
   redeemedCents: number;
   /** Play by every player at or below this account. */
   play: PlayTotals & { activePlayers: number };
+  /** Blackjack hands by the same players (kept apart: the win-ratio figures are for the slot). */
+  blackjack: BjTotals;
 }
 
 interface Sums {
@@ -100,6 +103,7 @@ export class OfficeReports {
       grandchildrenBalanceCents: kids.reduce((t, k) => t + (k.role === "PLAYER" ? 0 : (this.acc.view(k).childrenBalanceCents ?? 0)), 0),
       ...s,
       play: this.svc.totals(this.players(a), p.from, p.to),
+      blackjack: this.svc.blackjack.totals(this.players(a), p.from, p.to),
     };
   }
 

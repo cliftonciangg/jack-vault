@@ -407,6 +407,9 @@ body.fs .frame { box-shadow: 0 0 0 2px var(--cyan), 0 0 34px rgba(34,211,238,.7)
 .tile-game { position: relative; aspect-ratio: .8; border-radius: 14px; overflow: hidden; border: 1px solid var(--line2) !important; display: flex; flex-direction: column; justify-content: flex-end; padding: 6px; text-align: left; }
 .tile-game .nm { font-family: var(--display); font-size: 10px; font-weight: 900; line-height: 1.15; text-shadow: 0 1px 3px rgba(0,0,0,.8); position: relative; z-index: 1; }
 .tile-game .bd { position: absolute; top: 6px; left: 6px; font-family: var(--display); font-size: 8px; font-weight: 900; padding: 2px 5px; border-radius: 5px; z-index: 1; }
+.bj-tile { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); display: flex; pointer-events: none; }
+.bj-tile i { width: 34px; height: 48px; border-radius: 4px; background: #fff; color: #111; font-style: normal; font-family: Georgia, serif; font-weight: 700; font-size: 13px; line-height: 1.05; padding: 3px 4px; box-shadow: 0 2px 6px rgba(0,0,0,.5); transform: rotate(-10deg); }
+.bj-tile i.r { color: #D2202C; margin-left: -12px; transform: rotate(8deg) translateY(4px); }
 .tile-game.locked::after { content: "SOON"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(6,4,15,.55); font-family: var(--display); font-weight: 900; font-size: 11px; letter-spacing: 2px; color: var(--t2); }
 .lb-nav { display: flex; justify-content: space-around; padding: 6px 0 calc(6px + var(--sab-d, 0px)); background: rgba(21,16,48,.92); border-top: 1px solid var(--line2); }
 .lb-nav button { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 12px; font-weight: 700; color: var(--t3); min-width: 56px; min-height: 48px; justify-content: center; }
