@@ -39,6 +39,12 @@ export function handValue(cards: readonly Card[]): HandValue {
 /** Two-card 21. Whether it counts as a natural (not after a split) is the engine's call. */
 export const isTwentyOne2 = (cards: readonly Card[]) => cards.length === 2 && handValue(cards).total === 21;
 
+export interface SavedShoe {
+  cards: Card[];
+  pos: number;
+  shuffles: number;
+}
+
 /**
  * A shoe of `decks` decks, shuffled with Fisher-Yates from the given RNG and
  * reshuffled once `penetration` of it has been dealt (checked between rounds).
@@ -54,9 +60,19 @@ export class Shoe {
     readonly decks: number,
     readonly penetration: number,
     private readonly rng: Rng,
+    saved?: SavedShoe,
   ) {
     this.cutAt = Math.floor(decks * 52 * penetration);
-    this.shuffle();
+    if (saved && saved.cards.length === decks * 52) {
+      this.cards = [...saved.cards];
+      this.pos = saved.pos;
+      this.shuffles = saved.shuffles;
+    } else this.shuffle();
+  }
+
+  /** The shoe's order and position, to store with a table and pick up after a restart. */
+  save(): SavedShoe {
+    return { cards: [...this.cards], pos: this.pos, shuffles: this.shuffles };
   }
 
   shuffle(): void {

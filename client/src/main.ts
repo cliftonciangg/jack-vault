@@ -10,6 +10,7 @@ import { Stage } from "./pixi/stage";
 import type { ArtImages } from "./pixi/symbols";
 import { Loading } from "./ui/loading";
 import { Lobby } from "./ui/lobby";
+import { BlackjackScreen } from "./bj/screen";
 import { setOverlayHost } from "./ui/overlays";
 import { GameScreen, Orientation } from "./ui/screen";
 import { unlockAudio } from "./ui/sound";
@@ -228,6 +229,7 @@ async function main() {
   game.prepare(st);
 
   let lobby: Lobby | null = null;
+  let blackjack: BlackjackScreen | null = null;
   game.onLobby = () => {
     const close = () => {
       lobby?.remove();
@@ -236,6 +238,14 @@ async function main() {
     lobby = new Lobby(root, game.balance, st.jackpots, close, (tab) => {
       close();
       game.showMenu(tab);
+    }, () => {
+      close();
+      // Blackjack plays on the same wallet: back in the lobby, show the balance the server has now.
+      blackjack = new BlackjackScreen(root, api, game.balance, async () => {
+        blackjack = null;
+        await game.syncBalance();
+        game.onLobby();
+      });
     });
   };
   api.onJackpots((j) => lobby?.setJackpots(j));
@@ -247,6 +257,7 @@ async function main() {
     }
     game.relayout();
     relayout();
+    blackjack?.relayout();
   };
   // The size may have changed while loading (full screen from the LOG IN tap).
   refit(true);

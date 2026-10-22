@@ -152,15 +152,34 @@ Other characteristics (rtp95, max bet): hit frequency about 46%, free spins abou
 
 **Changing the RTP.** Edit counts or pays in `src/math/design.ts`, or run `npm run tune -- --target <rtp>`. The tuner adjusts filler symbols on reels 2-5 until the exact RTP hits the target, then writes a new profile JSON. The operator assigns profiles to distributors in the back office (`MATH_PROFILE` only sets the first default). Each profile has a SHA-256 hash (`GET /api/config`, `npm run par`), and every round records the hash it was played on.
 
-## Blackjack (in progress)
+## Blackjack
 
-A second game for the same lobby, accounts and coins. Step 1, the card engine and its math, is in `src/blackjack/`; the table server, client table scene and back-office records come next. Research and decisions: [Blackjack research](https://claude.ai/artifact/N3FeB8fuGrsQhtmNSZjcZo).
+A second game in the same lobby, on the same accounts, coins and back office. Research and decisions: [Blackjack research](https://claude.ai/artifact/N3FeB8fuGrsQhtmNSZjcZo).
 
-- **Table:** five seats, one real player plus bots. Bets 1.00 to 10.00. Optional side bets, 1.00 to 5.00 each: Perfect Pairs (25/12/6 to 1) and 21+3 (100/40/30/10/5 to 1).
+- **Table:** five seats, the player in the middle and house bots in the other four. Bets 1.00 to 10.00. Optional side bets, 1.00 to 5.00 each: Perfect Pairs (25/12/6 to 1) and 21+3 (100/40/30/10/5 to 1).
 - **Default rules (`standard`):** 6 decks, blackjack pays 3 to 2, dealer hits soft 17, double any two cards, double after split, split to 4 hands, split Aces get one card, no surrender, the dealer peeks under an Ace or 10, insurance pays 2 to 1. The shoe is reshuffled once half of it is dealt.
 - **Win ratio = rule set.** Blackjack odds come from the posted rules, so the distributor choice is between rule sets printed on the felt, never a hidden adjustment to the cards.
-- **Engine** (`engine.ts`): pure functions over a round state: `startRound`, `decideInsurance`, `legalActions`, `act`, `costOf`. The caller owns the shoe and the clock and debits `costOf(...)` before a double, split or insurance. Each round records every card dealt and every decision, for replay.
-- **Bots** play `basicStrategy` (`strategy.ts`) and never take insurance.
+- **Bots** play `basicStrategy` with play money that never touches a wallet or the ledger. They share the shoe, so they take the cards a full table would.
+- **Timers** (client): 15 s to bet (it deals if chips are down), 15 s per decision (then stand), 10 s for insurance (then no). If the player leaves mid-hand, the server finishes the hand for them after 60 s (decline insurance, stand).
+
+How it fits together (`src/blackjack/`):
+
+- `engine.ts`: pure round engine (`startRound`, `decideInsurance`, `legalActions`, `act`, `costOf`). Every round records each card dealt and each decision.
+- `table.ts`: one player's table (shoe, bots, the current hand). Each call runs the bots until the player has a decision, and returns one frame per step for the client to animate. The browser demo uses the same module.
+- `service.ts`: `BlackjackService` on the shared wallet. Each request is idempotent on its `requestId` and commits the table, the hand record, the wallet transactions (`BET` for the stake and each double, split or insurance, `WIN` for the payout) and the response together. Tables and hands are stored in `bj_tables` and `bj_rounds`, so an open hand survives a restart.
+- **Replay:** the back office re-plays a stored hand from its cards and decisions and shows "Verified". Each hand also records its shoe's shuffle number and SHA-256.
+
+| Method | Path | Auth | Body / query |
+|---|---|---|---|
+| GET | `/api/bj/table` | Bearer | The player's table: seats, bots, current hand, shoe count, limits |
+| POST | `/api/bj/bet` | Bearer | `{ requestId, betCents, perfectPairsCents?, plus3Cents? }` deals a hand |
+| POST | `/api/bj/insurance` | Bearer | `{ requestId, take }` |
+| POST | `/api/bj/action` | Bearer | `{ requestId, action }`: `hit`, `stand`, `double`, `split` |
+| GET | `/api/bj/history` | Bearer | `?limit=20&before=<roundId>` |
+| GET | `/api/office/accounts/:id/bj-rounds` | Bearer (office) | A player's hands and totals: `?from=&to=&limit=&before=` |
+| GET | `/api/office/bj-rounds/:roundId` | Bearer (office) | One hand with every seat and a `verified` replay check |
+
+Responses carry `frames` (one table view per step: deal, each seat's move, the dealer's turn), the final `view` and `balanceCents`. The dealer's hole card is `null` in every view until the hand is over. The office summary reports blackjack totals separately as `blackjack`, so the slot's win-ratio figures stay the slot's.
 
 House edge with basic strategy, 10M rounds x 5 seats per rule set (`npm run bj:sim -- --rounds 10000000`, full output in [`docs/blackjack-simulation-50M.txt`](docs/blackjack-simulation-50M.txt)):
 

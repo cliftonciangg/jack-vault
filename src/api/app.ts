@@ -102,6 +102,12 @@ const MAX_BODY = 16 * 1024;
  *   POST /api/admin/accounts/:id/password (x-admin-key) { password }
  *   POST /api/admin/accounts/:id/status   (x-admin-key) { status }
  *
+ *   GET  /api/bj/table                    (Bearer) the player's blackjack table: seats, bots, the current hand
+ *   POST /api/bj/bet                      (Bearer) { requestId, betCents, perfectPairsCents?, plus3Cents? } deals a hand
+ *   POST /api/bj/insurance                (Bearer) { requestId, take }
+ *   POST /api/bj/action                   (Bearer) { requestId, action: hit | stand | double | split | surrender }
+ *   GET  /api/bj/history?limit=&before=   (Bearer) the player's hands, newest first
+ *
  * WebSocket /ws?token=...  send { id, type, ...params }, receive { id, ok, result | error }.
  *   types: state, spin {requestId, betCents}, wheel {requestId}, freeSpin {requestId}, history {limit, before},
  *          round {roundId}, replay {roundId}, config, jackpots
@@ -193,6 +199,11 @@ export function createApp(o: AppOptions): { server: Server; wss: WebSocketServer
         if (m) return send(res, 200, svc.round(auth(), m[1]));
         m = path.match(/^\/api\/rounds\/([\w-]+)\/replay$/);
         if (m) return send(res, 200, svc.replay(auth(), m[1]));
+        if (path === "/api/bj/table") return send(res, 200, svc.blackjack.table(auth()));
+        if (path === "/api/bj/history") {
+          const limit = Number(url.searchParams.get("limit") ?? 20);
+          return send(res, 200, { rounds: svc.blackjack.history(auth(), limit, url.searchParams.get("before") ?? undefined) });
+        }
         if (path === "/api/admin/audit") {
           admin();
           return send(res, 200, o.accounts ? { ...svc.audit(), accounts: o.accounts.audit() } : svc.audit());
@@ -210,6 +221,16 @@ export function createApp(o: AppOptions): { server: Server; wss: WebSocketServer
           const betCents = body.betCents === undefined ? undefined : Number(body.betCents);
           return send(res, 200, svc.play(auth(), String(body.requestId ?? ""), actions[path], betCents));
         }
+        if (path === "/api/bj/bet") {
+          const r = svc.blackjack.bet(auth(), String(body.requestId ?? ""), {
+            betCents: Number(body.betCents),
+            perfectPairsCents: Number(body.perfectPairsCents ?? 0),
+            plus3Cents: Number(body.plus3Cents ?? 0),
+          });
+          return send(res, 200, r);
+        }
+        if (path === "/api/bj/insurance") return send(res, 200, svc.blackjack.insurance(auth(), String(body.requestId ?? ""), body.take === true));
+        if (path === "/api/bj/action") return send(res, 200, svc.blackjack.action(auth(), String(body.requestId ?? ""), String(body.action ?? "")));
         const m = path.match(/^\/api\/admin\/players\/([\w.:-]+)\/balance$/);
         if (m) {
           admin();
@@ -405,6 +426,19 @@ function accountRoute(
     const player = acc.visible(me, m[1]);
     if (player.role !== "PLAYER") throw new GameError("NOT_PLAYER", "Game records are kept for players");
     return { body: { player: acc.view(player), ...svc.rounds(player.id, { ...period(), limit: limit(), before: q.get("before") ?? undefined }) } };
+  }
+  m = path.match(/^\/api\/office\/accounts\/([\w.-]+)\/bj-rounds$/);
+  if (method === "GET" && m) {
+    const player = acc.visible(me, m[1]);
+    if (player.role !== "PLAYER") throw new GameError("NOT_PLAYER", "Game records are kept for players");
+    return { body: { player: acc.view(player), ...svc.blackjack.rounds(player.id, { ...period(), limit: limit(), before: q.get("before") ?? undefined }) } };
+  }
+  m = path.match(/^\/api\/office\/bj-rounds\/([\w-]+)$/);
+  if (method === "GET" && m) {
+    const r = svc.blackjack.round(m[1]);
+    const player = r ? acc.store.accounts.get(r.playerId) : undefined;
+    if (!r || !player || !acc.canSee(me, player)) throw new GameError("ROUND_NOT_FOUND", "Round not found", 404);
+    return { body: { round: r, player: { id: player.id, username: player.username }, verified: r.verified } };
   }
   m = path.match(/^\/api\/office\/rounds\/([\w-]+)$/);
   if (method === "GET" && m) {

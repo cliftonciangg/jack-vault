@@ -63,6 +63,8 @@ const { server } = createApp({
   store,
   staffHosts: env.OWNER_HOST && env.AGENT_HOST ? { operator: env.OWNER_HOST.toLowerCase(), staff: env.AGENT_HOST.toLowerCase() } : undefined,
 });
+// A blackjack hand left waiting on a player (closed tab, lost phone) is finished for them after a minute.
+setInterval(() => service.blackjack.expireStale(), 10_000).unref();
 const port = Number(env.PORT ?? 8080);
 server.listen(port, () => {
   const c = service.config();

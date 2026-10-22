@@ -2,6 +2,8 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname } from "node:path";
 import type { JackpotState } from "../engine/jackpots.js";
 import type { PendingFeatures, Step } from "../engine/engine.js";
+import type { RoundState } from "../blackjack/engine.js";
+import type { TableData } from "../blackjack/table.js";
 
 export interface Player {
   id: string;
@@ -133,6 +135,31 @@ export interface ChangeLogEntry {
   at: string;
 }
 
+/** A player's blackjack table (one per player): shoe, bots and the current or last hand. */
+export interface BjTable extends TableData {
+  playerId: string;
+}
+
+/** One blackjack hand. Every seat at the table is stored, so the hand can be replayed exactly. */
+export interface BjRound {
+  roundId: string;
+  playerId: string;
+  rulesId: string;
+  status: "OPEN" | "COMPLETE";
+  startedAt: string;
+  completedAt: string | null;
+  /** Everything the player put in: bet, side bets, insurance, doubles and splits. */
+  stakeCents: number;
+  /** Everything paid back, stakes included. */
+  returnCents: number;
+  balanceBeforeCents: number;
+  balanceAfterCents: number;
+  /** Which shuffle of the table's shoe the hand came from, and that shoe's SHA-256. */
+  shoeShuffle: number;
+  shoeHash: string;
+  round: RoundState;
+}
+
 export interface IdempotencyEntry {
   key: string;
   fingerprint: string;
@@ -154,6 +181,8 @@ export interface Commit {
   ledger?: LedgerEntry[];
   settings?: GameSettings;
   changes?: ChangeLogEntry[];
+  bjTables?: BjTable[];
+  bjRounds?: BjRound[];
   /** Tokens to delete from both session maps (logout, password reset, disable). */
   revokeSessions?: string[];
 }
@@ -178,6 +207,9 @@ export class Store {
   readonly staffSessions = new Map<string, StaffSession>();
   readonly ledger = new Map<string, LedgerEntry>();
   readonly changes = new Map<string, ChangeLogEntry>();
+  readonly bjTables = new Map<string, BjTable>();
+  readonly bjRounds = new Map<string, BjRound>();
+  readonly bjRoundsByPlayer = new Map<string, string[]>();
   jackpots: JackpotState | null = null;
   settings: GameSettings | null = null;
 
@@ -232,6 +264,15 @@ export class Store {
     c.ledger?.forEach((e) => this.ledger.set(e.entryId, e));
     if (c.settings) this.settings = c.settings;
     c.changes?.forEach((e) => this.changes.set(e.id, e));
+    c.bjTables?.forEach((t) => this.bjTables.set(t.playerId, t));
+    c.bjRounds?.forEach((r) => {
+      if (!this.bjRounds.has(r.roundId)) {
+        const list = this.bjRoundsByPlayer.get(r.playerId) ?? [];
+        list.push(r.roundId);
+        this.bjRoundsByPlayer.set(r.playerId, list);
+      }
+      this.bjRounds.set(r.roundId, r);
+    });
     c.revokeSessions?.forEach((t) => {
       this.sessions.delete(t);
       this.staffSessions.delete(t);

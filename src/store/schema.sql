@@ -103,3 +103,25 @@ CREATE TABLE IF NOT EXISTS change_log (
   data      jsonb NOT NULL,
   seq       bigserial
 );
+
+-- Blackjack: one table per player (shoe, bots, current hand) and every hand played.
+CREATE TABLE IF NOT EXISTS bj_tables (
+  player_id text PRIMARY KEY,
+  data      jsonb NOT NULL,
+  seq       bigserial
+);
+
+CREATE TABLE IF NOT EXISTS bj_rounds (
+  round_id     text PRIMARY KEY,
+  player_id    text NOT NULL,
+  status       text NOT NULL,
+  rules_id     text NOT NULL,
+  stake_cents  bigint NOT NULL,
+  return_cents bigint NOT NULL,
+  started_at   timestamptz NOT NULL,
+  completed_at timestamptz,
+  data         jsonb NOT NULL,
+  seq          bigserial
+);
+CREATE INDEX IF NOT EXISTS bj_rounds_player_seq ON bj_rounds (player_id, seq);
+CREATE INDEX IF NOT EXISTS bj_rounds_started ON bj_rounds (started_at);

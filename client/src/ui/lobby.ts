@@ -4,8 +4,15 @@ import { JP_STYLE } from "../theme";
 import { $, h, ICON, money } from "./dom";
 import { toast } from "./overlays";
 
-const GAMES: { name: string; bg: string; badge?: [string, string]; live?: boolean }[] = [
-  { name: "Crown of the Cosmos", bg: "radial-gradient(circle at 50% 35%, #5B3FBF, #130E36 70%)", badge: ["NEW", "#22D3EE"], live: true },
+const GAMES: { name: string; bg: string; badge?: [string, string]; live?: "slot" | "blackjack"; art?: string }[] = [
+  { name: "Crown of the Cosmos", bg: "radial-gradient(circle at 50% 35%, #5B3FBF, #130E36 70%)", badge: ["NEW", "#22D3EE"], live: "slot" },
+  {
+    name: "Blackjack",
+    bg: "radial-gradient(ellipse at 50% 30%, #3B5BC9, #1B2C72 60%, #0B1440 100%)",
+    badge: ["TABLE", "#4ADE80"],
+    live: "blackjack",
+    art: `<span class="bj-tile"><i>A<br>♠</i><i class="r">K<br>♥</i></span>`,
+  },
   { name: "Afterburner 777", bg: "radial-gradient(circle at 50% 35%, #FF7A1A, #3B1203 70%)", badge: ["HOT", "#FF7A1A"] },
   { name: "Abyss Pearls", bg: "radial-gradient(circle at 50% 35%, #0E7490, #06241C 70%)" },
   { name: "Dragon Ember", bg: "radial-gradient(circle at 50% 35%, #E11D2E, #2A0508 70%)", badge: ["JACKPOT", "#F5B301"] },
@@ -16,11 +23,18 @@ const GAMES: { name: string; bg: string; badge?: [string, string]; live?: boolea
   { name: "Pharaoh's Orbit", bg: "radial-gradient(circle at 50% 35%, #FBBF24, #2A2005 70%)" },
 ];
 
-/** Jack Vault lobby (Lobby.dc.html; landscape and desktop: LobbyL.dc.html, in CSS), with one playable game. */
+/** Jack Vault lobby (Lobby.dc.html; landscape and desktop: LobbyL.dc.html, in CSS): the slot and the blackjack table are playable. */
 export class Lobby {
   el: HTMLElement;
   private jpEls = new Map<string, HTMLElement>();
-  constructor(host: HTMLElement, balance: number, jackpots: Jackpots, onPlay: () => void, onMenu: (tab: "history" | "menu") => void) {
+  constructor(
+    host: HTMLElement,
+    balance: number,
+    jackpots: Jackpots,
+    onPlay: () => void,
+    onMenu: (tab: "history" | "menu") => void,
+    onBlackjack: () => void,
+  ) {
     this.el = h(`<div class="screen lobby" style="z-index:15">
       <div class="lb-top">
         <div class="brand"><b>JACK</b><i>VAULT</i></div>
@@ -31,14 +45,16 @@ export class Lobby {
         <div class="art">${ICON.crown(130, "cgh")}</div></div>
       <div class="lb-tabs tabs">${["All", "Slots", "Fish", "Arcade", "Favorites"].map((t, i) => `<button class="${i === 0 ? "on" : ""}">${t}</button>`).join("")}</div>
       <div class="lb-games">${GAMES.map((g, i) => `<button class="tile-game press ${g.live ? "" : "locked"}" data-i="${i}" style="background:${g.bg}">
-          ${g.badge ? `<span class="bd" style="background:${g.badge[1]};color:#0B0820">${g.badge[0]}</span>` : ""}
+          ${g.badge ? `<span class="bd" style="background:${g.badge[1]};color:#0B0820">${g.badge[0]}</span>` : ""}${g.art ?? ""}
           <span class="nm">${g.name}</span></button>`).join("")}</div>
       <nav class="lb-nav"><button class="on" data-nav="home">${ICON.home()}Home</button><button data-nav="games">${ICON.grid()}Games</button><button data-nav="rewards">${ICON.gift()}Rewards</button><button data-nav="history">${ICON.history()}History</button><button data-nav="profile">${ICON.user()}Profile</button></nav>
     </div>`);
     host.appendChild(this.el);
     this.el.querySelectorAll<HTMLElement>("[data-t]").forEach((e) => this.jpEls.set(e.dataset.t!, e));
     $(this.el, ".play").addEventListener("click", onPlay);
-    $(this.el, '[data-i="0"]').addEventListener("click", onPlay);
+    GAMES.forEach((g, i) => {
+      if (g.live) $(this.el, `[data-i="${i}"]`).addEventListener("click", g.live === "slot" ? onPlay : onBlackjack);
+    });
     // In landscape the games row scrolls sideways: let a mouse wheel scroll it too.
     const games = $(this.el, ".lb-games");
     games.addEventListener("wheel", (e) => {

@@ -66,6 +66,8 @@ export interface ActionRecord {
 
 export interface RoundState {
   rules: BlackjackRules;
+  /** The bets the round was dealt with, seat order. */
+  bets: SeatBet[];
   seats: SeatRound[];
   /** dealer[1] is the hole card; it stays hidden from players until `phase` is "settled". */
   dealer: Card[];
@@ -117,6 +119,7 @@ export function startRound(rules: BlackjackRules, bets: readonly SeatBet[], shoe
 
   const s: RoundState = {
     rules,
+    bets: sorted.map((b) => ({ ...b })),
     seats: [],
     dealer: [],
     phase: "players",

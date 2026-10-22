@@ -1,5 +1,5 @@
 import {
-  ApiError, GameApi, GameConfig, GameState, HistoryRound, JackpotTier, Jackpots, PlayResponse,
+  ApiError, BjAction, BjBet, BjResponse, BjView, GameApi, GameConfig, GameState, HistoryRound, JackpotTier, Jackpots, PlayResponse,
 } from "./types";
 
 const TOKEN_KEY = "jackvault.token";
@@ -158,6 +158,18 @@ export class RemoteApi implements GameApi {
   async history(limit = 20): Promise<HistoryRound[]> {
     const r = await this.request<{ rounds: HistoryRound[] }>("GET", `/api/history?limit=${limit}`);
     return r.rounds;
+  }
+  bjTable(): Promise<{ view: BjView; balanceCents: number }> {
+    return this.request("GET", "/api/bj/table");
+  }
+  bjBet(requestId: string, bet: BjBet): Promise<BjResponse> {
+    return this.request("POST", "/api/bj/bet", { requestId, ...bet });
+  }
+  bjInsurance(requestId: string, take: boolean): Promise<BjResponse> {
+    return this.request("POST", "/api/bj/insurance", { requestId, take });
+  }
+  bjAction(requestId: string, action: BjAction): Promise<BjResponse> {
+    return this.request("POST", "/api/bj/action", { requestId, action });
   }
   onJackpots(cb: (j: Jackpots) => void) {
     this.jackpotSubs.add(cb);

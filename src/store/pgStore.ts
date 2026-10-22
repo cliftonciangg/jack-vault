@@ -82,6 +82,17 @@ const WRITERS = {
     },
     "nothing",
   ),
+  bjTables: upsert("bj_tables", "player_id", { player_id: txt("playerId") }),
+  bjRounds: upsert("bj_rounds", "round_id", {
+    round_id: txt("roundId"),
+    player_id: txt("playerId"),
+    status: txt("status"),
+    rules_id: txt("rulesId"),
+    stake_cents: big("stakeCents"),
+    return_cents: big("returnCents"),
+    started_at: ts("startedAt"),
+    completed_at: ts("completedAt"),
+  }),
   changes: upsert(
     "change_log",
     "id",
@@ -101,6 +112,8 @@ const KEY: Record<keyof typeof WRITERS, string> = {
   accounts: "id",
   ledger: "entryId",
   changes: "id",
+  bjTables: "playerId",
+  bjRounds: "roundId",
 };
 
 function lastByKey<T>(rows: T[], key: string): T[] {
@@ -182,6 +195,8 @@ export class PgStore extends Store {
       idempotency: await q("SELECT data FROM idempotency ORDER BY seq"),
       ledger: await q("SELECT data FROM ledger ORDER BY seq"),
       changes: await q("SELECT data FROM change_log ORDER BY seq"),
+      bjTables: await q("SELECT data FROM bj_tables ORDER BY seq"),
+      bjRounds: await q("SELECT data FROM bj_rounds ORDER BY seq"),
     };
     const j = await q<JackpotState>("SELECT data FROM jackpots WHERE id = 1");
     if (j.length) c.jackpots = j[0];
